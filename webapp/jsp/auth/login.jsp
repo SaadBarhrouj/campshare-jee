@@ -205,7 +205,7 @@ pageEncoding="UTF-8"%>
           Créer un compte
         </a>
         <a
-          href="index.html"
+          href="${pageContext.request.contextPath}/"
           class="footer-link text-gray-600 dark:text-gray-400 hover:text-forest dark:hover:text-meadow"
         >
           <i class="fas fa-home mr-2"></i>
