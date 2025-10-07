@@ -1,0 +1,105 @@
+package com.campshare.service;
+
+import com.campshare.dao.interfaces.UserDAO;
+import com.campshare.dao.impl.UserDAOImpl;
+import com.campshare.model.User;
+import com.campshare.util.PasswordUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class UserService {
+
+    private UserDAO userDAO = new UserDAOImpl();
+
+    public User loginUser(String email, String plainPassword) {
+        User user = userDAO.findByEmail(email);
+
+        if (user == null || !user.isActive()) {
+            return null;
+        }
+
+        if (PasswordUtils.checkPassword(plainPassword, user.getPassword())) {
+            return user;
+        } else {
+            return null;
+        }
+    }
+
+    public List<String> registerUser(User user, String plainPassword, String passwordConfirmation) {
+        List<String> errors = new ArrayList<>();
+
+        if (user.getFirstName() == null || user.getFirstName().trim().isEmpty()) {
+            errors.add("Le prénom est requis.");
+        }
+        if (user.getLastName() == null || user.getLastName().trim().isEmpty()) {
+            errors.add("Le nom est requis.");
+        }
+        if (user.getUsername() == null || user.getUsername().trim().isEmpty()) {
+            errors.add("Le pseudonyme est requis.");
+        } else if (userDAO.findByUsername(user.getUsername()) != null) {
+            errors.add("Ce pseudonyme est déjà utilisé.");
+        }
+        if (user.getEmail() == null || user.getEmail().trim().isEmpty()) {
+            errors.add("L'email est requis.");
+        } else if (!isValidEmail(user.getEmail())) {
+            errors.add("Format d'email invalide.");
+        } else if (userDAO.findByEmail(user.getEmail()) != null) {
+            errors.add("Cet email est déjà enregistré.");
+        }
+        if (user.getPhoneNumber() == null || user.getPhoneNumber().trim().isEmpty()) {
+            errors.add("Le numéro de téléphone est requis.");
+        }
+        if (user.getAddress() == null || user.getAddress().trim().isEmpty()) {
+            errors.add("L'adresse est requise.");
+        }
+        if (user.getCityId() <= 0) {
+            errors.add("La ville est requise.");
+        }
+        if (plainPassword == null || plainPassword.isEmpty()) {
+            errors.add("Le mot de passe est requis.");
+        } else if (!plainPassword.equals(passwordConfirmation)) {
+            errors.add("Les mots de passe ne correspondent pas.");
+        } else if (!isValidPassword(plainPassword)) {
+            errors.add(
+                    "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial.");
+        }
+
+        if (!errors.isEmpty()) {
+            return errors;
+        }
+
+        String hashedPassword = PasswordUtils.hashPassword(plainPassword);
+        user.setPassword(hashedPassword);
+
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("client");
+        }
+        user.setActive(true);
+
+        try {
+            userDAO.save(user);
+            return errors;
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            errors.add("Erreur lors de l'enregistrement de l'utilisateur : " + e.getMessage());
+            return errors;
+        }
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern pattern = Pattern.compile(emailRegex);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    private boolean isValidPassword(String password) {
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&#])[A-Za-z\\d@$!%*?&#]{8,}$";
+        Pattern pattern = Pattern.compile(passwordRegex);
+        Matcher matcher = pattern.matcher(password);
+        return matcher.matches();
+    }
+}
