@@ -61,4 +61,13 @@
                 <url-pattern>/uploads/*</url-pattern>
             </servlet-mapping>
 
+            <servlet>
+                <servlet-name>ListingsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ListingsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>ListingsServlet</servlet-name>
+                <url-pattern>/listings</url-pattern>
+            </servlet-mapping>
+
 </web-app>
