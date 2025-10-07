@@ -20,6 +20,7 @@ public class User {
     private boolean isActive;
     private long cityId;
     private Timestamp createdAt;
+    
 
     public User() {}
 

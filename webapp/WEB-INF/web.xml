@@ -70,4 +70,13 @@
                 <url-pattern>/listings</url-pattern>
             </servlet-mapping>
 
+            <servlet>
+                <servlet-name>AdminDashboardServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminDashboardServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminDashboardServlet</servlet-name>
+                <url-pattern>/admin/dashboard</url-pattern>
+            </servlet-mapping>
+
 </web-app>

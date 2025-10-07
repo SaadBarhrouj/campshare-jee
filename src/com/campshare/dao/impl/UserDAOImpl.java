@@ -111,4 +111,36 @@ public class UserDAOImpl implements UserDAO {
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
     }
+
+    @Override
+    public long countAll() {
+        String sql = "SELECT COUNT(*) FROM users";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getLong(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public long countByRole(String role) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, role);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
