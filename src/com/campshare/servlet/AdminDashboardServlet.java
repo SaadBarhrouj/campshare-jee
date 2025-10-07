@@ -20,9 +20,6 @@ public class AdminDashboardServlet extends HttpServlet {
       throws ServletException, IOException {
 
     AdminDashboardStatsDTO stats = dashboardService.getDashboardStats();
-    // debug with logger
-    Logger logger = Logger.getLogger(AdminDashboardServlet.class.getName());
-    logger.info("Admin Dashboard Stats: " + stats);
 
     request.setAttribute("dashboardStats", stats);
 
