@@ -49,7 +49,7 @@ public class LoginServlet extends HttpServlet {
                 String redirectURL = request.getContextPath();
 
                 if ("admin".equals(userRole)) {
-                    redirectURL += "/jsp/admin/dashboard.jsp";
+                    redirectURL += "/admin/dashboard";
                 } else if ("partner".equals(userRole)) {
                     redirectURL += "/jsp/partner/dashboard.jsp";
                 } else {
