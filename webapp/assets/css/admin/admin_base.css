@@ -1,0 +1,212 @@
+/* Style pour le lien actif dans la barre latérale */
+.sidebar-link.active {
+  background-color: rgba(30, 64, 175, 0.1);
+  color: #1e40af;
+  border-left: 4px solid #1e40af;
+}
+
+.dark .sidebar-link.active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border-left: 4px solid #3b82f6;
+}
+
+/* Styles pour les tableaux de l'administration */
+.admin-table th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .admin-table th {
+  background-color: #374151;
+  border-bottom: 1px solid #4b5563;
+}
+
+.admin-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .admin-table td {
+  border-bottom: 1px solid #4b5563;
+}
+
+.admin-table tr:hover {
+  background-color: #f9fafb;
+}
+
+.dark .admin-table tr:hover {
+  background-color: #1f2937;
+}
+
+/* Styles pour les onglets de l'administration */
+.admin-tab {
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-tab:hover {
+  color: #1e40af;
+  border-bottom-color: #dbeafe;
+}
+
+.dark .admin-tab:hover {
+  color: #3b82f6;
+  border-bottom-color: #1e3a8a;
+}
+
+.admin-tab.active {
+  color: #1e40af;
+  border-bottom-color: #1e40af;
+}
+
+.dark .admin-tab.active {
+  color: #3b82f6;
+  border-bottom-color: #3b82f6;
+}
+
+/* Styles pour les badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.badge-success {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.dark .badge-success {
+  background-color: rgba(6, 95, 70, 0.2);
+  color: #34d399;
+}
+.badge-warning {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+.dark .badge-warning {
+  background-color: rgba(146, 64, 14, 0.2);
+  color: #fbbf24;
+}
+.badge-danger {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+.dark .badge-danger {
+  background-color: rgba(185, 28, 28, 0.2);
+  color: #f87171;
+}
+.badge-info {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+.dark .badge-info {
+  background-color: rgba(30, 64, 175, 0.2);
+  color: #60a5fa;
+}
+.badge-neutral {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+.dark .badge-neutral {
+  background-color: rgba(75, 85, 99, 0.2);
+  color: #9ca3af;
+}
+
+/* Styles pour les interrupteurs (switch toggle) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #1e40af;
+}
+.dark input:checked + .slider {
+  background-color: #3b82f6;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #1e40af;
+}
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Styles pour les menus déroulants de filtre */
+.filter-dropdown {
+  position: absolute;
+  z-index: 10;
+  min-width: 12rem;
+  background-color: white;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+}
+.dark .filter-dropdown {
+  background-color: #1f2937;
+  border-color: #4b5563;
+}
+.filter-dropdown .option {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.dark .filter-dropdown .option {
+  color: #d1d5db;
+}
+.filter-dropdown .option:hover {
+  background-color: #f3f4f6;
+}
+.dark .filter-dropdown .option:hover {
+  background-color: #374151;
+}
+.filter-dropdown .option.active {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+.dark .filter-dropdown .option.active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+}

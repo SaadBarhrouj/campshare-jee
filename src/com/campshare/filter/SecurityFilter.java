@@ -64,7 +64,8 @@ public class SecurityFilter implements Filter {
 
     switch (role) {
       case "admin":
-        return path.startsWith(ADMIN_PREFIX) || path.startsWith("/admin/");
+        return path.startsWith(ADMIN_PREFIX) || path.startsWith("/admin/") || path.startsWith("/api/admin/");
+        
       case "partner":
         return path.startsWith(PARTNER_PREFIX) || path.startsWith(CLIENT_PREFIX);
       case "client":

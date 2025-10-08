@@ -1,4 +1,4 @@
-package com.campshare.model;
+package com.campshare.dto;
 
 public class AdminDashboardStatsDTO {
 
