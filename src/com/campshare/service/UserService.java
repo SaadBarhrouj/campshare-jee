@@ -89,6 +89,18 @@ public class UserService {
         }
     }
 
+    public List<User> getUsersByRole(String role) {
+        return userDAO.findByRole(role);
+    }
+
+    public User getUserById(long id) {
+        return userDAO.findById(id);
+    }
+
+    public void updateUserStatus(long userId, boolean isActive) {
+        userDAO.updateStatus(userId, isActive);
+    }
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -102,4 +114,5 @@ public class UserService {
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
     }
+
 }

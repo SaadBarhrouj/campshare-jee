@@ -4,7 +4,7 @@ import com.campshare.dao.impl.ListingDAOImpl;
 import com.campshare.dao.impl.UserDAOImpl;
 import com.campshare.dao.interfaces.ListingDAO;
 import com.campshare.dao.interfaces.UserDAO;
-import com.campshare.model.AdminDashboardStatsDTO;
+import com.campshare.dto.AdminDashboardStatsDTO;
 
 public class AdminDashboardService {
 

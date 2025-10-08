@@ -78,5 +78,30 @@
                 <servlet-name>AdminDashboardServlet</servlet-name>
                 <url-pattern>/admin/dashboard</url-pattern>
             </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminPartnersServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminPartnersServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminPartnersServlet</servlet-name>
+                <url-pattern>/admin/partners</url-pattern>
+            </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminUserDetailApiServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminUserDetailApiServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminUserDetailApiServlet</servlet-name>
+                <url-pattern>/api/admin/user-details</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminToggleUserStatusServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminToggleUserStatusServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminToggleUserStatusServlet</servlet-name>
+                <url-pattern>/api/admin/toggle-user-status</url-pattern>
+            </servlet-mapping>
 
 </web-app>
