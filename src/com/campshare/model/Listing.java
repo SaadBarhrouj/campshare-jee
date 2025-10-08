@@ -15,6 +15,15 @@ public class Listing {
     private boolean deliveryOption;
     private Timestamp createdAt;
 
+    private Item item; // Associated Item
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+    public Item getItem() {
+        return item;
+    }
+
     // Default constructor
     public Listing() {
     }

@@ -1,5 +1,6 @@
 
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <style>
         @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
@@ -18,7 +19,7 @@
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
-                    <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenue, {{$user->username}} ! Voici un résumé de votre activité.</p>
+                    <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenue, ${user.username} ! Voici un résumé de votre activité.</p>
                 </div>
             </div>
             
@@ -34,7 +35,7 @@
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-sm">Locations réalisées</p>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$NumberReservationCompleted}}</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${completedReservations}</h3>
                             <p class="text-blue-600 dark:text-blue-400 text-sm flex items-center mt-1">
                                 
                             </p>
@@ -52,7 +53,7 @@
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-sm">Équipements actifs</p>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$TotalListingActive}} / {{$TotalListing}}</h3>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${countActiveListening} / ${countListening}</h3>
                             <p class="text-purple-600 dark:text-purple-400 text-sm flex items-center mt-1">
                             </p>
                         </div>
@@ -67,31 +68,30 @@
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-sm">Note moyenne</p>
-                            @if(isset($AverageRating) && $AverageRating != 0)
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$AverageRating}} / 5</h3>
-                                <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center mt-1"></p>
-                            @else
-                                <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Not Rated</h3>
-
-                            @endif
+                            <c:choose>
+                                <c:when test="${averageRating != null && averageRating != 0}">
+                                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${averageRating} / 5</h3>
+                                    <p class="text-amber-600 dark:text-amber-400 text-sm flex items-center mt-1"></p>
+                                </c:when>
+                                <c:otherwise>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Not Rated</h3>
+                                </c:otherwise>
+                            </c:choose>
 
                                 
                             
                         </div>
                     </div>
                 </div>
-
-                <!-- Stats card 1 -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 mr-4">
-                            <i class="fas fa-coins text-green-600 dark:text-green-400"></i>
+                        <div class="p-3 rounded-full bg-purple-100 dark:bg-purple-900 mr-4">
+                            <i class="fa-solid fa-campground text-purple-600 dark:text-purple-400"></i>
                         </div>
                         <div>
                             <p class="text-gray-500 dark:text-gray-400 text-sm">Revenus du mois</p>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$sumPayment}} MAD</h3>
-                            <p class="text-green-600 dark:text-green-400 text-sm flex items-center mt-1">
-                                
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${monthPayment} MAD</h3>
+                            <p class="text-purple-600 dark:text-purple-400 text-sm flex items-center mt-1">
                             </p>
                         </div>
                     </div>
@@ -105,126 +105,128 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="font-bold text-xl text-gray-900 dark:text-white">Avis Recent</h2>
                     </div>
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse($lastAvisPartnerForObjet as $avis)
-                        <div class="px-6 py-4">
-                            <div class="flex items-center">
-                                <div class="flex-shrink-0 mr-4">
-                                    <div class="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-800  flex items-center justify-center">
-                                        <i class="fas fa-star text-amber-600 dark:text-amber-400"></i>
+                      <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                        <c:choose>
+                            <c:when test="${not empty LastAvisPartnerForObjectList}">
+                                <c:forEach var="avis" items="${LastAvisPartnerForObjectList}">
+                                    <div class="px-6 py-4">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 mr-4">
+                                                <div class="h-10 w-10 rounded-full bg-amber-100 dark:bg-amber-800 flex items-center justify-center">
+                                                    <i class="fas fa-star text-amber-600 dark:text-amber-400"></i>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p class="font-medium text-gray-900 dark:text-white">
+                                                    ${avis.reviewer.username} - Equipment: ${avis.item.title}
+                                                </p>
+                                                <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                                    ${avis.comment}
+                                                </p>
+                                                <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">
+                                                    <div class="flex items-center text-sm">
+                                                        <i class="fas fa-star text-amber-400 mr-1"></i>
+                                                        <span>${avis.rating}</span>
+                                                    </div>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <div class="px-6 py-4 text-sm text-gray-500">
+                                        
                                     </div>
                                 </div>
-                                <div>
-                                    <p class="font-medium text-gray-900 dark:text-white">
-                                        {{$avis->username}} -  Equipment : {{$avis->object_title}}
-                                    </p>
-                                    <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                            {{$avis->comment}}
-                                    </p>
-                                    <p class="text-gray-500 dark:text-gray-500 text-xs mt-1">
-
-                                        <div class="flex items-center text-sm">
-                                                <i class="fas fa-star text-amber-400 mr-1"></i>
-                                                <span>{{ $avis->rating }}</span>
-                                            </div>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        @empty
-                        <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                            <div class="px-6 py-4 text-sm text-gray-500">
-                                Vous n'avez aucune demande de location dans ce moment.
-                            </div>
-                        </div>
-                        @endforelse
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                    @if($lastAvisPartnerForObjet->count()!=0)
-                    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 text-center">
-                        <a href="{{ route('HomePartenaie.avis') }}" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
-                            Voir tous les avis
-                        </a>
-                    </div>
-                    @endif
+ 
                 </div>
                 
                 <!-- Rental requests -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                        <h2 class="font-bold text-xl text-gray-900 dark:text-white">Demandes de location</h2>
+                        <h2 class="font-bold text-xl text-gray-900 dark:text-white">Demandeds de location</h2>
                         <span class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 text-xs font-medium rounded-full">
                             {{$NumberPendingReservation}} en attente
                         </span>
+                        
                     </div>
-                    @forelse ($pendingReservation as $Reservation)
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <div class="px-6 py-4">
-                            <div class="flex items-start">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
-                                        alt="Mehdi Idrissi" 
-                                        class="w-10 h-10 rounded-full object-cover mr-4" />
-                                
-                                <div class="flex-1">
-                                    <div class="flex items-center justify-between mb-1">
-                                        <h3 class="font-medium text-gray-900 dark:text-white">{{$Reservation->username}}</h3>
-                                        <span class="text-xs text-gray-500 dark:text-gray-400">{{$Reservation->created_at}}</span>
-                                    </div>
-                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
-                                        Souhaite louer <span class="font-medium">{{$Reservation->title}}</span>
-                                    </p>
-                                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-2 mb-3">
-                                        <div class="flex justify-between text-sm mb-1">
-                                            <span class="text-gray-600 dark:text-gray-400">Durée de résérvation</span>
-                                            <span class="font-medium text-gray-900 dark:text-white">{{$Reservation->start_date}} -> {{$Reservation->end_date}}</span>
-                                        </div>
-                                        <div class="flex justify-between text-sm">
-                                            <span class="text-gray-600 dark:text-gray-400">Montant total</span>
-                                            <span class="font-medium text-gray-900 dark:text-white">{{$Reservation->montant_total}} MAD ({{$Reservation->number_days}} jours)</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center space-x-2">
-                                    <form action="{{ route('reservation.action') }}" method="POST" class="flex-1">
-                                            @csrf
-                                            <input type="hidden" name="reservation_id" value="{{ $Reservation->id }}">
-                                            <input type="hidden" name="action" value="accept">
-                                            <button type="submit" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md w-full">
-                                                Accepter
-                                            </button>
-                                        </form>
 
-                                        <!-- Refuse Button -->
-                                        <form action="{{ route('reservation.action') }}" method="POST" class="flex-1">
-                                            @csrf
-                                            <input type="hidden" name="reservation_id" value="{{ $Reservation->id }}">
-                                            <input type="hidden" name="action" value="refuse">
-                                            <button type="submit" class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 w-full">
-                                                Refuser
-                                            </button>
-                                        </form>
+                        <c:choose>
+                            <c:when test="${not empty PendingReservationsWithMontantTotal}">
+                                <c:forEach var="reservation" items="${PendingReservationsWithMontantTotal}">
+                                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                        <div class="px-6 py-4">
+                                            <div class="flex items-start">
+                                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
+                                                    alt="${reservation.client.username}" 
+                                                    class="w-10 h-10 rounded-full object-cover mr-4" />
+
+                                                <div class="flex-1">
+                                                    <div class="flex items-center justify-between mb-1">
+                                                        <h3 class="font-medium text-gray-900 dark:text-white">${reservation.client.username}</h3>
+                                                        <span class="text-xs text-gray-500 dark:text-gray-400">${reservation.createdAt}</span>
+                                                    </div>
+                                                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">
+                                                        Souhaite louer <span class="font-medium">${reservation.listing.item.title}</span>
+                                                    </p>
+                                                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-2 mb-3">
+                                                        <div class="flex justify-between text-sm mb-1">
+                                                            <span class="text-gray-600 dark:text-gray-400">Durée de résérvation</span>
+                                                            <span class="font-medium text-gray-900 dark:text-white">
+                                                                ${reservation.startDate} -> ${reservation.endDate}
+                                                            </span>
+                                                        </div>
+                                                        <div class="flex justify-between text-sm">
+                                                            <span class="text-gray-600 dark:text-gray-400">Montant total</span>
+                                                            <span class="font-medium text-gray-900 dark:text-white">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="flex items-center space-x-2">
+                                                        <form action="reservationAction" method="post" class="flex-1">
+                                                            <input type="hidden" name="reservation_id" value="${reservation.id}" />
+                                                            <input type="hidden" name="action" value="accept" />
+                                                            <button type="submit" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md w-full">
+                                                                Accepter
+                                                            </button>
+                                                        </form>
+
+                                                        <form action="reservationAction" method="post" class="flex-1">
+                                                            <input type="hidden" name="reservation_id" value="${reservation.id}" />
+                                                            <input type="hidden" name="action" value="refuse" />
+                                                            <button type="submit" class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 w-full">
+                                                                Refuser
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+
+                                <c:if test="${fn:length(PendingReservationsWithMontantTotal) != 0}">
+                                    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 text-center">
+                                        <a href="HomePartenaieDemandes" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
+                                            Voir toutes les demandes
+                                        </a>
+                                    </div>
+                                </c:if>
+
+                            </c:when>
+                            <c:otherwise>
+                                <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    <div class="px-6 py-4 text-sm text-gray-500">
+                                        Vous n'avez aucune demande de location dans ce moment.
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        
-                        
-                        
-                        
-                    </div>
-                    @empty
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <div class="px-6 py-4 text-sm text-gray-500">
-                            Vous n'avez aucune demande de location dans ce moment.
-                        </div>
-                    </div>
-                    
-                    @endforelse
-                    @if($pendingReservation->count()!=0)
-                    <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 text-center">
-                        <a href="{{ route('HomePartenaie.demandes') }}" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
-                            Voir toutes les demandes
-                        </a>
-                    </div>
-                    @endif
+                            </c:otherwise>
+                        </c:choose>
                 </div>
             </div>
             

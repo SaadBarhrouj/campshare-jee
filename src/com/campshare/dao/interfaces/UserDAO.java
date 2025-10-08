@@ -6,4 +6,5 @@ public interface UserDAO {
     User findByEmail(String email);
     User findByUsername(String username);
     void save(User user);
+    double getAverageRatingForPartner(long partnerId);
 }

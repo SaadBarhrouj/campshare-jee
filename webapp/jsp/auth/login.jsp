@@ -89,7 +89,7 @@
         </div>
         
         <!-- Title -->
-        <h2 class="text-center text-2xl font-bold mb-8 text-gray-800 dark:text-white">Connexion à votre compte</h2>
+        <h2 class="text-center text-2xl font-bold mb-8 text-gray-800 dark:text-white">ss à votre compte</h2>
         
         <!-- Login Form -->
         <form id="login-form" class="space-y-6">

@@ -14,6 +14,36 @@ public class Review {
     private long itemId;
     private Timestamp createdAt;
 
+    private User reviewer;  // the user who wrote the review
+    private User reviewee;  // the user who is reviewed (partner or client)
+    private Item item;
+
+    public User getReviewer() {
+        return reviewer;
+    }
+
+    public void setReviewer(User reviewer) {
+        this.reviewer = reviewer;
+    }
+
+    // Reviewee
+    public User getReviewee() {
+        return reviewee;
+    }
+
+    public void setReviewee(User reviewee) {
+        this.reviewee = reviewee;
+    }
+
+    // Item
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
     // Default constructor
     public Review() {
     }

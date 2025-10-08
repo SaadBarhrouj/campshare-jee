@@ -3,7 +3,6 @@ package com.campshare.dao.impl;
 import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.model.User;
 import com.campshare.util.DatabaseManager;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -110,5 +109,26 @@ public class UserDAOImpl implements UserDAO {
         user.setCityId(rs.getLong("city_id"));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
+    }
+    public double getAverageRatingForPartner(long partnerId) {
+        double avgRating = 0.0;
+        String sql = "SELECT AVG(R.rating) AS avg_rating " +
+                    "FROM reviews R " +
+                    "WHERE R.reviewee_id = ? AND R.type = 'forPartner'";
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, partnerId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                avgRating = rs.getDouble("avg_rating"); // returns 0.0 if null
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return avgRating;
     }
 }
