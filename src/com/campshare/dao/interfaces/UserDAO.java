@@ -18,6 +18,8 @@ public interface UserDAO {
     List<User> findByRole(String role);
 
     User findById(long id);
-    
+
     void updateStatus(long userId, boolean isActive);
+
+    long countByRoleAndStatus(String role, boolean isActive);
 }

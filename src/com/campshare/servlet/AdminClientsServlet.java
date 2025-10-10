@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-public class AdminPartnersServlet extends HttpServlet {
+public class AdminClientsServlet extends HttpServlet {
 
   private UserService userService = new UserService();
   private AdminDashboardService dashboardService = new AdminDashboardService();
@@ -24,15 +24,15 @@ public class AdminPartnersServlet extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
-    List<User> partners = userService.getUsersByRole("partner");
-    request.setAttribute("partners", partners);
+    List<User> clients = userService.getUsersByRole("client");
+    request.setAttribute("clients", clients);
 
     AdminDashboardStatsDTO dashboardStats = dashboardService.getDashboardStats();
     request.setAttribute("dashboardStats", dashboardStats);
 
-    UserPageStatsDTO pageStats = adminUserService.getUserStats("partner");
+    UserPageStatsDTO pageStats = adminUserService.getUserStats("client");
     request.setAttribute("pageStats", pageStats);
 
-    request.getRequestDispatcher("/jsp/admin/partners.jsp").forward(request, response);
+    request.getRequestDispatcher("/jsp/admin/clients.jsp").forward(request, response);
   }
 }

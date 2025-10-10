@@ -171,6 +171,26 @@ public class UserDAOImpl implements UserDAO {
         }
     }
 
+    @Override
+    public long countByRoleAndStatus(String role, boolean isActive) {
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ? AND is_active = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role);
+            pstmt.setBoolean(2, isActive);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));

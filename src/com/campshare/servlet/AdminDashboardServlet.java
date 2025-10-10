@@ -21,6 +21,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
     AdminDashboardStatsDTO stats = dashboardService.getDashboardStats();
 
+
     request.setAttribute("dashboardStats", stats);
 
     request.getRequestDispatcher("/jsp/admin/dashboard.jsp").forward(request, response);
