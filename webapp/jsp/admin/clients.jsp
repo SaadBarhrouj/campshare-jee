@@ -2,14 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> 
 
-
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Partenaires - CampShare Admin</title>
+    <title>Gestion des Clients - CampShare Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin/admin_base.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -186,7 +185,7 @@
     </nav>
 
         <jsp:include page="includes/admin_sidebar.jsp">
-            <jsp:param name="activePage" value="partners"/>
+            <jsp:param name="activePage" value="clients"/>
         </jsp:include>
     <!-- Dashboard container -->
 
@@ -197,21 +196,23 @@
                 <!-- Dashboard header -->
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Gestion des Partenaires</h1>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">Liste de tous les partenaires de la plateforme</p>
+                        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Gestion des Clients</h1>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Liste de tous les clients de la plateforme.</p>
                     </div>
                 </div>
                 
                 <!-- Stats cards -->
                  
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8 justify-center">                    <!-- Stats card 1 - Total Clients --> 
+
+                    <!-- Stats card 1 - Total Clients -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 ">
                         <div class="flex items-center">
                             <div class="p-3 rounded-full bg-admin-light dark:bg-admin-dark mr-4">
                                 <i class="fas fa-user text-admin-primary dark:text-admin-secondary"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Partenaires</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Clients</p>
                                 <div class="flex items-center">
                                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
                                         <c:out value="${pageStats.total}"/>
@@ -229,15 +230,13 @@
                                 <i class="fas fa-check-circle text-green-600 dark:text-green-400"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Partenaires Actifs</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Clients Actifs</p>
                                 <div class="flex items-center">
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
-                                        <c:out value="${pageStats.active}"/>
-                                    </h3>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><c:out value="${pageStats.active}"/></h3>
                                     
                                 </div>
                                 <p class="text-gray-600 dark:text-gray-400 text-xs mt-1">
-                                            (<fmt:formatNumber value="${pageStats.activePercentage}" maxFractionDigits="0"/>% du total)
+                                    (<fmt:formatNumber value="${pageStats.activePercentage}" maxFractionDigits="0"/>% du total)
                                 </p>
                             </div>
                         </div>
@@ -250,7 +249,7 @@
                                 <i class="fas fa-x text-red-600 dark:text-red-400"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Partenaires Inactifs</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Clients Inactifs</p>
                                 <div class="flex items-center">
                                     <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><c:out value="${pageStats.inactive}"/></h3>
                                     
@@ -346,7 +345,7 @@
                         <table class="w-full text-sm admin-table">
                             <thead>
                                 <tr>
-                                    <th>Partenaire</th>
+                                    <th>Client</th>
                                     <th>Contact</th>
                                     <th>Inscrit le</th>
                                     <th>Statut</th>
@@ -354,25 +353,25 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach var="partner" items="${partners}">
+                                <c:forEach var="client" items="${clients}">
                                     <tr>
                                         <td>
                                             <div class="flex items-center">
-                                                <img class="h-10 w-10 rounded-full object-cover mr-4" src="${pageContext.request.contextPath}${partner.avatarUrl}" alt="Avatar">
+                                                <img class="h-10 w-10 rounded-full object-cover mr-4" src="${pageContext.request.contextPath}${client.avatarUrl}" alt="Avatar">
                                                 <div>
-                                                    <p class="font-semibold"><c:out value="${partner.firstName} ${partner.lastName}"/></p>
-                                                    <p class="text-xs text-gray-500">@<c:out value="${partner.username}"/></p>
+                                                    <p class="font-semibold"><c:out value="${client.firstName} ${client.lastName}"/></p>
+                                                    <p class="text-xs text-gray-500">@<c:out value="${client.username}"/></p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <p><c:out value="${partner.email}"/></p>
-                                            <p class="text-xs text-gray-500"><c:out value="${partner.phoneNumber}"/></p>
+                                            <p><c:out value="${client.email}"/></p>
+                                            <p class="text-xs text-gray-500"><c:out value="${client.phoneNumber}"/></p>
                                         </td>
-                                        <td><fmt:formatDate value="${partner.createdAt}" pattern="dd MMM yyyy"/></td>
+                                        <td><fmt:formatDate value="${client.createdAt}" pattern="dd MMM yyyy"/></td>
                                         <td>
                                             <c:choose>
-                                                <c:when test="${partner.active}">
+                                                <c:when test="${client.active}">
                                                     <span class="badge badge-success">Actif</span>
                                                 </c:when>
                                                 <c:otherwise>
@@ -380,7 +379,7 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>                                        <td>
-                                            <button onclick="showUserDetails(${partner.id})" 
+                                            <button onclick="showUserDetails(${client.id})" 
                                                     class="p-2 text-xs rounded-md bg-blue-100 hover:bg-blue-200" title="Voir les détails">
                                                 <i class="fas fa-eye"></i>
                                             </button>

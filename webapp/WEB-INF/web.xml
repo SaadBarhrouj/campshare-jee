@@ -104,4 +104,13 @@
                 <url-pattern>/api/admin/toggle-user-status</url-pattern>
             </servlet-mapping>
 
+            <servlet>
+                <servlet-name>AdminClientsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminClientsServlet</servlet-class>
+            </servlet>
+                <servlet-mapping>
+                    <servlet-name>AdminClientsServlet</servlet-name>
+                    <url-pattern>/admin/clients</url-pattern>
+                </servlet-mapping>
+
 </web-app>
