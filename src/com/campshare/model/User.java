@@ -20,10 +20,24 @@ public class User {
     private boolean isActive;
     private long cityId;
     private Timestamp createdAt;
+    private double avgRating;
+    private int reviewCount;
 
     public User() {}
 
+    public double getAvgRating() {
+        return avgRating;
+    }
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
 
+    public int getReviewCount() {
+        return reviewCount;
+    }
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
     public String getFirstName() { return firstName; }

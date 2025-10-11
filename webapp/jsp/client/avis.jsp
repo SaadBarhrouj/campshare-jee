@@ -1,3 +1,7 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -62,8 +66,8 @@
     <div class="py-8 px-4 md:px-8">
         <!-- Dashboard header -->
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Avis reçus</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-1">Voici un résumé des avis des utilisateurs sur vous.</p>
+                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Avis recus</h1>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Voici un resume des avis des utilisateurs sur vous.</p>
             </div>
         
     </div>
@@ -75,53 +79,46 @@
             
             </div>
 
+
             <!-- Request items -->
-            <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                <!-- Request 1 -->
-                @foreach ($reviews as $review)
-
-                <div class="px-6 py-4">
-                    <div class="flex flex-col lg:flex-row lg:items-start">
-                       
-
-                        <div class="flex-grow grid grid-cols-1 lg:grid-cols-7 gap-4 mb-4 lg:mb-0">
-                            <div class="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto col-span-2">
-                                <div class="flex items-center lg:w-16">
-                                    <img src="{{ asset($review->reviewer_avatar) }}"
-     alt="{{ $review->reviewer_name }}"
-     class="w-12 h-12 rounded-full object-cover aspect-square" />
-                                    <div class="ml-4">
-                                        <a href="{{ route('partner.profile.index', $review->reviewer_id) }}">
-                                            <h3 class="font-medium text-gray-900 dark:text-white">{{$review->reviewer_name}}</h3>
-                                        </a>
-                                    </div>
-                                </div>
-
+     <div class="divide-y divide-gray-200 dark:divide-gray-700">
+    <c:forEach var="review" items="${reviewsAboutMe}">
+        <div class="px-6 py-4">
+            <div class="flex flex-col lg:flex-row lg:items-start">
+                <div class="flex-grow grid grid-cols-1 lg:grid-cols-7 gap-4 mb-4 lg:mb-0">
+                    <div class="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto col-span-2">
+                        <div class="flex items-center lg:w-16">
+                            <img src="${pageContext.request.contextPath}/images/avatars/${review.reviewer.avatarUrl}"
+                                 alt=""
+                                 class="w-12 h-12 rounded-full object-cover aspect-square" />
+                            <div class="ml-4">
+                                <a href="profile?id=">
+                                    <h3 class="font-medium text-gray-900 dark:text-white"></h3>
+                                </a>
                             </div>
-                            <div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Note reçue</p>
-                                <div class="flex items-center text-sm">
-                                    <i class="fas fa-star text-amber-400 mr-1"></i>
-                                    <span>{{ $review->rating }}</span>
-                                </div>
-                            </div>
-                            <div class="col-span-3">
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire</p>
-                                <p class="font-medium text-gray-900 dark:text-white"> {{ $review->comment }}</p>
-                            </div>
-                            <div class="col-span-1">
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Date</p>
-                                <p class="font-medium text-gray-900 dark:text-white">{{ $review->created_at}}</p>
-                            </div>
-                          
-                      
                         </div>
-
-                            
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Note recue</p>
+                        <div class="flex items-center text-sm">
+                            <i class="fas fa-star text-amber-400 mr-1"></i>
+                            <span>${review.rating}</span>
+                        </div>
+                    </div>
+                    <div class="col-span-3">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire</p>
+                        <p class="font-medium text-gray-900 dark:text-white">${review.comment}</p>
+                    </div>
+                    <div class="col-span-1">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Date</p>
+                        <p class="font-medium text-gray-900 dark:text-white">${review.createdAt}</p>
                     </div>
                 </div>
-                @endforeach
             </div>
+        </div>
+    </c:forEach>
+</div>
+
 
         </div>
 </div>

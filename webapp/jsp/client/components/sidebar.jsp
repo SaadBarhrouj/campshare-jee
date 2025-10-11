@@ -1,4 +1,5 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
         .nav-link {
@@ -196,38 +197,40 @@
             <!-- Desktop Navigation -->
 
             <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('client.listings.index') }}" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
+                <a href="{{ route('client.listings.index') }}" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le materiel</a>
                 
-                @auth
-                    @php
-                        $user = $user ?? Auth::user();
-                    @endphp
-                    @if($user)
-                        @if($user->role == 'client')
-                            <button type="button" id="openPartnerModalBtn" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 cursor-pointer">
+
+                    <c:if test="${not empty sessionScope.user}">
+                        <c:if test="${sessionScope.user.role == 'client'}">
+                            <button type="button" id="openPartnerModalBtn"
+                                class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 cursor-pointer">
                                 Devenir Partenaire
                             </button>
-                        @endif
+                        </c:if>
+                    </c:if>
+
                         <div class="relative ml-4">
                             <div class="flex items-center space-x-4">
                                 <div class="relative">
-                                    <a id="notifications-client-icon-link" 
-                                    href="{{ route('notifications.client.index') }}" 
-                                    data-mark-read-url="{{ route('notifications.client.markAllAsRead') }}"
+                                    <a id="notifications-client-icon-link"
+                                    href="${pageContext.request.contextPath}/notifications/client/index"
+                                    data-mark-read-url="${pageContext.request.contextPath}/notifications/client/markAllAsRead"
                                     class="relative p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
                                         <i class="fas fa-bell"></i>
-                                        {{-- Utilisation de la variable globale $unreadClientNotificationsCountGlobal fournie par AppServiceProvider --}}
-                                        @if(isset($unreadClientNotificationsCountGlobal) && $unreadClientNotificationsCountGlobal > 0)
-                                            <span id="notification-badge-count" class="notification-badge">{{ $unreadClientNotificationsCountGlobal }}</span>
-                                        @endif
+
+                                        <c:if test="${not empty unreadClientNotificationsCountGlobal and unreadClientNotificationsCountGlobal > 0}">
+                                            <span id="notification-badge-count" class="notification-badge">
+                                                ${unreadClientNotificationsCountGlobal}
+                                            </span>
+                                        </c:if>
                                     </a>
                                 </div>
                                 <div class="relative">
                                     <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                        <img src="{{ asset($user->avatar_url) ?? asset('images/default-avatar.png') }}"
+                                        <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
                                            alt="Avatar de {{ $user->username }}"
                                            class="h-8 w-8 rounded-full object-cover" />
-                                        <span class="font-medium text-gray-800 dark:text-gray-200">{{ $user->username }}</span>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">${user.username}</span>
                                         <i class="fas fa-chevron-down text-sm text-gray-500"></i>
                                     </button>
                                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 border border-gray-200 dark:border-gray-600">
@@ -238,20 +241,20 @@
                                             <a href="{{ route('HomeClient') }}" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                                 <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Client
                                             </a>
-                                            @if($user->role == 'partner')
-                                            <a href="{{ route('HomePartenaie') }}" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Partenaire
-                                            </a>
-                                            @endif
+                                          <c:if test="${user != null and user.role == 'partner'}">
+                                                <a href="${pageContext.request.contextPath}/HomePartenaire" 
+                                                class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                    <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Partenaire
+                                                </a>
+                                            </c:if>
                                             <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
                                             <a href="{{ route('logout') }}"
                                             class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
+                                                <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
                                             </a>
 
                                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                                @csrf
                                             </form>
 
                                         </div>
@@ -259,58 +262,7 @@
                                 </div>
                             </div>
                         </div>
-                        @if($user->role == 'client')
-                        <div id="partnerAcceptModal" class="fixed inset-0 z-[60] hidden overflow-y-auto bg-black bg-opacity-60 flex items-center justify-center" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden max-w-2xl w-full p-6 m-4">
-                                <div class="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-gray-700">
-                                    <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-white" id="modal-title">
-                                        Devenir Partenaire Campshare
-                                    </h3>
-                                    <button id="closePartnerModalBtn" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white" aria-label="Fermer">
-                                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                                    </button>
-                                </div>
-                                <div class="mt-4 mb-6 max-h-[60vh] overflow-y-auto px-1">
-                                    <p class="text-sm text-gray-600 dark:text-gray-300">
-                                        En devenant partenaire sur <strong>Campshare</strong>, notre plateforme de location d'équipements de camping, vous vous engagez à respecter les points suivants :
-                                        <ul class="mt-3 ml-4 list-disc space-y-2 text-sm">
-                                            <li><strong>Qualité et Sécurité :</strong> Fournir du matériel de camping conforme à sa description, propre, sécurisé et en parfait état de fonctionnement.</li>
-                                            <li><strong>Annonces à Jour :</strong> Maintenir les informations de vos annonces (photos, descriptions, prix, caractéristiques) exactes et actuelles.</li>
-                                            <li><strong>Disponibilité :</strong> Gérer avec précision et réactivité le calendrier de disponibilité de votre matériel pour éviter les doubles réservations.</li>
-                                            <li><strong>Communication :</strong> Répondre rapidement (idéalement sous 24h) aux demandes de réservation et aux questions des locataires potentiels.</li>
-                                            <li><strong>Gestion des Réservations :</strong> Honorer les réservations confirmées. Vous serez notifié par email et via votre espace partenaire lors de l'acceptation d'une réservation par un client.</li>
-                                            <li><strong>Préparation et Restitution :</strong> Préparer le matériel loué pour le retrait par le locataire et vérifier son état lors de la restitution.</li>
-                                            <li><strong>Respect des Règles :</strong> Vous conformer aux <a href="/conditions-generales-partenaires" target="_blank" class="text-blue-600 hover:underline dark:text-blue-400">Conditions Générales Partenaires de Campshare</a>.</li>
-                                        </ul>
-                                        <br>
-                                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-2">
-                                            En cliquant sur 'Accepter et Continuer', vous confirmez avoir lu, compris et accepté ces engagements pour rejoindre la communauté des partenaires Campshare.
-                                        </p>
-                                    </p>
-                                </div>
-                                <div class="flex justify-end space-x-3 border-t border-gray-200 dark:border-gray-700 pt-4">
-                                    <form method="POST" action="{{ route('devenir_partenaire') }}">
-                                        @csrf
-                                    <a id="cancelPartnerModalBtn"  class="cursor-pointer mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 transition duration-150 ease-in-out">
-                                        Annuler
-                                    </a>
-                                    <button type="submit" id="confirmPartnerBtn" class="px-4 py-2 bg-forest text-white rounded-md hover:bg-opacity-90 dark:bg-sunlight dark:text-gray-900 dark:hover:bg-opacity-90 transition duration-150 ease-in-out shadow-sm">
-                                        Accepter et Continuer
-                                    </button>
-                                </form>
-                                    
-                                    
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                    @endif
-                @else
-                    <div class="flex items-center space-x-4 ml-4">
-                        <a href="{{ route('login.form') }}" class="px-4 py-2 font-medium rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Connexion</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 font-medium rounded-md bg-sunlight hover:bg-amber-600 text-white shadow-md transition duration-300">Inscription</a>
-                    </div>
-                @endauth
+              
 
             </div>
             
@@ -329,16 +281,18 @@
     <!-- Mobile menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 pb-4 shadow-lg">
         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="{{ route('client.listings.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Explorer le matériel</a>
-            @auth
-                @php
-                    $user = $user ?? Auth::user();
-                @endphp
-                @if($user)
-                    @if($user->role == 'client')
-                        <a href="#devenir" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Devenir Partenaire</a>
+            <a href="{{ route('client.listings.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Explorer le materiel</a>
+           <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-                    @endif
+            <c:if test="${not empty sessionScope.user}">
+                <c:if test="${sessionScope.user.role == 'client'}">
+                    <a href="#devenir"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                        Devenir Partenaire
+                    </a>
+                </c:if>
+            </c:if>
+
 
                         <!-- Mobile profile menu -->
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
@@ -371,7 +325,7 @@
                                 </a>
                                 @endif
                                 <a href="{{ route('logout') }}" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                                    <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
+                                    <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
                                 </a>
                             </div>
                         </div>
@@ -393,9 +347,9 @@
             <div class="p-5">
                 <div class="mb-6 px-3 flex flex-col items-center">
                     <div class="relative">
-                        <img src="{{ asset($user->avatar_url) ?? asset('images/default-avatar.jpg') }}" 
-                        alt="Avatar de {{ $user->name }}" 
-                             class="w-24 h-24 rounded-full border-4 border-forest dark:border-meadow object-cover" />
+                    <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
+                         
+                        class="w-24 h-24 rounded-full border-4 border-forest dark:border-meadow object-cover" />
                         <div class="absolute bottom-1 right-1 bg-green-500 p-1 rounded-full border-2 border-white dark:border-gray-800">
                             <i class="fas fa-check text-white text-xs"></i>
                         </div>
@@ -406,59 +360,61 @@
                         <fmt:formatDate value="${user.createdAt}" pattern="MM/yyyy"/>
                     </div>
 
-                    <div class="flex items-center mt-2">
-                        @if(isset($note_moyenne) && $note_moyenne != 0)
-                            @php
-                                $rating = $note_moyenne;
-                                $fullStars = floor($rating); 
-                                $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                $emptyStars = 5 - $fullStars - ($hasHalfStar ? 1 : 0);
-                            @endphp
-                            
+                <div class="flex items-center mt-2">
+                    <c:choose>
+                        <c:when test="${noteMoyenne != 0}">
                             <div class="flex text-amber-400 mr-1">
-                                @for ($i = 0; $i < $fullStars; $i++)
+                                <!-- Full stars -->
+                                <c:forEach var="i" begin="1" end="${fullStars}">
                                     <i class="fas fa-star text-base"></i>
-                                @endfor
-                                @if ($hasHalfStar)
+                                </c:forEach>
+
+                                <!-- Half star -->
+                                <c:if test="${hasHalfStar}">
                                     <i class="fas fa-star-half-alt text-base"></i>
-                                @endif
-                                @for ($i = 0; $i < $emptyStars; $i++)
+                                </c:if>
+
+                                <!-- Empty stars -->
+                                <c:forEach var="i" begin="1" end="${emptyStars}">
                                     <i class="far fa-star text-base"></i>
-                                @endfor
+                                </c:forEach>
                             </div>
-                            
+
                             <span class="text-gray-600 dark:text-gray-300 text-sm ml-1">
-                                {{ number_format($rating, 1) }}
+                                <fmt:formatNumber value="${noteMoyenne}" maxFractionDigits="1"/>
                             </span>
-                        @else
-                            <span class="text-gray-400 text-sm">Non noté</span>
-                        @endif
-                    </div>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="text-gray-400 text-sm">Non note</span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+
                 </div>
                 <nav class="mt-6 space-y-1">
-                    <a href="/Client" data-target="dashboard" class="sidebar-link2 active flex items-center px-4 py-3 text-base font-medium rounded-md transition-colors">
+                    <a href="${pageContext.request.contextPath}/client/dashboard" data-target="dashboard" class="sidebar-link2 active flex items-center px-4 py-3 text-base font-medium rounded-md transition-colors">
                         <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                         Tableau de bord
                     </a>
-                    <a href="/MesReservation" data-target="allRes" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="${pageContext.request.contextPath}/client/allReservation" data-target="allRes" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-shopping-cart w-5 mr-3"></i>
-                        Mes réservations
+                        Mes reservations
                     </a>
-                    <a href="/EquipementRecommende" data-target="allSim" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="${pageContext.request.contextPath}/client/equipement" data-target="allSim" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-heart w-5 mr-3"></i>
-                        Equip. recommandes
+                        Equip recommandes
                     </a>
-                    <a href="/AvisRecus" data-target="mes-avis" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="${pageContext.request.contextPath}/client/avis" data-target="mes-avis" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-star w-5 mr-3"></i>
-                        Avis reçus
+                        Avis recus
                     </a>
                     
                 </nav>
                 <div class="mt-28">
                     <form method="POST" action="{{ route('logout') }}">
-                        @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition duration-300">
-                            <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
+                            <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
                         </button>
                     </form>
                 </div>
@@ -487,7 +443,7 @@
                             <i class="fas fa-check text-white text-xs"></i>
                         </div>
                     </div>
-                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mt-3">{{$user->username}}</h2>
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mt-3">${user.username}</h2>
                 </div>
             </div>
         </div>
@@ -510,6 +466,15 @@
                 link.classList.add('active');
             }
         });
+        
+        // Special handling for dashboard
+        if (currentPath.includes('/client/dashboard') || currentPath === '/client/dashboard' || currentPath.endsWith('/client/dashboard')) {
+            const dashboardLink = document.querySelector('a[data-target="dashboard"]');
+            if (dashboardLink) {
+                document.querySelectorAll('.sidebar-link2').forEach(link => link.classList.remove('active'));
+                dashboardLink.classList.add('active');
+            }
+        }
     }
     document.addEventListener('DOMContentLoaded', setActiveSidebarLink);
 

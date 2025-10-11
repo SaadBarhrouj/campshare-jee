@@ -1,10 +1,15 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampShare - Dashboard Client</title>
+    <title>CampShare - Mes Réservations</title>
 
     <!-- Styles / Scripts -->
 
@@ -69,130 +74,24 @@
             
         </div>
 
-        <div class="mt-4 mb-8  md:mt-0 flex space-x-3 justify-end items-center">
+        <div class="mt-4 mb-8 md:mt-0 flex space-x-3 justify-end items-center">
             <!-- Status Filter Dropdown -->
-            <label class="block text-gray-700 dark:text-gray-300">Statut de résérvation</label>
+            <label class="block text-gray-700 dark:text-gray-300">Statut de réservation</label>
             <select id="statusFilter" class="flex items-center px-4 py-2 bg-white dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all w-46">
-                <option value="all">Tous les statuts</option>
-                <option value="pending">En attente</option>
-                <option value="confirmed">Confirmé</option>
-                <option value="ongoing">En cours</option>
-                <option value="completed">Terminé</option>
-                <option value="canceled">Annulé</option>
+                <option value="all" ${selectedStatus == null || selectedStatus == 'all' ? 'selected' : ''}>Tous les statuts</option>
+                <option value="pending" ${selectedStatus == 'pending' ? 'selected' : ''}>En attente</option>
+                <option value="confirmed" ${selectedStatus == 'confirmed' ? 'selected' : ''}>Confirmé</option>
+                <option value="ongoing" ${selectedStatus == 'ongoing' ? 'selected' : ''}>En cours</option>
+                <option value="completed" ${selectedStatus == 'completed' ? 'selected' : ''}>Terminé</option>
+                <option value="canceled" ${selectedStatus == 'canceled' ? 'selected' : ''}>Annulé</option>
             </select>
         </div>
+
         
-        <!-- Reservations Grid (Will be updated via AJAX) -->
+        <!-- Reservations Grid -->
         <div id="reservations-container">
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- Reservation 1 -->
-    @forelse( $allReservations as $allRes)
-
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-        <div class="relative h-40">
-            
-            <img src="{{ $allRes->image_url }}" alt="Image"
-                class="w-full h-full object-cover" />
-            
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            
-            @php
-                $statusMap = [
-                    'pending' => ['label' => 'En attente', 'color' => 'bg-yellow-400'],
-                    'confirmed' => ['label' => 'Confirmée', 'color' => 'bg-blue-500'],
-                    'ongoing' => ['label' => 'En cours', 'color' => 'bg-green-500'],
-                    'canceled' => ['label' => 'Annulée', 'color' => 'bg-red-500'],
-                    'completed' => ['label' => 'Terminée', 'color' => 'bg-purple-600'],
-                ];
-
-                $status = $allRes->status;
-                $statusLabel = $statusMap[$status]['label'] ?? $status;
-                $statusColor = $statusMap[$status]['color'] ?? 'bg-gray-400';
-            @endphp
-
-            <div class="absolute top-4 left-4">
-                <span class="{{ $statusColor }} text-white text-xs px-2 py-1 rounded-full">
-                    {{ $statusLabel }}
-                </span>
-            </div>
-            <div class="absolute bottom-4 left-4 right-4">
-                <h3 class="text-white font-bold text-lg truncate">{{$allRes->listing_title}}</h3>
-                <p class="text-gray-200 text-sm">{{ \Illuminate\Support\Str::limit($allRes->description, 150) }}</p>
-            </div>
+            <jsp:include page="components/reservations-grid.jsp" />
         </div>
-        
-        <div class="p-4">
-            <div class="flex items-start mb-4">
-                <a href="{{ route('partner.profile.index', $allRes->partner_id) }}">
-                    <img src="{{ $allRes->partner_img}}" 
-                        alt="image" 
-                        class="w-8 h-8 rounded-full object-cover mr-3" />
-                </a>
-                <div>
-                    <a href="{{ route('partner.profile.index', $allRes->partner_id) }}">
-                        <p class="font-medium text-gray-900 dark:text-white">{{$allRes->partner_username}}</p>
-                    </a>
-                    <div class="flex items-center text-sm">
-                        @if($allRes->partner_avg_rating)
-                            @php
-                                $rating = $allRes->partner_avg_rating;
-                                $fullStars = floor($rating);
-                                $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                            @endphp
-                            
-                            <div class="flex text-amber-400">
-                                @for ($i = 0; $i < $fullStars; $i++)
-                                    <i class="fas fa-star"></i>
-                                @endfor
-                                
-                                @if ($hasHalfStar)
-                                    <i class="fas fa-star-half-alt"></i>
-                                @endif
-                                
-                                {{-- Fill remaining empty stars --}}
-                                @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                    <i class="far fa-star"></i>
-                                @endfor
-                            </div>
-                            <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">
-                                {{ number_format($rating, 1) }}
-                            </span>
-                        @else
-                            <div class="text-sm text-gray-500">No ratings yet</div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mb-4">
-                <div class="flex justify-between text-sm mb-1">
-                    <span class="text-gray-600 dark:text-gray-400">Durée de résérvation</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{$allRes->start_date}} - {{$allRes->end_date}}</span>
-                </div>
-                <div class="flex justify-between text-sm mb-1">
-                    <span class="text-gray-600 dark:text-gray-400">Prix</span>
-                    <span class="font-medium text-gray-900 dark:text-white">{{$allRes->montant_paye}} MAD</span>
-                </div>
-              
-            </div>
-            
-            <div class="flex items-center space-x-2">
-                @if($allRes->status === 'pending')
-                    <button onclick="cancelReservation({{ $allRes->id }})"
-                            class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-1">
-                        <i class="fas fa-times mr-2"></i> Annuler
-                    </button>
-                @endif
-            </div>
-        </div>
-    </div>
-    @empty
-    <div class="rounded-lg shadow-sm overflow-hidden">
-        <p class="mx-8 text-sm text-gray-600 dark:text-gray-400">Vous n'avez aucune réservation.</p>
-    </div>
-    @endforelse
-
-</div>
 <script>
     function cancelReservation(reservationId) {
     if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
@@ -224,64 +123,57 @@
     </div>
 </main>
 
-<!-- AJAX Script -->
+<!-- AJAX Script for Status Filter -->
 <script>
-document.getElementById('statusFilter').addEventListener('change', function() {
-    const status = this.value;
+document.addEventListener('DOMContentLoaded', function() {
+    const statusFilter = document.getElementById('statusFilter');
     
-    fetch(`/client/reservations/filter?status=${status}`, {
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'text/html',
-        }
-    })
-    .then(response => response.text())
-    .then(html => {
-        document.getElementById('reservations-container').innerHTML = html;
-    })
-    .catch(error => console.error('Error:', error));
+    if (statusFilter) {
+        statusFilter.addEventListener('change', function() {
+            const status = this.value;
+            console.log('Filter changed to:', status);
+            
+            // Show loading state
+            document.getElementById('reservations-container').innerHTML = '<div class="text-center py-8"><div class="text-gray-500">Chargement...</div></div>';
+            
+            fetch(`${window.location.pathname}?status=${status}`, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'text/html',
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.text();
+            })
+            .then(html => {
+                console.log('Response received, length:', html.length);
+                
+                // Parse the response to extract just the reservations grid
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newReservationsContainer = doc.querySelector('#reservations-container');
+                
+                if (newReservationsContainer) {
+                    console.log('Found reservations container, updating...');
+                    document.getElementById('reservations-container').innerHTML = newReservationsContainer.innerHTML;
+                } else {
+                    console.log('No reservations container found, response is likely the grid component directly');
+                    // The response should be the grid component directly
+                    document.getElementById('reservations-container').innerHTML = html;
+                    console.log('Updated reservations container with response');
+                }
+            })
+            .catch(error => {
+                console.error('Error filtering reservations:', error);
+                // Fallback: reload the page with the filter parameter
+                window.location.href = `${window.location.pathname}?status=${status}`;
+            });
+        });
+    }
 });
 </script>
-<script>
-      
-      document.addEventListener('DOMContentLoaded', function() {
-          const openModalBtn = document.getElementById('openPartnerModalBtn');
-          const partnerModal = document.getElementById('partnerAcceptModal');
-          if (openModalBtn && partnerModal) {
-              const closeModalBtn = document.getElementById('closePartnerModalBtn');
-              const cancelModalBtn = document.getElementById('cancelPartnerModalBtn');
-              const openModal = () => {
-                  partnerModal.classList.remove('hidden');
-                  partnerModal.classList.add('flex');
-                  document.body.style.overflow = 'hidden';
-              };
-              const closeModal = () => {
-                  partnerModal.classList.add('hidden');
-                  partnerModal.classList.remove('flex');
-                  document.body.style.overflow = '';
-              };
-              openModalBtn.addEventListener('click', (event) => {
-                  event.preventDefault();
-                  openModal();
-              });
-              if (closeModalBtn) {
-                  closeModalBtn.addEventListener('click', closeModal);
-              }
-              if (cancelModalBtn) {
-                  cancelModalBtn.addEventListener('click', closeModal);
-              }
-              partnerModal.addEventListener('click', (event) => {
-                  if (event.target === partnerModal) {
-                      closeModal();
-                  }
-              });
-              document.addEventListener('keydown', (event) => {
-                  if (event.key === 'Escape' && !partnerModal.classList.contains('hidden')) {
-                      closeModal();
-                  }
-              });
-          }
-      });
-  </script>
+
 </body>
 </html>

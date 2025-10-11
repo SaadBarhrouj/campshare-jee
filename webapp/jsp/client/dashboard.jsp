@@ -1,4 +1,8 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -12,12 +16,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     
 
-    <link rel="icon" href="{{ asset('images/favicon_io/favicon.ico') }}" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('images/favicon_io/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ asset('images/favicon_io/safari-pinned-tab.svg') }}" color="#5bbad5">
+
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="CampShare - Louez facilement le matériel de camping dont vous avez besoin
@@ -59,18 +58,18 @@
 </head>
 <body class="font-sans antialiased text-gray-800 dark:text-gray-200 dark:bg-gray-900 min-h-screen flex flex-col">
 <jsp:include page="components/sidebar.jsp" />
+
 <main class="flex-1 md:ml-64 bg-gray-50 dark:bg-gray-900 min-h-screen">
     <div class="py-8 px-4 md:px-8">
         <!-- Dashboard header -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
             <div>
                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenue, {{$user->username}} ! Voici un résumé de vos réservations.</p>
+                <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenue, ${user.username} ! Voici un resume de vos reservations.</p>
             </div>
-         
         </div>
-        
-        <!-- Stats cards -->
+
+                <!-- Stats cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
             <!-- Stats card 1 -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
@@ -79,8 +78,8 @@
                         <i class="fas fa-shopping-cart text-blue-600 dark:text-blue-400"></i>
                     </div>
                     <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Total réservations</p>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $totalReservations }}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Total reservations</p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${totalReservations}</h3>
                         
                     </div>
                 </div>
@@ -93,8 +92,8 @@
                         <i class="fas fa-money-bill-wave text-green-600 dark:text-green-400"></i>
                     </div>
                     <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Montant total dépensé</p>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$totalDepenseByEmail}}</h3>
+                        <p class="text-gray-500 dark:text-gray-400 text-sm">Montant total depense</p>
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${totalDepense}</h3>
                       
                     </div>
                 </div>
@@ -106,299 +105,226 @@
                     <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900 mr-4">
                         <i class="fas fa-star text-yellow-600 dark:text-yellow-400"></i>
                     </div>
-                    <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Note moyenne</p>
-                        @if(isset($note_moyenne) && $note_moyenne != 0)
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{$note_moyenne}}</h3>
-                        @else
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Non noté</h3>
-                        @endif
-                      
-                    </div>
+                <div>
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Note moyenne</p>
+
+                    <c:choose>
+                        <c:when test="${noteMoyenne != null and noteMoyenne != 0}">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${noteMoyenne}</h3>
+                        </c:when>
+                        <c:otherwise>
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Non note</h3>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
                 </div>
             </div>
         </div>
-        
 
-        <!-- My reservations section -->
+                <!-- My reservations section -->
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Mes réservations</h2>
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Mes reservations</h2>
                 <a href="{{ route('HomeClient.reservations') }}" data-target = "allRes" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
                     Voir toutes mes réservations
                 </a>
             </div>
-            
+
+            <%
+                java.util.Map<String, String> statusMap = new java.util.HashMap<>();
+                statusMap.put("pending", "En attente");
+                statusMap.put("confirmed", "Confirmée");
+                statusMap.put("ongoing", "En cours");
+                statusMap.put("canceled", "Annulée");
+                statusMap.put("completed", "Terminée");
+                request.setAttribute("statusMap", statusMap);
+            %>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Reservation 1 -->
-                @forelse($reservations as $res)
-
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                    <div class="relative h-40">
-                        <img src="{{ $res->image_url }}" alt="Image"
-                             class="w-full h-full object-cover" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        @php
-                            $statusMap = [
-                                'pending' => ['label' => 'En attente', 'color' => 'bg-yellow-400'],
-                                'confirmed' => ['label' => 'Confirmée', 'color' => 'bg-blue-500'],
-                                'ongoing' => ['label' => 'En cours', 'color' => 'bg-green-500'],
-                                'canceled' => ['label' => 'Annulée', 'color' => 'bg-red-500'],
-                                'completed' => ['label' => 'Terminée', 'color' => 'bg-purple-600'],
-                            ];
-
-                            $status = $res->status;
-                            $statusLabel = $statusMap[$status]['label'] ?? $status;
-                            $statusColor = $statusMap[$status]['color'] ?? 'bg-gray-400';
-                        @endphp
-
-                        <div class="absolute top-4 left-4">
-                            <span class="{{ $statusColor }} text-white text-xs px-2 py-1 rounded-full">
-                                {{ $statusLabel }}
-                            </span>
-                        </div>
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white font-bold text-lg truncate">{{$res->listing_title}}</h3>
-                            <p class="text-gray-200 text-sm">{{ \Illuminate\Support\Str::limit($res->description, 150) }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="p-4">
-                        <div class="flex items-start mb-4">
-                            <a href="{{ route('partner.profile.index', $res->partner_id) }}">
-                                <img src="{{ $res->partner_img}}" 
-                                    alt="image" 
-                                    class="w-8 h-8 rounded-full object-cover mr-3" />
-                            </a>
-                            <div>
-                                <a href="{{ route('partner.profile.index', $res->partner_id) }}">
-                                    <p class="font-medium text-gray-900 dark:text-white">{{$res->partner_username}}</p>
-                                </a>
-                                <div class="flex items-center text-sm">
-                                    @if($res->partner_avg_rating)
-                                        @php
-                                            $rating = $res->partner_avg_rating;
-                                            $fullStars = floor($rating);
-                                            $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                        @endphp
-                                        
-                                        <div class="flex text-amber-400 mr-1">
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            
-                                            @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
-                                        </div>
-                                        <span class="text-gray-600 dark:text-gray-400">
-                                            {{ number_format($rating, 1) }}
+                <c:choose>
+                    <c:when test="${not empty reservations}">
+                        <c:forEach var="res" items="${reservations}">
+                            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+                                <div class="relative h-40">
+                                    <img src="${pageContext.request.contextPath}/images/items/${res.image.url}" alt="Image" class="w-full h-full object-cover" />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                    <div class="absolute top-4 left-4">
+                                        <span class="bg-gray-400 text-white text-xs px-2 py-1 rounded-full">
+                                            <c:out value="${statusMap[res.status]}" />
                                         </span>
-                                    @else
-                                        <div class="text-sm text-gray-500">No ratings yet</div>
-                                    @endif
+                                    </div>
+                                    <div class="absolute bottom-4 left-4 right-4">
+                                        <h3 class="text-white font-bold text-lg truncate">
+                                            <c:out value="${res.item.title}" />
+                                        </h3>
+                                        <p class="text-gray-200 text-sm">
+                                            <c:out value="${res.item.description}" />
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="p-4">
+                                    <div class="flex items-start mb-4">
+                                        <c:if test="${not empty res.partner}">
+                                            <a href="#">
+                                                <img src="${pageContext.request.contextPath}/images/avatars/${res.partner.avatarUrl}" alt="image"
+                                                    class="w-8 h-8 rounded-full object-cover mr-3" />
+                                            </a>
+                                            <div>
+                                                <p class="font-medium text-gray-900 dark:text-white">
+                                                    <c:out value="${res.partner.username}" />
+                                                </p>
+                                                <div class="flex items-center text-sm">
+                                                    <c:choose>
+                                                        <c:when test="${noteMoyenne != null and noteMoyenne != 0}">
+                                                            <fmt:formatNumber value="${noteMoyenne}" maxFractionDigits="1" />
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="text-sm text-gray-500">No ratings yet</div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mb-4">
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600 dark:text-gray-400">Date</span>
+                                            <span class="font-medium text-gray-900 dark:text-white">
+                                                <fmt:formatDate value="${res.startDate}" pattern="yyyy-MM-dd" /> -
+                                                <fmt:formatDate value="${res.endDate}" pattern="yyyy-MM-dd" />
+                                            </span>
+                                        </div>
+                                        <div class="flex justify-between text-sm mb-1">
+                                            <span class="text-gray-600 dark:text-gray-400">Prix</span>
+                                            <span class="font-medium text-gray-900 dark:text-white">
+                                                ${res.montantPaye} MAD
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <c:if test="${res.status eq 'pending'}">
+                                        <button class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 
+                                                    dark:text-red-400 text-sm rounded-md hover:bg-red-50 
+                                                    dark:hover:bg-red-900/20 transition-colors flex-1">
+                                            <i class="fas fa-times mr-2"></i> Annuler
+                                        </button>
+                                    </c:if>
                                 </div>
                             </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="rounded-lg shadow-sm overflow-hidden">
+                            <p class="mx-8 text-sm text-gray-600 dark:text-gray-400">
+                                Vous n'avez aucune réservation.
+                            </p>
                         </div>
-                        
-                        <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mb-4">
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600 dark:text-gray-400">Date</span>
-                                <span class="font-medium text-gray-900 dark:text-white">{{$res->start_date}} - {{$res->end_date}}</span>
-                            </div>
-                            <div class="flex justify-between text-sm mb-1">
-                                <span class="text-gray-600 dark:text-gray-400">Prix</span>
-                                <span class="font-medium text-gray-900 dark:text-white">{{$res->montant_paye}} MAD</span>
-                            </div>
-                          
-                        </div>
-                        
-                        <div class="flex items-center space-x-2">
-                            @if($res->status === 'pending')
-                                <button onclick="cancelReservation({{ $res->id }})"
-                                        class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-1">
-                                    <i class="fas fa-times mr-2"></i> Annuler
-                                </button>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                @empty
-                <div class="rounded-lg shadow-sm overflow-hidden">
-                    <p class="mx-8 text-sm text-gray-600 dark:text-gray-400">Vous n'avez aucune réservation.</p>
-                </div>
-                @endforelse
-
+                    </c:otherwise>
+                </c:choose>
             </div>
-        </div>
-        
-
-
-       
-        
-        <!-- Equipment recommendations -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Équipements recommandés</h2>
-                <a href="{{ route('HomeClient.equips') }}" data-target = "allSim" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
-                    Voir plus de recommandations
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Recommendation 1 -->
-                @forelse($similarListings as $item)
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                    
-                    <a href="{{ route('client.listings.show', $item->lis_id) }}">
-                    <div class="relative h-48">
-                        <img src="{{ $item->image_url }}" alt="Image" 
-                             class="w-full h-full object-cover" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white font-bold text-lg truncate">{{$item->listing_title}}</h3>
-                            <p class="text-gray-200 text-sm">{{$item->category_name}}</p>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg text-gray-900 dark:text-white">{{$item->price_per_day}} MAD</span>
-                                <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                @if($item->review_count)
-                                    @php
-                                        $rating = $item->avg_rating;
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                    @endphp
-                                    
-                                    <div class="flex items-center">
-                                        <div class="flex text-amber-400 mr-1">
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            
-                                            @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
-                                        </div>
-                                        <span class="text-gray-600 dark:text-gray-400">
-                                            {{ number_format($rating, 1) }}
-                                            <span class="text-xs text-gray-400 ml-1">({{ $item->review_count }})</span>
-                                        </span>
-                                    </div>
-                                @else
-                                    <div class="text-sm text-gray-500">No ratings yet</div>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <div class="text-sm mb-3">
-                            <span class="text-gray-600 dark:text-gray-300">
-                                Dispo. du {{ \Carbon\Carbon::parse($item->start_date)->format('d M') }} 
-                                au {{ \Carbon\Carbon::parse($item->end_date)->format('d M') }}
-                            </span>                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-600 dark:text-gray-300">
-                                <span class="font-medium text-green-800 dark:text-green-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> 
-                                    {{$item->city_name}}
-                                </span>
-                            </div>
-                            <a href="{{ route('client.listings.show', $item->lis_id) }}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                                Voir les détails
-                            </a>
-                        </div>
-                    </div>
+            <!-- Equipment recommendations -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white">Équipements recommandés</h2>
+                    <a href="allEquipment.jsp" class="sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
+                        Voir plus de recommandations
                     </a>
                 </div>
-                @empty
-                @foreach($liss as $lis)
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                    
-                    <a href="{{ route('client.listings.show', $lis->id) }}">
-                    <div class="relative h-48">
-                        <img src="{{ $lis->item?->images?->first() ? asset($lis->item->images->first()->url) : asset('images/item-default.jpg') }}" alt="Image" 
-                             class="w-full h-full object-cover" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white font-bold text-lg truncate">{{$lis->item->title}}</h3>
-                            <p class="text-gray-200 text-sm">{{$lis->item->category->name}}</p>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg text-gray-900 dark:text-white">{{$lis->item->price_per_day}} MAD</span>
-                                <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                @if($lis->item->averageRating() !=0)
-                                    @php
-                                        $rating = $lis->item->averageRating();
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                    @endphp
-                                    
-                                    <div class="flex items-center">
-                                        <div class="flex text-amber-400 mr-1">
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            
-                                            @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
+
+                <c:choose>
+                    <c:when test="${not empty similarListings}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <c:forEach var="item" items="${similarListings}">
+                                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+                                    <a href="listingDetails.jsp?listingId=${item.listing.id}">
+                                        <div class="relative h-48">
+                                            <img src="${pageContext.request.contextPath}/images/items/${item.image.url}" 
+                                                alt="Image" class="w-full h-full object-cover" />
+                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                            <div class="absolute bottom-4 left-4 right-4">
+                                                <h3 class="text-white font-bold text-lg truncate">${item.item.title}</h3>
+                                                <p class="text-gray-200 text-sm">${item.category.name}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                @else
-                                    <div class="text-sm text-gray-500">No ratings yet</div>
-                                @endif
-                            </div>
+
+                                        <div class="p-4">
+                                            <div class="flex justify-between items-center mb-3">
+                                                <div>
+                                                    <span class="font-bold text-lg text-gray-900 dark:text-white">${item.item.pricePerDay} MAD</span>
+                                                    <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
+                                                </div>
+
+                                                <div class="flex items-center text-sm">
+                                                    <c:choose>
+                                                        <c:when test="${item.partner != null && item.partner.reviewCount > 0}">
+                                                            <c:set var="rating" value="${item.partner.avgRating}" />
+                                                            <c:set var="fullStars" value="3" />
+                                                            <c:set var="hasHalfStar" value="${(rating - fullStars) ge 0.5}" />
+                                                            <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />
+
+                                                            <div class="flex items-center">
+                                                                <div class="flex text-amber-400 mr-1">
+                                                                    <c:forEach begin="0" end="${fullStars - 1}" var="i">
+                                                                        <i class="fas fa-star"></i>
+                                                                    </c:forEach>
+                                                                    <c:if test="${hasHalfStar}">
+                                                                        <i class="fas fa-star-half-alt"></i>
+                                                                    </c:if>
+                                                                    <c:forEach begin="0" end="${emptyStars - 1}" var="i">
+                                                                        <i class="far fa-star"></i>
+                                                                    </c:forEach>
+                                                                </div>
+                                                                <span class="text-gray-600 dark:text-gray-400">
+                                                                    <fmt:formatNumber value="${rating}" maxFractionDigits="1"/>
+                                                               
+                                                                </span>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="text-sm text-gray-500">No ratings yet</div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+
+                                            <div class="text-sm mb-3">
+                                                <span class="text-gray-600 dark:text-gray-300">
+                                                    Dispo. du <fmt:formatDate value="${item.listing.startDate}" pattern="dd MMM"/>
+                                                    au <fmt:formatDate value="${item.listing.endDate}" pattern="dd MMM"/>
+                                                </span>
+                                            </div>
+
+                                            <div class="flex items-center justify-between">
+                                                <div class="text-sm text-gray-600 dark:text-gray-300">
+                                                    <span class="font-medium text-green-800 dark:text-green-600">
+                                                        <i class="fas fa-map-marker-alt mr-1"></i> 
+                                                        ${item.city.name}
+                                                    </span>
+                                                </div>
+                                                <a href="listingDetails.jsp?listingId=${item.listing.id}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
+                                                    Voir les détails
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </c:forEach>
                         </div>
-                        
-                        <div class="text-sm mb-3">
-                            <span class="text-gray-600 dark:text-gray-300">
-                                Dispo. du {{ \Carbon\Carbon::parse($lis->start_date)->format('d M') }} 
-                                au {{ \Carbon\Carbon::parse($lis->end_date)->format('d M') }}
-                            </span>                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-600 dark:text-gray-300">
-                                <span class="font-medium text-green-800 dark:text-green-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> 
-                                    {{$lis->city->name}}
-                                </span>
-                            </div>
-                            <a href="{{ route('client.listings.show', $lis->id) }}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                                Voir les détails
-                            </a>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="text-gray-500 dark:text-gray-400 text-center col-span-3">
+                            Aucune recommandation disponible pour le moment.
                         </div>
-                    </div>
-                    </a>
-                </div>
-                @endforeach
-                @endforelse
-                
+                    </c:otherwise>
+                </c:choose>
             </div>
-        </div>
+
+
     </div>
 </main>
+
 <script>
     // Mobile menu toggle
     const mobileMenuButton = document.getElementById('mobile-menu-button');
