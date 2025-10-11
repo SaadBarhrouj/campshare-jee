@@ -15,7 +15,7 @@ pageEncoding="UTF-8"%>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
     <script src="${pageContext.request.contextPath}/assets/js/admin/admin.js"></script>
 
     <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/admin/admin_base.css">
@@ -270,9 +270,11 @@ pageEncoding="UTF-8"%>
                                 <i class="fas fa-money-bill-wave text-amber-600 dark:text-amber-400"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Revenu (MAD)</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Revenu </p>
                                 <div class="flex items-center">
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">86.4K</h3>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+                                       <c:out value="${dashboardStats.totalRevenue}"/>
+                                    </h3>
                                     
                                 </div>
                                 <p class="text-gray-600 dark:text-gray-400 text-xs mt-1">
@@ -287,16 +289,6 @@ pageEncoding="UTF-8"%>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
                     <!-- Graph card -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center justify-between">
-                                <h2 class="font-bold text-lg text-gray-900 dark:text-white">Graphique des utilisateurs</h2>
-                                <div class="flex space-x-2">
-                                    <button
-                                        class="px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded">Nombre Total : <c:out value="${dashboardStats.totalUsers}"/></button>
-                                    
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Chart container -->
                         <div class="p-4">
@@ -305,37 +297,24 @@ pageEncoding="UTF-8"%>
                                 <div
                                     class="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                     <div class="chart-container bg-white dark:bg-gray-800 p-4 rounded-lg flex justify-center items-center">
-                                        <canvas id="userPieChart"></canvas>
+                                        <canvas id="registrationBarChart"></canvas>
                                     </div>
                                 </div>     
                                 
                             </div>
                         </div>
                     </div>
-
-                    <!-- Graph card -->
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                        <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                            <div class="flex items-center justify-between">
-                                <h2 class="font-bold text-lg text-gray-900 dark:text-white">Graphique des résérvations</h2>
-                                <div class="flex space-x-2">
-                                    <button
-                                        class="px-3 py-1 text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 rounded">Nombre Total : <c:out value="${dashboardStats.totalReservations}"/></button>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                       
-                        <!-- Chart container -->
-                        <div class="p-4">
+
+                                                <div class="p-4">
                             <div class="chart-container">
-                                <!-- Placeholder for chart -->
                                 <div
                                     class="w-full h-full flex items-center justify-center bg-gray-50 dark:bg-gray-700/50 rounded-lg">
-                                    <div class="rounded-lg p-4 w-max">
-                                        <canvas id="reservationBarChart" height="200" width="500"></canvas>
+                                    <div class="chart-container bg-white dark:bg-gray-800 p-4 rounded-lg flex justify-center items-center">
+                                        <canvas id="bookingCountChart"></canvas>
                                     </div>
-                                </div>
+                                </div>     
+                                
                             </div>
                         </div>
                     </div>

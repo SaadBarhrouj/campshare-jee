@@ -2,6 +2,7 @@ package com.campshare.dao.interfaces;
 
 import java.util.List;
 
+import com.campshare.dto.DailyRegistrationStatsDTO;
 import com.campshare.model.User;
 
 public interface UserDAO {
@@ -22,4 +23,6 @@ public interface UserDAO {
     void updateStatus(long userId, boolean isActive);
 
     long countByRoleAndStatus(String role, boolean isActive);
+
+    List<DailyRegistrationStatsDTO> getDailyRegistrationStats(int days);
 }

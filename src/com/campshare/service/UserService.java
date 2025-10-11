@@ -101,6 +101,10 @@ public class UserService {
         userDAO.updateStatus(userId, isActive);
     }
 
+    public long getUserCountByRole(String role) {
+        return userDAO.countByRole(role);
+    }
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);

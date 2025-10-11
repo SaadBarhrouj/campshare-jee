@@ -7,6 +7,7 @@ public class AdminDashboardStatsDTO {
   private long totalPartners;
   private long totalListings;
   private long totalReservations;
+  private double totalRevenue;
 
   public long getTotalUsers() {
     return totalUsers;
@@ -46,5 +47,13 @@ public class AdminDashboardStatsDTO {
 
   public void setTotalReservations(long totalReservations) {
     this.totalReservations = totalReservations;
+  }
+
+  public double getTotalRevenue() {
+    return totalRevenue;
+  }
+
+  public void setTotalRevenue(double totalRevenue) {
+    this.totalRevenue = totalRevenue;
   }
 }

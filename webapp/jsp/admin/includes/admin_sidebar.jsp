@@ -72,22 +72,23 @@ prefix="c" %>
         </h5>
         <nav class="space-y-1">
           <a
-            href=""
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            href="${pageContext.request.contextPath}/admin/listings"
+            class="sidebar-link ${param.activePage == 'listings' ? 'active' : ''} flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
             <i
               class="fas fa-campground w-5 mr-3 text-gray-500 dark:text-gray-400"
             ></i>
-            Équipements
+            Annonces
             <span
               class="ml-auto bg-admin-light dark:bg-admin-dark text-admin-primary dark:text-admin-secondary text-xs rounded-full h-5 px-1.5 flex items-center justify-center"
-              ><c:out value="${dashboardStats.totalClients}" />
+            >
+              <c:out value="${dashboardStats.totalListings}" />
             </span>
           </a>
 
           <a
-            href=""
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            href="${pageContext.request.contextPath}/admin/reservations"
+            class="sidebar-link ${param.activePage == 'reservations' ? 'active' : ''} flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           >
             <i
               class="fas fa-calendar-alt w-5 mr-3 text-gray-500 dark:text-gray-400"
@@ -241,43 +242,6 @@ prefix="c" %>
           class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
         >
           Utilisateurs
-        </h5>
-        <nav class="space-y-1">
-          <a
-            href="#analytics"
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <i
-              class="fas fa-chart-line w-5 mr-3 text-gray-500 dark:text-gray-400"
-            ></i>
-            Statistiques
-          </a>
-          <a
-            href="#financial"
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <i
-              class="fas fa-money-bill-wave w-5 mr-3 text-gray-500 dark:text-gray-400"
-            ></i>
-            Finances
-          </a>
-          <a
-            href="#reports-gen"
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <i
-              class="fas fa-file-alt w-5 mr-3 text-gray-500 dark:text-gray-400"
-            ></i>
-            Rapports
-          </a>
-        </nav>
-      </div>
-
-      <div class="mb-6">
-        <h5
-          class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
-        >
-          Equi. Réserv. & Avis
         </h5>
         <nav class="space-y-1">
           <a
