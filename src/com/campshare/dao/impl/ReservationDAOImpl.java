@@ -275,6 +275,82 @@ public class ReservationDAOImpl implements ReservationDAO {
 
         return reservations;
     }
+    public List<Reservation> getReservationsWithMontantTotal(String email) {
+        List<Reservation> reservations = new ArrayList<>();
+
+        String sql = """
+            SELECT 
+                r.id AS reservation_id,
+                r.start_date,
+                r.end_date,
+                r.created_at,
+                r.status,
+                r.delivery_option,
+                l.id AS listing_id,
+                i.id AS item_id,
+                i.title AS item_title,
+                i.price_per_day AS itempricePerDay,
+                c.id AS client_id,
+                c.username AS client_username,
+                c.avatar_url AS client_avatar,
+                (ABS(DATEDIFF(r.end_date, r.start_date) + 1) * i.price_per_day
+                + CASE WHEN r.delivery_option = 1 THEN 50 ELSE 0 END) AS montant_total,
+                (ABS(DATEDIFF(r.end_date, r.start_date) + 1)) AS number_days
+            FROM users u
+            JOIN reservations r ON r.partner_id = u.id
+            JOIN listings l ON l.id = r.listing_id
+            JOIN items i ON i.id = l.item_id
+            JOIN users c ON c.id = r.client_id
+            WHERE u.email = ?
+            ORDER BY r.created_at DESC
+            LIMIT 2
+        """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Reservation res = new Reservation();
+                res.setId(rs.getLong("reservation_id"));
+                res.setStartDate(rs.getDate("start_date"));
+                res.setEndDate(rs.getDate("end_date"));
+                res.setStatus(rs.getString("status"));
+                res.setCreatedAt(rs.getDate("created_at"));
+
+                // Client
+                User client = new User();
+                client.setId(rs.getLong("client_id"));
+                client.setUsername(rs.getString("client_username"));
+                client.setAvatarUrl(rs.getString("client_avatar"));
+                res.setClient(client);
+
+                // Partner
+                User partner = new User();
+                partner.setUsername(email);  // or fetch more fields if needed
+                res.setPartner(partner);
+
+                // Listing
+                Listing listing = new Listing();
+                Item item = new Item();
+                item.setId(rs.getLong("item_id"));
+                item.setTitle(rs.getString("item_title"));
+                item.setPricePerDay(rs.getDouble("itempricePerDay"));
+                listing.setId(rs.getLong("listing_id"));
+                listing.setItem(item);
+                res.setListing(listing);
+
+                reservations.add(res);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return reservations;
+    }
 
     
 }

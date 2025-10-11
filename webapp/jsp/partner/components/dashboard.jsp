@@ -149,20 +149,20 @@
                 <!-- Rental requests -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                        <h2 class="font-bold text-xl text-gray-900 dark:text-white">Demandeds de location</h2>
+                        <h2 class="font-bold text-xl text-gray-900 dark:text-white">Demandes de location</h2>
                         <span class="bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300 px-3 py-1 text-xs font-medium rounded-full">
-                            {{$NumberPendingReservation}} en attente
+                            ${fn:length(PendingReservationsWithMontantTotal)} en attente
                         </span>
                         
                     </div>
 
                         <c:choose>
                             <c:when test="${not empty PendingReservationsWithMontantTotal}">
-                                <c:forEach var="reservation" items="${PendingReservationsWithMontantTotal}">
+                                <c:forEach var="reservation" items="${PendingReservationsWithMontantTotal}"  begin="0" end="1">
                                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
                                         <div class="px-6 py-4">
                                             <div class="flex items-start">
-                                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" 
+                                                <img src="${pageContext.request.contextPath}/assets/images/users/${reservation.client.avatarUrl}" 
                                                     alt="${reservation.client.username}" 
                                                     class="w-10 h-10 rounded-full object-cover mr-4" />
 
@@ -229,7 +229,6 @@
                         </c:choose>
                 </div>
             </div>
-            ${partnerEquipment}
 
             
             <!-- My equipment section -->
@@ -242,60 +241,59 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <c:forEach var="equipment" items="${partnerEquipment}">
-        <!-- Calculate review count -->
-        <c:set var="reviewCount" value="${fn:length(equipment.reviews)}" />
+                    <c:forEach var="equipment" items="${partnerEquipment}" begin="0" end="2">
+                        <!-- Calculate review count -->
+                        <c:set var="reviewCount" value="${fn:length(equipment.reviews)}" />
 
-        <!-- Calculate average rating -->
-        <c:set var="sumRating" value="0" />
-        <c:forEach var="review" items="${equipment.reviews}">
-            <c:set var="sumRating" value="${sumRating + review.rating}" />
-        </c:forEach>
-        <c:set var="avgRating" value="${reviewCount > 0 ? sumRating / reviewCount : 0}" />
+                        <!-- Calculate average rating -->
+                        <c:set var="sumRating" value="0" />
+                        <c:forEach var="review" items="${equipment.reviews}">
+                            <c:set var="sumRating" value="${sumRating + review.rating}" />
+                        </c:forEach>
+                        <c:set var="avgRating" value="${reviewCount > 0 ? sumRating / reviewCount : 0}" />
 
-        <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-            <div class="relative h-48">
-                <c:if test="${equipment.images != null && fn:length(equipment.images) > 0}">
-                    <img src="${pageContext.request.contextPath}/${equipment.images[0].url}"
-                         alt="${equipment.title}" 
-                         class="w-full h-full object-cover" />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                </c:if>
+                        <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+                            <div class="relative h-48">
+                                <c:if test="${equipment.images != null && fn:length(equipment.images) > 0}">
+                                    <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}"
+                                        alt="${equipment.title}" 
+                                        class="w-full h-full object-cover" />
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                </c:if>
 
-                <div class="absolute bottom-4 left-4 right-4">
-                    <h3 class="text-white font-bold text-lg truncate">${equipment.title}</h3>
-                    <p class="text-gray-200 text-sm">${equipment.category.name} - Excellent état</p>
-                </div>
-            </div>
+                                <div class="absolute bottom-4 left-4 right-4">
+                                    <h3 class="text-white font-bold text-lg truncate">${equipment.title}</h3>
+                                    <p class="text-gray-200 text-sm">${equipment.category.name} - Excellent état</p>
+                                </div>
+                            </div>
 
-            <div class="p-4">
-                <div class="flex justify-between items-center mb-3">
-                    <div>
-                        <span class="font-bold text-lg text-gray-900 dark:text-white">${equipment.pricePerDay} MAD</span>
-                        <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
-                    </div>
+                            <div class="p-4">
+                                <div class="flex justify-between items-center mb-3">
+                                    <div>
+                                        <span class="font-bold text-lg text-gray-900 dark:text-white">${equipment.pricePerDay} MAD</span>
+                                        <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
+                                    </div>
 
-                    <div class="flex items-center text-sm">
-                        <c:choose>
-                            <c:when test="${reviewCount != 0}">
-                                <i class="fas fa-star text-amber-400 mr-1"></i>
-                                <span>${avgRating}
-                                    <span class="text-gray-500 dark:text-gray-400">(${reviewCount})</span>
-                                </span>
-                            </c:when>
-                            <c:otherwise>
-                                <i class="far fa-star text-amber-400 mr-1"></i>
-                                <span>Non noté</span>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
+                                    <div class="flex items-center text-sm">
+                                        <c:choose>
+                                            <c:when test="${reviewCount != 0}">
+                                                <i class="fas fa-star text-amber-400 mr-1"></i>
+                                                <span>${avgRating}
+                                                    <span class="text-gray-500 dark:text-gray-400">(${reviewCount})</span>
+                                                </span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="far fa-star text-amber-400 mr-1"></i>
+                                                <span>Non noté</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                </div>
 
-                <!-- buttons and other HTML remain the same -->
-            </div>
-        </div>
-    </c:forEach>
-
+                                <!-- buttons and other HTML remain the same -->
+                            </div>
+                        </div>
+                    </c:forEach>
                     <!-- Add Equipment Card -->
                     <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center h-80">
                         <div class="flex flex-col items-center justify-center p-6 text-center">

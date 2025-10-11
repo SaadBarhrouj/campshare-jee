@@ -241,10 +241,10 @@
                                 </div>
                                 <div class="relative">
                                     <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                        <img src=""
-                                           alt="Avatar de "
+                                        <img src="${pageContext.request.contextPath}/assets/images/users/${user.avatarUrl}"
+                                           alt="Avatar de ${user.username}"
                                            class="h-8 w-8 rounded-full object-cover" />
-                                        <span class="font-medium text-gray-800 dark:text-gray-200">ilas maroun</span>
+                                        <span class="font-medium text-gray-800 dark:text-gray-200">${user.username}</span>
                                         <i class="fas fa-chevron-down text-sm text-gray-500"></i>
                                     </button>
                                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 border border-gray-200 dark:border-gray-600">
@@ -403,8 +403,8 @@
             <div class="p-5">
                 <div class="mb-6 px-3 flex flex-col items-center">
                     <div class="relative">
-                        <img src=""  
-                             alt="aa"  
+                        <img src="${pageContext.request.contextPath}/assets/images/users/${user.avatarUrl}"  
+                             alt="${user.username}"  
                              class="w-24 h-24 rounded-full border-4 border-forest dark:border-meadow object-cover" />
                         <div class="absolute bottom-1 right-1 bg-green-500 p-1 rounded-full border-2 border-white dark:border-gray-800">
                             <i class="fas fa-check text-white text-xs"></i>

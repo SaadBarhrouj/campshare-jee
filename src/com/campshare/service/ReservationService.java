@@ -31,7 +31,9 @@ public class ReservationService {
     public List<Reservation> getPendingReservationsWithMontantTotal(String email) {
         return reservationDAO.getPendingReservationsWithMontantTotal(email);
     }
-
+    public List<Reservation> getReservationsWithMontantTotal(String email) {
+        return reservationDAO.getReservationsWithMontantTotal(email);
+    }
 
 
 }

@@ -15,7 +15,6 @@ import com.campshare.model.Review;
 import com.campshare.model.Reservation;
 
 import com.campshare.model.User;
-import com.campshare.service.ClientService;
 import com.campshare.service.ReservationService;
 
 import com.campshare.service.PartnerService;

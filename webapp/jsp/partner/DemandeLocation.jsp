@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -215,14 +217,15 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                         <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                           {{$NumberReservationCompleted}} demandes au total
+                           {{$NumberReservationCompleted}} demadddndes au total
                         </span>
                     </div>
+                    <h1>${ReservationsWithMontantTotal} demandes au total</h1>
 
                     <!-- Request items -->
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <div id="reservations">
-                            @foreach($AllReservationForPartner as $Reservation)
+                        <div id="">
+                            <c:forEach var="reservation" items="${ReservationsWithMontantTotal}" >
                                 <div class="px-6 py-4">
                                     <div class="flex flex-col lg:flex-row lg:items-start">
 
@@ -232,22 +235,16 @@
                                             <div class="flex gap-2 mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto">
     
                                                 <div class="flex items-center lg:w-16">
-                                                    <img src="{{ asset($Reservation->avatar_url)}}"
-                                                        alt="Mehdi Idrissi" 
+                                                    <img src="${pageContext.request.contextPath}/assets/images/users/${reservation.client.avatarUrl}"
+                                                        alt="${reservation.client.username}" 
                                                         class="w-12 h-12 rounded-full object-cover" />
+                                                        ${reservation.client.username}
                                                     <div class="lg:hidden ml-1">
-                                                        <h3 class="font-medium text-gray-900 dark:text-white">{{$Reservation->username}}</h3>
+                                                        <h3 class="font-medium text-gray-900 dark:text-white">${reservation.client.username}</h3>
                                                         <div class="flex text-sm">
                                                             <i class="fas fa-star text-amber-400 mr-1"></i>
                                                             <span>4.8 <span class="text-gray-500 dark:text-gray-400">(14)</span></span>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="hidden lg:block mt-2">
-                                                    <h3 class="font-medium text-gray-900 dark:text-white">{{$Reservation->username}}</h3>
-                                                    <div class="flex items-center justify-center text-xs mt-1">
-                                                        <i class="fas fa-star text-amber-400 mr-1"></i>
-                                                        <span>4.8</span>
                                                     </div>
                                                 </div>
 
@@ -256,83 +253,105 @@
                                             <div>
                                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Équipement</p>
                                                 <p class="font-medium text-gray-900 dark:text-white flex items-center">
-                                                    <span class="truncate">{{$Reservation->title}}</span>
+                                                    <span class="truncate">${reservation.listing.item.title}</span>
                                                 </p>
                                             </div>
 
                                             <div>
+                                                <fmt:parseDate value="${reservation.startDate}" pattern="yyyy-MM-dd" var="startDate" />
+                                                <fmt:parseDate value="${reservation.endDate}" pattern="yyyy-MM-dd" var="endDate" />
+
+                                                <!-- Compute difference in milliseconds -->
+                                                <c:set var="diffMs" value="${endDate.time - startDate.time}" />
+
+                                                <!-- Convert to days (1000 * 60 * 60 * 24 = 86400000) -->
+                                                <c:set var="diffDays" value="${diffMs / (1000*60*60*24)}" />
+
+                
                                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Durée de résérvation</p>
-                                                <p class="font-medium text-gray-900 dark:text-white">{{$Reservation->start_date}} - {{$Reservation->end_date}}</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">( {{$Reservation->number_days}} jours )</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">${reservation.startDate} - ${reservation.endDate}</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">( ${diffDays} jours )</p>
                                             </div>
 
                                             <div>
+                                                <c:set var="montantTotal" value="${reservation.listing.item.pricePerDay * diffDays}" />
                                                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Montant</p>
-                                                <p class="font-medium text-gray-900 dark:text-white">{{$Reservation->montant_total}} MAD</p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400">( {{$Reservation->price_per_day }} MAD /jour )</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">${montantTotal} MAD</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">( ${reservation.listing.item.pricePerDay} MAD /jour )</p>
                                             </div>
 
                                         </div>
 
                                         <div class="flex flex-col items-start lg:ml-6 space-y-3">
-                                            @if($Reservation->status == "pending")
-                                                <div class="status-badge bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300">
-                                                    <i class="fas fa-clock mr-1"></i> En attente
-                                                </div>
-                                                
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
-                                                <div class="flex space-x-2 w-full lg:w-auto">
-                                                    <form method="POST" action="{{ route('partenaire.reservations.accept', $Reservation->id) }}" class="flex-1 lg:flex-initial">
-                                                        @csrf 
-                                                        <button type="submit" class="w-full px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                                                            Accepter
-                                                        </button>
-                                                    </form>
-                                                    <form method="POST" action="{{ route('partenaire.reservations.reject', $Reservation->id) }}" class="flex-1 lg:flex-initial">
-                                                        @csrf
-                                                        <button type="submit" class="w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                                            Refuser
-                                                        </button>
-                                                    </form>
-                                                </div>
 
-                                            @elseif($Reservation->status == "confirmed")
-                                                <div class="status-badge bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
-                                                    <i class="fas fa-check-circle mr-1"></i> Confirmée
-                                                </div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
+                                            <c:choose>
 
-                                            @elseif($Reservation->status == "ongoing")
-                                                <div class="status-badge bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
-                                                    <i class="fas fa-spinner mr-1"></i> En cours
-                                                </div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
+                                                <c:when test="${reservation.status eq 'pending'}">
+                                                    <div class="status-badge bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300">
+                                                        <i class="fas fa-clock mr-1"></i> En attente
+                                                    </div>
 
-                                            @elseif($Reservation->status == "canceled")
-                                                <div class="status-badge bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
-                                                    <i class="fas fa-times-circle mr-1"></i> Annulée
-                                                </div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">
+                                                        ${reservation.createdAt}
+                                                    </p>
 
-                                            @elseif($Reservation->status == "completed")
-                                                <div class="status-badge bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
-                                                    <i class="fas fa-check-circle mr-1"></i> Terminée
-                                                </div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
+                                                    <div class="flex space-x-2 w-full lg:w-auto">
+                                                        <form method="POST" action="acceptReservation?id=${reservation.id}" class="flex-1 lg:flex-initial">
+                                                            <button type="submit" class="w-full px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition-colors">
+                                                                Accepter
+                                                            </button>
+                                                        </form>
 
-                                            @else
-                                                <div class="status-badge bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300">
-                                                    <i class="fas fa-question-circle mr-1"></i> {{ ucfirst($Reservation->status) }}
-                                                </div>
-                                                <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">{{ $Reservation->created_at }}</p>
-                                            @endif
-                                                                                    
+                                                        <form method="POST" action="rejectReservation?id=${reservation.id}" class="flex-1 lg:flex-initial">
+                                                            <button type="submit" class="w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                                Refuser
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </c:when>
 
+                                                <c:when test="${reservation.status eq 'confirmed'}">
+                                                    <div class="status-badge bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300">
+                                                        <i class="fas fa-check-circle mr-1"></i> Confirmée
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">${reservation.createdAt}</p>
+                                                </c:when>
+
+                                                <c:when test="${reservation.status eq 'ongoing'}">
+                                                    <div class="status-badge bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
+                                                        <i class="fas fa-spinner mr-1"></i> En cours
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">${reservation.createdAt}</p>
+                                                </c:when>
+
+                                                <c:when test="${reservation.status eq 'canceled'}">
+                                                    <div class="status-badge bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
+                                                        <i class="fas fa-times-circle mr-1"></i> Annulée
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">${reservation.createdAt}</p>
+                                                </c:when>
+
+                                                <c:when test="${reservation.status eq 'completed'}">
+                                                    <div class="status-badge bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
+                                                        <i class="fas fa-check-circle mr-1"></i> Terminée
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">${reservation.createdAt}</p>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    <div class="status-badge bg-gray-100 dark:bg-gray-900/30 text-gray-800 dark:text-gray-300">
+                                                        <i class="fas fa-question-circle mr-1"></i> ${reservation.status}
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 dark:text-gray-400 mr-12 text-nowrap">${reservation.createdAt}</p>
+                                                </c:otherwise>
+
+                                            </c:choose>
 
                                         </div>
+
                                     </div>
                                 </div>
-                            @endforeach
+                            </c:forEach>
                         </div>
 
 
