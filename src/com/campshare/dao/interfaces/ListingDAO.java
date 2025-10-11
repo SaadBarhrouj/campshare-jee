@@ -7,4 +7,7 @@ public interface ListingDAO {
   List<Listing> findAll();
 
   long countAll();
+
+  long countAllActive();
+
 }

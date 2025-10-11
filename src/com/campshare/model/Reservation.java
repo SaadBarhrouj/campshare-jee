@@ -3,15 +3,16 @@ package com.campshare.model;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
-public class Listing {
+public class Reservation {
 
   private long id;
-  private long itemId;
-  private String status;
   private LocalDate startDate;
   private LocalDate endDate;
-  private long cityId;
+  private String status;
   private boolean deliveryOption;
+  private long clientId;
+  private long partnerId;
+  private long listingId;
   private Timestamp createdAt;
 
   public long getId() {
@@ -20,22 +21,6 @@ public class Listing {
 
   public void setId(long id) {
     this.id = id;
-  }
-
-  public long getItemId() {
-    return itemId;
-  }
-
-  public void setItemId(long itemId) {
-    this.itemId = itemId;
-  }
-
-  public String getStatus() {
-    return status;
-  }
-
-  public void setStatus(String status) {
-    this.status = status;
   }
 
   public LocalDate getStartDate() {
@@ -54,12 +39,12 @@ public class Listing {
     this.endDate = endDate;
   }
 
-  public long getCityId() {
-    return cityId;
+  public String getStatus() {
+    return status;
   }
 
-  public void setCityId(long cityId) {
-    this.cityId = cityId;
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public boolean isDeliveryOption() {
@@ -68,6 +53,30 @@ public class Listing {
 
   public void setDeliveryOption(boolean deliveryOption) {
     this.deliveryOption = deliveryOption;
+  }
+
+  public long getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(long clientId) {
+    this.clientId = clientId;
+  }
+
+  public long getPartnerId() {
+    return partnerId;
+  }
+
+  public void setPartnerId(long partnerId) {
+    this.partnerId = partnerId;
+  }
+
+  public long getListingId() {
+    return listingId;
+  }
+
+  public void setListingId(long listingId) {
+    this.listingId = listingId;
   }
 
   public Timestamp getCreatedAt() {

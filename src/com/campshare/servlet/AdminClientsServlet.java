@@ -18,7 +18,7 @@ public class AdminClientsServlet extends HttpServlet {
 
   private UserService userService = new UserService();
   private AdminDashboardService dashboardService = new AdminDashboardService();
-  private AdminUserService adminUserService = new AdminUserService(); // NOUVEAU SERVICE
+  private AdminUserService adminUserService = new AdminUserService();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)

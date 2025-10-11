@@ -113,4 +113,28 @@
                     <url-pattern>/admin/clients</url-pattern>
                 </servlet-mapping>
 
+            <servlet>
+                <servlet-name>AdminChartDataApiServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminChartDataApiServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminChartDataApiServlet</servlet-name>
+                <url-pattern>/api/admin/chart-data</url-pattern>
+            </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminReservationsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminReservationsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminReservationsServlet</servlet-name>
+                <url-pattern>/admin/reservations</url-pattern>
+            </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminListingsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminListingsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminListingsServlet</servlet-name>
+                <url-pattern>/admin/listings</url-pattern>
+            </servlet-mapping>
 </web-app>
