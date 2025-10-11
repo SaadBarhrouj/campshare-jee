@@ -1,49 +1,143 @@
 package com.campshare.model;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class Listing {
-  private long id;
-  private String title;
-  private String description;
-  private double price;
-  private String imageUrl;
+    private long id;
+    private long itemId;
+    private String status; // "active" or "archived"
+    private Date startDate;
+    private Date endDate;
+    private long cityId;
+    private Double longitude; // nullable
+    private Double latitude;  // nullable
+    private boolean deliveryOption;
+    private Timestamp createdAt;
 
-  public long getId() {
-    return id;
-  }
+    private Item item; // Associated Item
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public void setItem(Item item) {
+        this.item = item;
+    }
+    public Item getItem() {
+        return item;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    // Default constructor
+    public Listing() {
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    // Parameterized constructor
+    public Listing(long id, long itemId, String status, Date startDate, Date endDate, long cityId,
+                   Double longitude, Double latitude, boolean deliveryOption, Timestamp createdAt) {
+        this.id = id;
+        this.itemId = itemId;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.cityId = cityId;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.deliveryOption = deliveryOption;
+        this.createdAt = createdAt;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    // Getters and Setters
+    public long getId() {
+        return id;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public double getPrice() {
-    return price;
-  }
+    public long getItemId() {
+        return itemId;
+    }
 
-  public void setPrice(double price) {
-    this.price = price;
-  }
+    public void setItemId(long itemId) {
+        this.itemId = itemId;
+    }
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    public String getStatus() {
+        return status;
+    }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public long getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(long cityId) {
+        this.cityId = cityId;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public boolean isDeliveryOption() {
+        return deliveryOption;
+    }
+
+    public void setDeliveryOption(boolean deliveryOption) {
+        this.deliveryOption = deliveryOption;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // toString
+    @Override
+    public String toString() {
+        return "Listing{" +
+                "id=" + id +
+                ", itemId=" + itemId +
+                ", status='" + status + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", cityId=" + cityId +
+                ", longitude=" + longitude +
+                ", latitude=" + latitude +
+                ", deliveryOption=" + deliveryOption +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

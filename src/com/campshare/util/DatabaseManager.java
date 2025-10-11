@@ -8,7 +8,7 @@ public class DatabaseManager {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/campshare_db?useSSL=false&serverTimezone=UTC";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "saad123";
+    private static final String DB_PASSWORD = "";
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
 
     static {

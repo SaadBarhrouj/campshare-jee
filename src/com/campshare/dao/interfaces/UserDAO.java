@@ -1,8 +1,7 @@
 package com.campshare.dao.interfaces;
 
-import java.util.List;
-
 import com.campshare.model.User;
+import java.util.List;
 
 public interface UserDAO {
     User findByEmail(String email);
@@ -22,4 +21,5 @@ public interface UserDAO {
     void updateStatus(long userId, boolean isActive);
 
     long countByRoleAndStatus(String role, boolean isActive);
+    double getAverageRatingForPartner(long partnerId);
 }
