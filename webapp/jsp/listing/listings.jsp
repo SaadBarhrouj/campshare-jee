@@ -192,6 +192,21 @@
                            class="whitespace-nowrap px-4 py-2 ${priceRange == '200+' ? 'bg-forest text-white' : 'bg-white dark:bg-gray-700'} rounded-full font-medium border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 transition-all">
                             200+ MAD
                         </a>
+                        <!-- Reset Button for all filters -->
+                        <c:choose>
+                            <c:when test="${empty category and empty city and empty priceRange and empty search}">
+                                <button class="flex items-center px-4 py-2 bg-sunlight text-white rounded-full font-medium border border-sunlight transition-all opacity-50 cursor-not-allowed" disabled>
+                                    <i class="fas fa-times mr-2"></i>
+                                    Réinitialiser
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/listings" class="flex items-center px-4 py-2 bg-sunlight hover:bg-amber-600 text-white rounded-full font-medium border border-sunlight transition-all">
+                                    <i class="fas fa-times mr-2"></i>
+                                    Réinitialiser
+                                </a>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     
                     <!-- Sort and Map View Options -->
@@ -300,7 +315,7 @@
                                 <div class="absolute top-4 left-4 z-10 bg-forest text-white rounded-full px-3 py-1 font-medium text-xs flex items-center">
                                     <c:out value="${category.name}" />
                                 </div>
-                                <a href="${pageContext.request.contextPath}/listing/${listing.id}">
+                                <a href="${pageContext.request.contextPath}/listing?id=${listing.id}">
                                     <div class="relative h-48">
                                         <c:choose>
                                             <c:when test="${not empty firstImage}">
@@ -348,7 +363,7 @@
                                                 <span class="font-bold text-lg text-gray-900 dark:text-white"><c:out value="${item.pricePerDay}" /> MAD</span>
                                                 <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
                                             </div>
-                                            <a href="${pageContext.request.contextPath}/listing/${listing.id}" class="inline-block">
+                                            <a href="${pageContext.request.contextPath}/listing?id=${listing.id}" class="inline-block">
                                                 <button class="px-4 py-2 bg-forest hover:bg-green-700 text-white rounded-md transition-colors shadow-sm">
                                                     Voir détails
                                                 </button>

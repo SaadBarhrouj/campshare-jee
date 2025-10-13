@@ -14,7 +14,7 @@ import java.util.List;
 public class SecurityFilter implements Filter {
 
   private static final List<String> PUBLIC_PATHS = Arrays.asList("", "/", "/login", "/register", "/logout",
-      "/listings");
+      "/listings", "/listing");
 
   private static final String ADMIN_PREFIX = "/jsp/admin/";
   private static final String PARTNER_PREFIX = "/jsp/partner/";

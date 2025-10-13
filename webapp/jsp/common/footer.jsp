@@ -1,3 +1,5 @@
+    <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    
     <!-- Footer -->
     <footer
       class="bg-gray-800 dark:bg-gray-900 text-white py-12 transition-all duration-300"
@@ -7,7 +9,7 @@
           <!-- Column 1: Company Info -->
           <div class="lg:col-span-2">
             <div class="flex items-center mb-6">
-              <span class="text-white text-2xl font-extrabold"
+              <span class="text-forest dark:text-meadow text-2xl font-extrabold"
                 >Camp<span class="text-sunlight">Share</span></span
               >
             </div>
