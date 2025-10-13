@@ -5,4 +5,5 @@ import java.util.List;
 
 public interface CityDAO {
   List<City> findAll();
+  City findById(long id);
 }
