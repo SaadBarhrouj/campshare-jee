@@ -111,7 +111,8 @@
                     </div>
                     <div class="col-span-1">
                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Date</p>
-                        <p class="font-medium text-gray-900 dark:text-white">${review.createdAt}</p>
+                        <fmt:formatDate value="${review.createdAt}" pattern="dd/MM/yyyy"/>
+
                     </div>
                 </div>
             </div>

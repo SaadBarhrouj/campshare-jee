@@ -126,7 +126,7 @@
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">Mes reservations</h2>
-                <a href="{{ route('HomeClient.reservations') }}" data-target = "allRes" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
+                <a href="${pageContext.request.contextPath}/client/allReservation" data-target = "allRes" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
                     Voir toutes mes réservations
                 </a>
             </div>
