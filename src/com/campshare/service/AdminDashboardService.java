@@ -16,12 +16,15 @@ import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.dto.AdminDashboardStatsDTO;
 import com.campshare.dto.DailyRegistrationStatsDTO;
 import com.campshare.dto.DailyStatsDTO;
+import com.campshare.dao.impl.ItemDAOImpl;
+import com.campshare.dao.interfaces.ItemDAO;
 
 public class AdminDashboardService {
 
   private UserDAO userDAO = new UserDAOImpl();
   private ListingDAO listingDAO = new ListingDAOImpl();
   private ReservationDAO reservationDAO = new ReservationDAOImpl();
+  private ItemDAO itemDAO = new ItemDAOImpl();
   private static final double COMMISSION_RATE = 0.10;
 
   public AdminDashboardStatsDTO getDashboardStats() {
@@ -116,4 +119,5 @@ public class AdminDashboardService {
 
     return finalChartData;
   }
+
 }

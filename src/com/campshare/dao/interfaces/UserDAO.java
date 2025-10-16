@@ -25,4 +25,6 @@ public interface UserDAO {
     long countByRoleAndStatus(String role, boolean isActive);
 
     List<DailyRegistrationStatsDTO> getDailyRegistrationStats(int days);
+
+    List<User> findRecentByRole(String role, int limit);
 }

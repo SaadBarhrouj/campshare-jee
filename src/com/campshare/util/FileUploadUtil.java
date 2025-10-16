@@ -10,16 +10,16 @@ import java.util.UUID;
 
 public class FileUploadUtil {
 
-    public static String uploadFile(Part filePart, String applicationRealPath, String uploadDirectoryName, String subfolder) throws IOException {
+    public static String uploadFile(Part filePart, String basePath, String subfolder) throws IOException {
         String fileName = getFileName(filePart);
         if (fileName == null || fileName.isEmpty()) {
-            return null; 
+            return null;
         }
 
-        String uploadPath = applicationRealPath + File.separator + uploadDirectoryName + File.separator + subfolder;
+        String uploadPath = basePath + File.separator + subfolder;
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
-            uploadDir.mkdirs(); 
+            uploadDir.mkdirs();
         }
 
         String fileExtension = "";
@@ -32,7 +32,7 @@ public class FileUploadUtil {
         Path filePath = Paths.get(uploadPath, uniqueFileName);
         Files.copy(filePart.getInputStream(), filePath);
 
-        return "/" + uploadDirectoryName + "/" + subfolder + "/" + uniqueFileName;
+        return subfolder + "/" + uniqueFileName;
     }
 
     private static String getFileName(Part part) {

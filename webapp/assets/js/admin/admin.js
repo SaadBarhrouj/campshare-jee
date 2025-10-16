@@ -41,10 +41,10 @@ function closeModal() {
 function fillModalWithData(data) {
   const user = data.user;
   const fullName = `${user.firstName || ""} ${user.lastName || ""}`;
-
+  const contextPath = "/webapp";
   document.getElementById("modal-user-avatar").src = user.avatarUrl
-    ? `/webapp${user.avatarUrl}`
-    : "https://i.pravatar.cc/150";
+    ? `${contextPath}/uploads/${user.avatarUrl}`
+    : `${contextPath}/assets/images/default-avatar.png`;
   document.getElementById("modal-user-fullname").textContent = fullName;
   document.getElementById("modal-user-email").textContent = user.email || "N/A";
   document.getElementById("modal-user-phone").textContent =

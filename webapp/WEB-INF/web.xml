@@ -137,4 +137,33 @@
                 <servlet-name>AdminListingsServlet</servlet-name>
                 <url-pattern>/admin/listings</url-pattern>
             </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminListingDetailsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminListingDetailsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminListingDetailsServlet</servlet-name>
+                <url-pattern>/admin/listings/details</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminUpdateListingStatusServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminUpdateListingStatusServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminUpdateListingStatusServlet</servlet-name>
+                <url-pattern>/admin/listings/update-status</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminDeleteListingServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminDeleteListingServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminDeleteListingServlet</servlet-name>
+                <url-pattern>/admin/listings/delete</url-pattern>
+            </servlet-mapping>
+
+            
 </web-app>
