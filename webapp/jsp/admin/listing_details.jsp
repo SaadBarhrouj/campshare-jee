@@ -62,6 +62,20 @@
     
     <main class="flex-1 md:ml-64 min-h-screen">
         <div class="py-8 px-4 md:px-8">
+
+            <c:if test="${param.statusUpdated == 'true'}">
+            <div id="alert-success" class="flex items-center p-4 mb-6 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                <i class="fas fa-check-circle"></i>
+                <span class="sr-only">Success</span>
+                <div class="ms-3 text-sm font-medium">
+                    Le statut de l'annonce a été mis à jour avec succès !
+                </div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-success" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </c:if>
             
             <nav class="flex mb-6" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-3">

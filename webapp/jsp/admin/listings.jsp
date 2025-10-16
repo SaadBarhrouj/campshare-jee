@@ -74,6 +74,20 @@ pageEncoding="UTF-8"%>
       <main class="flex-1 md:ml-64 bg-gray-50 dark:bg-gray-900 min-h-screen">
           <div class="py-8 px-4 md:px-8 pb-0">
 
+        <c:if test="${param.deleteSuccess == 'true'}">
+            <div id="alert-success" class="flex items-center p-4 mb-6 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                <i class="fas fa-check-circle"></i>
+                <span class="sr-only">Success</span>
+                <div class="ms-3 text-sm font-medium">
+                    L'annonce a été supprimée avec succès !
+                </div>
+                <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-success" aria-label="Close">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </c:if>
+
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
                     <div>
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Gestion des Annonces</h1>
@@ -322,6 +336,8 @@ pageEncoding="UTF-8"%>
     <jsp:include page="includes/admin_user_details_modal.jsp" />
             
     <script src="${pageContext.request.contextPath}/assets/js/admin/admin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
 
 
 </body>
