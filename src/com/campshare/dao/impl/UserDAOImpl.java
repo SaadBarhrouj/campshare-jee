@@ -222,6 +222,29 @@ public class UserDAOImpl implements UserDAO {
         return 0;
     }
 
+    @Override
+    public List<User> findRecentByRole(String role, int limit) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = ? ORDER BY created_at DESC LIMIT ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role);
+            pstmt.setInt(2, limit);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = mapResultSetToUser(rs);
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));

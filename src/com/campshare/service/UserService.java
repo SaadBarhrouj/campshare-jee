@@ -119,4 +119,12 @@ public class UserService {
         return matcher.matches();
     }
 
+    public List<User> getRecentPartners(int limit) {
+        return userDAO.findRecentByRole("partner", limit);
+    }
+
+    public List<User> getRecentClients(int limit) {
+        return userDAO.findRecentByRole("client", limit);
+    }
+
 }

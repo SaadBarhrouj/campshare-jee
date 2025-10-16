@@ -10,15 +10,12 @@ import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
-@MultipartConfig(maxFileSize = 1024 * 1024 * 10, // 10MB
-        maxRequestSize = 1024 * 1024 * 50 // 50MB
-)
+@MultipartConfig(maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 50)
 public class RegisterServlet extends HttpServlet {
 
     private UserService userService = new UserService();
@@ -27,7 +24,6 @@ public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         CityService cityService = new CityService();
-
         List<City> cities = cityService.getAllCities();
         request.setAttribute("cities", cities);
         request.getRequestDispatcher("/jsp/auth/register.jsp").forward(request, response);
@@ -75,17 +71,17 @@ public class RegisterServlet extends HttpServlet {
         try {
             Part imagePart = request.getPart("image");
             if (imagePart != null && imagePart.getSize() > 0) {
-                avatarUrl = FileUploadUtil.uploadFile(imagePart, permanentStoragePath, "uploads", "avatars");
+                avatarUrl = FileUploadUtil.uploadFile(imagePart, permanentStoragePath, "avatars");
             }
 
             Part cinFrontPart = request.getPart("cin_recto");
             if (cinFrontPart != null && cinFrontPart.getSize() > 0) {
-                cinRectoUrl = FileUploadUtil.uploadFile(cinFrontPart, permanentStoragePath, "uploads", "cin");
+                cinRectoUrl = FileUploadUtil.uploadFile(cinFrontPart, permanentStoragePath, "cin");
             }
 
             Part cinBackPart = request.getPart("cin_verso");
             if (cinBackPart != null && cinBackPart.getSize() > 0) {
-                cinVersoUrl = FileUploadUtil.uploadFile(cinBackPart, permanentStoragePath, "uploads", "cin");
+                cinVersoUrl = FileUploadUtil.uploadFile(cinBackPart, permanentStoragePath, "cin");
             }
         } catch (IOException | ServletException e) {
             e.printStackTrace();
