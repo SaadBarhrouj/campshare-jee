@@ -1,6 +1,7 @@
 package com.campshare.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Item {
     private long id;
@@ -10,6 +11,43 @@ public class Item {
     private double pricePerDay;
     private long categoryId;
     private Timestamp createdAt;
+
+    ////////////////////
+
+    private List<Review> reviews;
+    private List<Image> images;   
+    private Category category;
+    private User partner; 
+
+    public User getPartner() {
+        return partner;
+    }
+    public void setPartner(User partner) {
+        this.partner = partner;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    public List<Image> getImages() {
+        return images;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public Category getCategory() {
+        return category;
+    }
+
 
     // Default constructor
     public Item() {

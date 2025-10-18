@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
@@ -121,8 +123,6 @@
                 </div>
             </div>
         </div>
-
-                <!-- My reservations section -->
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-xl font-bold text-gray-900 dark:text-white">Mes reservations</h2>
@@ -140,13 +140,14 @@
                 statusMap.put("completed", "Terminée");
                 request.setAttribute("statusMap", statusMap);
             %>
+            
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <c:choose>
                     <c:when test="${not empty reservations}">
                         <c:forEach var="res" items="${reservations}">
                             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                                 <div class="relative h-40">
-                                    <img src="${pageContext.request.contextPath}/images/items/${res.image.url}" alt="Image" class="w-full h-full object-cover" />
+                                    <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" alt="Image" class="w-full h-full object-cover" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                     <div class="absolute top-4 left-4">
                                         <span class="bg-gray-400 text-white text-xs px-2 py-1 rounded-full">
@@ -155,10 +156,10 @@
                                     </div>
                                     <div class="absolute bottom-4 left-4 right-4">
                                         <h3 class="text-white font-bold text-lg truncate">
-                                            <c:out value="${res.item.title}" />
+                                            <c:out value="${res.listing.item.title}" />
                                         </h3>
                                         <p class="text-gray-200 text-sm">
-                                            <c:out value="${res.item.description}" />
+                                            <c:out value="${res.listing.item.description}" />
                                         </p>
                                     </div>
                                 </div>
@@ -177,7 +178,7 @@
                                                 <div class="flex items-center text-sm">
                                                     <c:choose>
                                                         <c:when test="${noteMoyenne != null and noteMoyenne != 0}">
-                                                            <fmt:formatNumber value="${noteMoyenne}" maxFractionDigits="1" />
+                                                            <fmt:formatNumber value="" maxFractionDigits="1" />
                                                         </c:when>
                                                         <c:otherwise>
                                                             <div class="text-sm text-gray-500">No ratings yet</div>
@@ -198,8 +199,18 @@
                                         </div>
                                         <div class="flex justify-between text-sm mb-1">
                                             <span class="text-gray-600 dark:text-gray-400">Prix</span>
-                                            <span class="font-medium text-gray-900 dark:text-white">
-                                                ${res.montantPaye} MAD
+                                                <fmt:parseDate value="${res.startDate}" pattern="yyyy-MM-dd" var="startDate" />
+                                                <fmt:parseDate value="${res.endDate}" pattern="yyyy-MM-dd" var="endDate" />
+
+                                                <!-- Compute difference in milliseconds -->
+                                                <c:set var="diffDays" value="${(endDate.time - startDate.time) / (1000 * 60 * 60 * 24)}" />
+                                                <!-- Convert to days (1000 * 60 * 60 * 24 = 86400000) -->
+                                               
+                                            
+                                                <c:set var="montantTotal" value="${res.listing.item.pricePerDay * diffDays}" />
+                                                
+                                                <span class="font-medium text-gray-900 dark:text-white">
+                                                    <p class="font-medium text-gray-900 dark:text-white">${montantTotal} MAD</p>
                                             </span>
                                         </div>
                                     </div>
@@ -240,19 +251,19 @@
                                 <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                                     <a href="listingDetails.jsp?listingId=${item.listing.id}">
                                         <div class="relative h-48">
-                                            <img src="${pageContext.request.contextPath}/images/items/${item.image.url}" 
+                                            <img src="${pageContext.request.contextPath}/images/items/${item.listing.item.images.get(0).url}" 
                                                 alt="Image" class="w-full h-full object-cover" />
                                             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                             <div class="absolute bottom-4 left-4 right-4">
-                                                <h3 class="text-white font-bold text-lg truncate">${item.item.title}</h3>
-                                                <p class="text-gray-200 text-sm">${item.category.name}</p>
+                                                <h3 class="text-white font-bold text-lg truncate">${item.listing.item.title}</h3>
+                                                <p class="text-gray-200 text-sm">${item.listing.item.category.name}</p>
                                             </div>
                                         </div>
 
                                         <div class="p-4">
                                             <div class="flex justify-between items-center mb-3">
                                                 <div>
-                                                    <span class="font-bold text-lg text-gray-900 dark:text-white">${item.item.pricePerDay} MAD</span>
+                                                    <span class="font-bold text-lg text-gray-900 dark:text-white">${item.listing.item.pricePerDay} MAD</span>
                                                     <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
                                                 </div>
 
@@ -260,7 +271,7 @@
                                                     <c:choose>
                                                         <c:when test="${item.partner != null && item.partner.reviewCount > 0}">
                                                             <c:set var="rating" value="${item.partner.avgRating}" />
-                                                            <c:set var="fullStars" value="3" />
+                                                            <c:set var="fullStars" value="${fn:substringBefore(rating, '.')}" />
                                                             <c:set var="hasHalfStar" value="${(rating - fullStars) ge 0.5}" />
                                                             <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />
 
@@ -300,7 +311,8 @@
                                                 <div class="text-sm text-gray-600 dark:text-gray-300">
                                                     <span class="font-medium text-green-800 dark:text-green-600">
                                                         <i class="fas fa-map-marker-alt mr-1"></i> 
-                                                        ${item.city.name}
+                                                        ${item.listing.city.name}
+                                                   
                                                     </span>
                                                 </div>
                                                 <a href="listingDetails.jsp?listingId=${item.listing.id}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
@@ -323,6 +335,9 @@
 
 
     </div>
+
+                <!-- My reservations section -->
+        
 </main>
 
 <script>

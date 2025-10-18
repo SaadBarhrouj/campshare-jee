@@ -93,7 +93,7 @@
                                  class="w-12 h-12 rounded-full object-cover aspect-square" />
                             <div class="ml-4">
                                 <a href="profile?id=">
-                                    <h3 class="font-medium text-gray-900 dark:text-white"></h3>
+                                    <h3 class="font-medium text-gray-900 dark:text-white">${review.reviewer.username}</h3>
                                 </a>
                             </div>
                         </div>

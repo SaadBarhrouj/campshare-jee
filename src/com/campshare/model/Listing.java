@@ -15,6 +15,23 @@ public class Listing {
     private boolean deliveryOption;
     private Timestamp createdAt;
 
+    private Item item; // Associated Item
+    private City city; // Associated City
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+    public City getCity() {
+        return city;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+    public Item getItem() {
+        return item;
+    }
+
     // Default constructor
     public Listing() {
     }
@@ -35,6 +52,7 @@ public class Listing {
     }
 
     // Getters and Setters
+  
     public long getId() {
         return id;
     }

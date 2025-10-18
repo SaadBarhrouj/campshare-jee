@@ -19,7 +19,7 @@
             <c:forEach var="res" items="${reservations}">
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
                     <div class="relative h-40">
-                        <img src="${pageContext.request.contextPath}/images/items/${res.image.url}" 
+                        <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" 
                              alt="Image" class="w-full h-full object-cover" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         
@@ -30,15 +30,15 @@
                         </div>
                         <div class="absolute bottom-4 left-4 right-4">
                             <h3 class="text-white font-bold text-lg truncate">
-                                <c:out value="${res.item.title}" />
+                                <c:out value="${res.listing.item.title}" />
                             </h3>
                             <p class="text-gray-200 text-sm">
                                 <c:choose>
-                                    <c:when test="${fn:length(res.item.description) > 150}">
-                                        <c:out value="${fn:substring(res.item.description, 0, 150)}..." />
+                                    <c:when test="${fn:length(res.listing.item.description) > 150}">
+                                        <c:out value="${fn:substring(res.listing.item.description, 0, 150)}..." />
                                     </c:when>
                                     <c:otherwise>
-                                        <c:out value="${res.item.description}" />
+                                        <c:out value="${res.listing.item.description}" />
                                     </c:otherwise>
                                 </c:choose>
                             </p>
@@ -96,8 +96,15 @@
                             </div>
                             <div class="flex justify-between text-sm mb-1">
                                 <span class="text-gray-600 dark:text-gray-400">Prix</span>
+                                    <fmt:parseDate value="${res.startDate}" pattern="yyyy-MM-dd" var="startDate" />
+                                    <fmt:parseDate value="${res.endDate}" pattern="yyyy-MM-dd" var="endDate" />
+
+                                    <c:set var="diffDays" value="${(endDate.time - startDate.time) / (1000 * 60 * 60 * 24)}" />
+                                    
+                                    <c:set var="montantTotal" value="${res.listing.item.pricePerDay * diffDays}" />
+
                                 <span class="font-medium text-gray-900 dark:text-white">
-                                    ${res.montantPaye} MAD
+                                    ${montantTotal} MAD
                                 </span>
                             </div>
                         </div>

@@ -13,48 +13,51 @@ public class Review {
     private long revieweeId;
     private long itemId;
     private Timestamp createdAt;
-    private Image image;
-    private Item item;
-    private User reviewer;
-    private User reviewee; 
-   
 
-    // Default constructor
-    public Review() {
+    private User reviewer;  
+    private User reviewee;  
+    private Item item;
+    private Reservation reservation;
+
+    public Reservation getReservation() {
+        return reservation;
     }
-    public int getRating() {
-        return rating;
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
-    public void setRating(int rating) {
-        this.rating = rating;
-    }
+
     public User getReviewer() {
         return reviewer;
     }
+
     public void setReviewer(User reviewer) {
         this.reviewer = reviewer;
     }
-         public User getReviewee() {
+
+
+
+    // Reviewee
+    public User getReviewee() {
         return reviewee;
     }
+
     public void setReviewee(User reviewee) {
         this.reviewee = reviewee;
     }
 
+    // Item
     public Item getItem() {
         return item;
     }
+
     public void setItem(Item item) {
         this.item = item;
     }
-        public Image getImage() {
-        return image;
-    }
-    public void setImage(Image image) {
-        this.image = image;
+
+    // Default constructor
+    public Review() {
     }
 
-    
     // Parameterized constructor
     public Review(long id, long reservationId, int rating, String comment, boolean isVisible, String type,
                   long reviewerId, long revieweeId, long itemId, Timestamp createdAt) {
@@ -87,7 +90,13 @@ public class Review {
         this.reservationId = reservationId;
     }
 
+    public int getRating() {
+        return rating;
+    }
 
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
 
     public String getComment() {
         return comment;

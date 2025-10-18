@@ -119,6 +119,7 @@ public class ReservationDAOImpl implements ReservationDAO{
                 r.start_date,
                 r.end_date,
                 r.status,
+                it.price_per_day,
                 it.title AS listing_title,
                 ABS((DATEDIFF(r.end_date, r.start_date) + 1) * it.price_per_day)
                     + CASE WHEN r.delivery_option = 1 THEN 50 ELSE 0 END AS montant_paye,
@@ -146,8 +147,9 @@ public class ReservationDAOImpl implements ReservationDAO{
 
             while (rs.next()) {
                 Reservation reservation = new Reservation();
+                Listing listing = new Listing();
                 reservation.setId(rs.getInt("reservation_id"));
-                reservation.setListingId(rs.getInt("listing_id"));
+                listing.setId(rs.getInt("listing_id"));
 
                 // Partner info
                 User partner = new User();
@@ -161,22 +163,27 @@ public class ReservationDAOImpl implements ReservationDAO{
                 item.setId(rs.getInt("listing_id"));
                 item.setTitle(rs.getString("listing_title"));
                 item.setDescription(rs.getString("description"));
-                reservation.setItem(item);
-
-                // Image
+                item.setPricePerDay(rs.getDouble("price_per_day"));
                 Image image = new Image();
                 image.setUrl(rs.getString("image_url"));
-                reservation.setImage(image);
+
+                List<Image> images = new ArrayList<>();
+                images.add(image);
+
+                
+                item.setImages(images);
+                listing.setItem(item);
+
+
+                
 
                 reservation.setStartDate(rs.getDate("start_date"));
                 reservation.setEndDate(rs.getDate("end_date"));
                 reservation.setStatus(rs.getString("status"));
 
-                Listing listing = new Listing();
-                listing.setId(rs.getInt("listing_id"));
-                reservation.setListing(listing);
 
-                reservation.setMontantPaye(rs.getDouble("montant_paye"));
+
+                reservation.setListing(listing);
 
                 reservations.add(reservation);
             }
@@ -204,6 +211,7 @@ public class ReservationDAOImpl implements ReservationDAO{
                 r.end_date,
                 r.status,
                 it.title AS listing_title,
+                it.price_per_day,
                 ABS((DATEDIFF(r.end_date, r.start_date) + 1) * it.price_per_day)
                     + CASE WHEN r.delivery_option = 1 THEN 50 ELSE 0 END AS montant_paye,
                 it.description
@@ -230,7 +238,10 @@ public class ReservationDAOImpl implements ReservationDAO{
             while (rs.next()) {
                 Reservation reservation = new Reservation();
                 reservation.setId(rs.getInt("reservation_id"));
-                reservation.setListingId(rs.getInt("listing_id"));
+
+                //listing info
+                Listing listing = new Listing();
+                listing.setId(rs.getInt("listing_id"));
 
                 // Partner info
                 User partner = new User();
@@ -244,22 +255,25 @@ public class ReservationDAOImpl implements ReservationDAO{
                 item.setId(rs.getInt("listing_id"));
                 item.setTitle(rs.getString("listing_title"));
                 item.setDescription(rs.getString("description"));
-                reservation.setItem(item);
+                item.setPricePerDay(rs.getDouble("price_per_day"));
+
+
+  
 
                 // Image
                 Image image = new Image();
                 image.setUrl(rs.getString("image_url"));
-                reservation.setImage(image);
+                List<Image> images = new ArrayList<>();
+                images.add(image);
+                item.setImages(images);
 
                 reservation.setStartDate(rs.getDate("start_date"));
                 reservation.setEndDate(rs.getDate("end_date"));
                 reservation.setStatus(rs.getString("status"));
 
-                Listing listing = new Listing();
-                listing.setId(rs.getInt("listing_id"));
+                listing.setItem(item);
                 reservation.setListing(listing);
 
-                reservation.setMontantPaye(rs.getDouble("montant_paye"));
 
                 reservations.add(reservation);
             }
@@ -316,7 +330,9 @@ public class ReservationDAOImpl implements ReservationDAO{
             while (rs.next()) {
                 Reservation reservation = new Reservation();
                 reservation.setId(rs.getInt("reservation_id"));
-                reservation.setListingId(rs.getInt("listing_id"));
+
+                Listing listing = new Listing();
+                listing.setId(rs.getInt("listing_id"));
 
                 // Partner info
                 User partner = new User();
@@ -330,12 +346,14 @@ public class ReservationDAOImpl implements ReservationDAO{
                 item.setId(rs.getInt("listing_id"));
                 item.setTitle(rs.getString("listing_title"));
                 item.setDescription(rs.getString("description"));
-                reservation.setItem(item);
+                
 
                 // Image
                 Image image = new Image();
                 image.setUrl(rs.getString("image_url"));
-                reservation.setImage(image);
+                List<Image> images = new ArrayList<>();
+                images.add(image);
+                item.setImages(images);
 
                 reservation.setStartDate(rs.getDate("start_date"));
                 reservation.setEndDate(rs.getDate("end_date"));
@@ -345,11 +363,12 @@ public class ReservationDAOImpl implements ReservationDAO{
                 // Debug: Print the actual status from database
                 System.out.println("Found reservation with status: '" + dbStatus + "' for reservation ID: " + reservation.getId());
 
-                Listing listing = new Listing();
-                listing.setId(rs.getInt("listing_id"));
-                reservation.setListing(listing);
+                
 
-                reservation.setMontantPaye(rs.getDouble("montant_paye"));
+
+
+                listing.setItem(item);
+                reservation.setListing(listing);
 
                 reservations.add(reservation);
             }
@@ -417,21 +436,24 @@ public class ReservationDAOImpl implements ReservationDAO{
                 Item item = new Item();
                 item.setTitle(rs.getString("listing_title"));
                 item.setPricePerDay(rs.getDouble("price_per_day"));
-                item.setDescription(""); // optional
-                res.setItem(item);
+                item.setDescription(""); 
+                
+                // optional
+                Listing listing = new Listing();
+
+            
 
                 // Category
                 Category category = new Category();
                 category.setName(rs.getString("category_name"));
-                res.setCategory(category);
+                item.setCategory(category);
 
                 // City
                 City city = new City();
                 city.setName(rs.getString("city_name"));
-                res.setCity(city);
+                listing.setCity(city);
 
                 // Listing info
-                Listing listing = new Listing();
                 listing.setId(rs.getInt("lis_id"));
                 listing.setStartDate(rs.getDate("start_date"));
                 listing.setEndDate(rs.getDate("end_date"));
@@ -440,7 +462,8 @@ public class ReservationDAOImpl implements ReservationDAO{
                 // Image
                 Image image = new Image();
                 image.setUrl(rs.getString("image_url"));
-                res.setImage(image);
+                List<Image> images = new ArrayList<>();
+                images.add(image);
 
                 // Ratings - Note: partner_id et partner_username ne sont plus dans le SELECT
                 // Si vous en avez besoin, vous devrez les ajouter à la requête SQL
@@ -448,6 +471,9 @@ public class ReservationDAOImpl implements ReservationDAO{
                 partner.setAvgRating(rs.getDouble("avg_rating"));
                 partner.setReviewCount(rs.getInt("review_count"));
                 res.setPartner(partner);
+                item.setImages(images);
+                listing.setItem(item);
+                res.setListing(listing);
 
                 similarListings.add(res);
             }
@@ -515,21 +541,19 @@ public class ReservationDAOImpl implements ReservationDAO{
                 Item item = new Item();
                 item.setTitle(rs.getString("listing_title"));
                 item.setPricePerDay(rs.getDouble("price_per_day"));
-                item.setDescription(""); // optional
-                res.setItem(item);
+                item.setDescription(""); 
+                
+                Listing listing =new Listing();
 
                 // Category
                 Category category = new Category();
                 category.setName(rs.getString("category_name"));
-                res.setCategory(category);
 
                 // City
                 City city = new City();
                 city.setName(rs.getString("city_name"));
-                res.setCity(city);
 
                 // Listing info
-                Listing listing = new Listing();
                 listing.setId(rs.getInt("lis_id"));
                 listing.setStartDate(rs.getDate("start_date"));
                 listing.setEndDate(rs.getDate("end_date"));
@@ -538,14 +562,19 @@ public class ReservationDAOImpl implements ReservationDAO{
                 // Image
                 Image image = new Image();
                 image.setUrl(rs.getString("image_url"));
-                res.setImage(image);
+                List<Image> images = new ArrayList<>();
+                images.add(image);
 
-                // Ratings - Note: partner_id et partner_username ne sont plus dans le SELECT
-                // Si vous en avez besoin, vous devrez les ajouter à la requête SQL
+                
                 User partner = new User();
                 partner.setAvgRating(rs.getDouble("avg_rating"));
                 partner.setReviewCount(rs.getInt("review_count"));
                 res.setPartner(partner);
+                item.setCategory(category);
+                item.setImages(images);
+                listing.setCity(city);
+                listing.setItem(item);
+                res.setListing(listing);
 
                 similarListings.add(res);
             }
@@ -623,12 +652,17 @@ public class ReservationDAOImpl implements ReservationDAO{
                     // Item info
                     Item item = new Item();
                     item.setTitle(rs.getString("item_title"));
-                    review.setItem(item);
 
                     // Image info
                     Image image = new Image();
                     image.setUrl(rs.getString("item_image"));
-                    review.setImage(image);
+                    List<Image> images = new ArrayList<>();
+                    images.add(image);
+                    item.setImages(images);
+                    review.setItem(item);
+
+
+
                     System.out.println("Loaded review: " + review.getComment() + " by " + reviewer.getUsername());
 
                     reviews.add(review);
