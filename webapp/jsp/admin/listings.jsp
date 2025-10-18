@@ -224,7 +224,7 @@ pageEncoding="UTF-8"%>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     
-                    <c:forEach var="listingInfo" items="${listings}">
+                    <c:forEach var="listing" items="${listings}">
                         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col">
                             
                             <div class="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
@@ -235,15 +235,15 @@ pageEncoding="UTF-8"%>
                                 <div class="flex justify-between items-start mb-2">
                                     <h3 class="font-bold text-lg text-gray-900 dark:text-white leading-tight">
                                         <a href="#" class="hover:text-admin-secondary transition-colors">
-                                            <c:if test="${not empty listingInfo.item}">
-                                                <c:out value="${listingInfo.item.title}"/>
+                                            <c:if test="${not empty listing.item}">
+                                                <c:out value="${listing.item.title}"/>
                                             </c:if>                            
                                         </a>
                                     </h3>
-                                    <c:set var="status" value="${listingInfo.listing.status}"/>
+                                    <c:set var="status" value="${listing.status}"/>
                                     <span class="px-2.5 py-0.5 rounded-full text-xs font-medium 
                                         ${status == 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' : ''}
-                                        ${status == 'inactive' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : ''}
+                                        ${status == 'archived' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400' : ''}
                                         ${status == 'expired' ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400' : ''}
                                     ">
                                         <c:out value="${fn:toUpperCase(fn:substring(status, 0, 1))}${fn:toLowerCase(fn:substring(status, 1, -1))}"/>
@@ -253,8 +253,8 @@ pageEncoding="UTF-8"%>
                                 <%-- Information sur le Partenaire --%>
                                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-4">
                                     <c:choose>
-                                        <c:when test="${not empty fn:trim(listingInfo.partner.avatarUrl)}">
-                                            <img class="h-6 w-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${listingInfo.partner.avatarUrl}" alt="Avatar">
+                                        <c:when test="${not empty fn:trim(listing.item.partner.avatarUrl)}">
+                                            <img class="h-6 w-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${listing.item.partner.avatarUrl}" alt="Avatar">
                                         </c:when>
                                         <c:otherwise>
                                             <img class="h-6 w-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
@@ -263,10 +263,10 @@ pageEncoding="UTF-8"%>
                                     <span>Proposé par 
                                         <button 
                                             type="button" 
-                                            onclick="showUserDetails(${listingInfo.partner.id})" 
+                                            onclick="showUserDetails(${listing.item.partner.id})" 
                                             class="font-medium text-admin-secondary hover:underline"
                                         >
-                                            <c:out value="${listingInfo.partner.firstName} ${listingInfo.partner.lastName}"/>
+                                            <c:out value="${listing.item.partner.firstName} ${listing.item.partner.lastName}"/>
                                         </button>
                                     </span>
                                 </div>
@@ -276,25 +276,25 @@ pageEncoding="UTF-8"%>
                                     <div>
                                         <p class="text-gray-500 dark:text-gray-400">Prix / jour</p>
                                         <p class="font-semibold text-gray-800 dark:text-gray-200">
-                                            <fmt:formatNumber value="${listingInfo.item.pricePerDay}" type="currency" currencySymbol="MAD"/>
+                                            <fmt:formatNumber value="${listing.item.pricePerDay}" type="currency" currencySymbol="MAD"/>
                                         </p>
                                     </div>
                                     <div>
                                         <p class="text-gray-500 dark:text-gray-400">Disponibilité</p>
                                         <p class="font-semibold text-gray-800 dark:text-gray-200">
-                                           <c:out value="${listingInfo.listing.startDate}"/>
-                                              - <c:out value="${listingInfo.listing.endDate}"/>
+                                           <c:out value="${listing.startDate}"/>
+                                              - <c:out value="${listing.endDate}"/>
                                         </p>
                                     </div>
                                 </div>
 
                                 <div class="mt-auto pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
                                     <p class="text-xs text-gray-500 dark:text-gray-400">
-                                        Créée le: <fmt:formatDate value="${listingInfo.listing.createdAt}" pattern="dd MMM yyyy"/>
+                                        Créée le: <fmt:formatDate value="${listing.createdAt}" pattern="dd MMM yyyy"/>
                                     </p>
 
                                         <div class="flex items-center space-x-2">
-                                            <a href="${pageContext.request.contextPath}/admin/listings/details?id=${listingInfo.listing.id}" 
+                                            <a href="${pageContext.request.contextPath}/admin/listings/details?id=${listing.id}" 
                                             class="p-2 rounded-md text-admin-primary bg-admin-light hover:bg-blue-200 dark:text-admin-accent dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors" 
                                             title="Voir les détails">
                                                 <i class="fas fa-eye"></i>
@@ -307,7 +307,7 @@ pageEncoding="UTF-8"%>
                                             </a>
 
                                             <form action="${pageContext.request.contextPath}/admin/listings/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette annonce ?');">
-                                                <input type="hidden" name="listingId" value="${listingInfo.listing.id}">
+                                                <input type="hidden" name="listingId" value="${listing.id}">
                                                 <button type="submit" 
                                                         class="p-2 rounded-md text-red-600 bg-red-100 hover:bg-red-200 dark:text-red-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors" 
                                                         title="Supprimer">
@@ -337,8 +337,6 @@ pageEncoding="UTF-8"%>
             
     <script src="${pageContext.request.contextPath}/assets/js/admin/admin.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
-
-
+    
 </body>
 </html>

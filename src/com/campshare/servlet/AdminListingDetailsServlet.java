@@ -2,7 +2,7 @@ package com.campshare.servlet;
 
 import com.campshare.dto.AdminDashboardStatsDTO;
 import com.campshare.service.AdminDashboardService;
-import com.campshare.dto.ListingInfoDTO;
+import com.campshare.model.Listing;
 import com.campshare.service.ListingService;
 
 import javax.servlet.ServletException;
@@ -21,7 +21,7 @@ public class AdminListingDetailsServlet extends HttpServlet {
     try {
       long listingId = Long.parseLong(request.getParameter("id"));
 
-      ListingInfoDTO listingDetails = listingService.getListingDetailsById(listingId);
+      Listing listingDetails = listingService.getListingDetailsById(listingId);
       AdminDashboardStatsDTO stats = dashboardService.getDashboardStats();
 
       if (listingDetails != null) {

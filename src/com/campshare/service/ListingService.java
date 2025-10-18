@@ -2,21 +2,21 @@ package com.campshare.service;
 
 import com.campshare.dao.impl.ListingDAOImpl;
 import com.campshare.dao.interfaces.ListingDAO;
-import com.campshare.dto.ListingInfoDTO;
+import com.campshare.model.Listing;
 import java.util.List;
 
 public class ListingService {
   private ListingDAO listingDAO = new ListingDAOImpl();
 
-  public List<ListingInfoDTO> getRecentListingsWithDetails(int limit) {
-    return listingDAO.findRecentWithDetails(limit);
+  public List<Listing> getRecentListings(int limit) {
+    return listingDAO.findRecent(limit);
   }
 
-  public List<ListingInfoDTO> getAllListingsWithDetails() {
-    return listingDAO.findAllWithDetails();
+  public List<Listing> getAllListings() {
+    return listingDAO.findAll();
   }
 
-  public ListingInfoDTO getListingDetailsById(long listingId) {
+  public Listing getListingDetailsById(long listingId) {
     return listingDAO.findInfoById(listingId);
   }
 
