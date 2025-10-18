@@ -14,9 +14,17 @@ public class Review {
     private long itemId;
     private Timestamp createdAt;
 
-    private User reviewer;  // the user who wrote the review
-    private User reviewee;  // the user who is reviewed (partner or client)
+    private User reviewer;  
+    private User reviewee;  
     private Item item;
+    private Reservation reservation;
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 
     public User getReviewer() {
         return reviewer;

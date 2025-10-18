@@ -142,7 +142,6 @@
 
                 <!-- Filters and search -->
                 <form  id="filters-form" >
-                @csrf
 
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
@@ -151,7 +150,6 @@
                                 <input 
                                     type="text" 
                                     name="search"
-                                    value="{{ request('search') }}"
                                     placeholder="Rechercher..." 
                                     class="px-4 py-2 pr-10 w-full md:w-64 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow text-base custom-input"
                                 >
@@ -164,7 +162,7 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            @php
+                            <!-- @php
                                 $statuses = ['all' => 'Toutes', 'Pending' => 'En Attente', 'confirmed' => 'Confirmée', 'ongoing' => 'ongoing', 'canceled' => 'canceled', 'completed' => 'completed'];
                             @endphp
 
@@ -177,7 +175,7 @@
                                 >
                                     <span>{{ $label }}</span>
                                 </button>
-                            @endforeach
+                            @endforeach -->
                         </div>
                         <input type="hidden" name="status" id="selected-status" value="{{ request('status', 'all') }}">
 
@@ -217,7 +215,7 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                         <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                           {{$NumberReservationCompleted}} demadddndes au total
+                           <!-- {{$NumberReservationCompleted}} demadddndes au total -->
                         </span>
                     </div>
                     <h1>${ReservationsWithMontantTotal} demandes au total</h1>
@@ -357,7 +355,7 @@
 
 
                     <!-- Pagination -->
-                    <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between">
+                    <!-- <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 flex items-center justify-between">
                         <div class="text-sm text-gray-600 dark:text-gray-400">
                             Affichage de 
                             <span class="font-medium text-gray-900 dark:text-white">
@@ -375,7 +373,7 @@
                         <div>
                             {{ $AllReservationForPartner->links() }}
                         </div>
-                    </div>
+                    </div> -->
 
                     </div>
                 </div>

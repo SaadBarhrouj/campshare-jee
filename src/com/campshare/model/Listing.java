@@ -16,6 +16,14 @@ public class Listing {
     private Timestamp createdAt;
 
     private Item item; // Associated Item
+    private City city; // Associated City
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+    public City getCity() {
+        return city;
+    }
 
     public void setItem(Item item) {
         this.item = item;

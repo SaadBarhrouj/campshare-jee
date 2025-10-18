@@ -12,13 +12,19 @@ public class Item {
     private long categoryId;
     private Timestamp createdAt;
 
+    ////////////////////
+
     private List<Review> reviews;
+    private List<Image> images;   
+    private Category category;
+    private User partner; 
 
-
-
-    private List<Image> images;
-    
-    private Category category; 
+    public User getPartner() {
+        return partner;
+    }
+    public void setPartner(User partner) {
+        this.partner = partner;
+    }
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;

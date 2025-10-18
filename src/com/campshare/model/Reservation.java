@@ -13,6 +13,11 @@ public class Reservation {
     private long listingId;
     private Date createdAt;
     private double montantTotal;
+    //////////////////////
+
+    private User client;  
+    private User partner;  
+    private Listing listing;
 
     // + getter & setter
     public double getMontantTotal() {
@@ -24,9 +29,7 @@ public class Reservation {
     }
 
     
-    private User client;  // the user who wrote the review
-    private User partner;  // the user who is reviewed (partner or client)
-    private Listing listing;
+
 
     public User getClient() { return client; }
     public void setClient(User client) { this.client = client; }
