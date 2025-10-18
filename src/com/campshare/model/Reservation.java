@@ -13,9 +13,9 @@ public class Reservation {
     private long partnerId;
     private long listingId;
     private Date createdAt;
-
-   private User partner; 
-   private Item item;
+    
+    private User partner; 
+    private Item item;
     private Listing listing;
     private Image image;
     private City city;
