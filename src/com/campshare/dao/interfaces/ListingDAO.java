@@ -1,7 +1,8 @@
 package com.campshare.dao.interfaces;
 
-import com.campshare.dto.ListingInfoDTO;
 import java.util.List;
+
+import com.campshare.model.Listing;
 
 public interface ListingDAO {
 
@@ -9,11 +10,11 @@ public interface ListingDAO {
 
   long countAllActive();
 
-  List<ListingInfoDTO> findAllWithDetails();
+  List<Listing> findAll();
 
-  List<ListingInfoDTO> findRecentWithDetails(int limit);
+  List<Listing> findRecent(int limit);
 
-  ListingInfoDTO findInfoById(long listingId);
+  Listing findInfoById(long listingId);
 
   boolean updateStatus(long listingId, String newStatus);
 

@@ -1,7 +1,7 @@
 package com.campshare.servlet;
 
 import com.campshare.dto.AdminDashboardStatsDTO;
-import com.campshare.dto.ListingInfoDTO;
+import com.campshare.model.Listing;
 import com.campshare.service.AdminDashboardService;
 import com.campshare.service.ListingService;
 import javax.servlet.ServletException;
@@ -17,20 +17,12 @@ public class AdminListingsServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    System.out.println("\n[DEBUG SERVLET 1] Entrée dans AdminListingsServlet.doGet().");
-    ;
 
     AdminDashboardStatsDTO stats = dashboardService.getDashboardStats();
     request.setAttribute("dashboardStats", stats);
 
-    // ...
-    List<ListingInfoDTO> listings = listingService.getAllListingsWithDetails();
-    System.out.println("[DEBUG SERVLET 2] " + listings.size() + " annonce(s) récupérée(s) du service.");
-
+    List<Listing> listings = listingService.getAllListings();
     request.setAttribute("listings", listings);
-    System.out.println("[DEBUG SERVLET 3] La liste a été mise dans la requête.");
-
     request.getRequestDispatcher("/jsp/admin/listings.jsp").forward(request, response);
-    System.out.println("[DEBUG SERVLET 4] Forward vers le JSP effectué. Sortie du servlet.");
   }
 }

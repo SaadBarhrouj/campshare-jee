@@ -309,12 +309,16 @@ pageEncoding="UTF-8"%>
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach var="listingInfo" items="${recentListings}">
+                                <c:forEach var="listing" items="${recentListings}">
                                     <tr>
-                                        <td><c:out value="${listingInfo.item.title}"/></td>
-                                        <td><c:out value="${listingInfo.partner.firstName} ${listingInfo.partner.lastName}"/></td>
-                                        <td><fmt:formatNumber value="${listingInfo.item.pricePerDay}" type="currency" currencySymbol="MAD"/></td>
-                                        <td><fmt:formatDate value="${listingInfo.listing.createdAt}" pattern="dd MMM, yyyy"/></td>
+                                        <td><c:out value="${listing.item.title}"/></td>
+                                        <td>
+                                        <c:if test="${not empty listing.item && not empty listing.item.partner}">
+                                            <c:out value="${listing.item.partner.firstName} ${listing.item.partner.lastName}"/>
+                                        </c:if>
+                                        </td>                                        
+                                        <td><fmt:formatNumber value="${listing.item.pricePerDay}" type="currency" currencySymbol="MAD"/></td>
+                                        <td><fmt:formatDate value="${listing.createdAt}" pattern="dd MMM, yyyy"/></td>
                                     </tr>
                                 </c:forEach>
                                 

@@ -201,7 +201,7 @@
                                     </div>
                                     <div>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">Statut</p>
-                                        <c:set var="status" value="${listingDetails.listing.status}"/>
+                                        <c:set var="status" value="${listingDetails.status}"/>
                                         <span class="badge ${status == 'active' ? 'badge-success' : (status == 'archived' ? 'badge-warning' : 'badge-danger')}">
                                             <c:out value="${fn:toUpperCase(fn:substring(status, 0, 1))}${fn:toLowerCase(fn:substring(status, 1, -1))}"/>
                                         </span>
@@ -216,8 +216,8 @@
                                         <p class="text-xs text-gray-500 dark:text-gray-400">Disponibilité</p>
                                         <p class="font-semibold text-gray-800 dark:text-gray-200">
                                             <c:choose>
-                                                <c:when test="${not empty listingDetails.listing.startDate}">
-                                                    <c:out value="${listingDetails.listing.startDate}"/> - <c:out value="${listingDetails.listing.endDate}"/>
+                                                <c:when test="${not empty listingDetails.startDate}">
+                                                    <c:out value="${listingDetails.startDate}"/> - <c:out value="${listingDetails.endDate}"/>
                                                 </c:when>
                                                 <c:otherwise>
                                                     Non spécifiée
@@ -240,24 +240,24 @@
                         </h2>
                         <div class="flex items-center mb-4">
                              <c:choose>
-                                <c:when test="${not empty fn:trim(listingDetails.partner.avatarUrl)}"><img class="w-12 h-12 rounded-full object-cover mr-4" src="${pageContext.request.contextPath}/uploads/${listingDetails.partner.avatarUrl}" alt="Avatar"></c:when>
+                                <c:when test="${not empty fn:trim(listingDetails.item.partner.avatarUrl)}"><img class="w-12 h-12 rounded-full object-cover mr-4" src="${pageContext.request.contextPath}/uploads/${listingDetails.item.partner.avatarUrl}" alt="Avatar"></c:when>
                                 <c:otherwise><img class="w-12 h-12 rounded-full object-cover mr-4" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut"></c:otherwise>
                             </c:choose>
                             <div>
-                                <p class="font-medium"><c:out value="${listingDetails.partner.firstName} ${listingDetails.partner.lastName}"/></p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400"><c:out value="${listingDetails.partner.email}"/></p>
+                                <p class="font-medium"><c:out value="${listingDetails.item.partner.firstName} ${listingDetails.item.partner.lastName}"/></p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400"><c:out value="${listingDetails.item.partner.email}"/></p>
                             </div>
                         </div>
-                                        <button onclick="showUserDetails(${listingDetails.partner.id})" 
+                                        <button onclick="showUserDetails(${listingDetails.item.partner.id})" 
                                                 class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary transition-colors">
                                             <i class="fas fa-user-cog mr-2"></i> Gérer ce partenaire
                                         </button>                
                     </div>
                     <div class="space-y-3">
                         
-                        <c:if test="${listingDetails.listing.status != 'active'}">
+                        <c:if test="${listingDetails.status != 'active'}">
                             <form action="${pageContext.request.contextPath}/admin/listings/update-status" method="POST">
-                                <input type="hidden" name="listingId" value="${listingDetails.listing.id}">
+                                <input type="hidden" name="listingId" value="${listingDetails.id}">
                                 <input type="hidden" name="newStatus" value="active">
                                 <button type="submit" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                                     <i class="fas fa-check-circle mr-2"></i> Activer
@@ -265,9 +265,9 @@
                             </form>
                         </c:if>
 
-                        <c:if test="${listingDetails.listing.status == 'active'}">
+                        <c:if test="${listingDetails.status == 'active'}">
                             <form action="${pageContext.request.contextPath}/admin/listings/update-status" method="POST">
-                                <input type="hidden" name="listingId" value="${listingDetails.listing.id}">
+                                <input type="hidden" name="listingId" value="${listingDetails.id}">
                                 <input type="hidden" name="newStatus" value="archived">
                                 <button type="submit" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors">
                                     <i class="fas fa-archive mr-2"></i> Archiver
@@ -276,9 +276,8 @@
                         </c:if>
                         
                         <form action="${pageContext.request.contextPath}/admin/listings/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette annonce ?');">
-                            <input type="hidden" name="listingId" value="${listingDetails.listing.id}">
+                            <input type="hidden" name="listingId" value="${listingDetails.id}">
                             <button type="submit" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">
-                                <%-- Correction du nom de l'icône --%>
                                 <i class="fas fa-trash-can mr-2"></i> Supprimer
                             </button>
                         </form>

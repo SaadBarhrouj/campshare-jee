@@ -1,19 +1,54 @@
 package com.campshare.model;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.util.Date;
 
 public class Reservation {
-
   private long id;
-  private LocalDate startDate;
-  private LocalDate endDate;
+  private Date startDate;
+  private Date endDate;
   private String status;
   private boolean deliveryOption;
   private long clientId;
   private long partnerId;
   private long listingId;
-  private Timestamp createdAt;
+  private Date createdAt;
+  private double montantTotal;
+
+  private User client;
+  private User partner;
+  private Listing listing;
+
+  public double getMontantTotal() {
+    return montantTotal;
+  }
+
+  public void setMontantTotal(double montantTotal) {
+    this.montantTotal = montantTotal;
+  }
+
+  public User getClient() {
+    return client;
+  }
+
+  public void setClient(User client) {
+    this.client = client;
+  }
+
+  public User getPartner() {
+    return partner;
+  }
+
+  public void setPartner(User partner) {
+    this.partner = partner;
+  }
+
+  public Listing getListing() {
+    return listing;
+  }
+
+  public void setListing(Listing listing) {
+    this.listing = listing;
+  }
 
   public long getId() {
     return id;
@@ -23,20 +58,28 @@ public class Reservation {
     this.id = id;
   }
 
-  public LocalDate getStartDate() {
+  public Date getStartDate() {
     return startDate;
   }
 
-  public void setStartDate(LocalDate startDate) {
+  public void setStartDate(Date startDate) {
     this.startDate = startDate;
   }
 
-  public LocalDate getEndDate() {
+  public Date getEndDate() {
     return endDate;
   }
 
-  public void setEndDate(LocalDate endDate) {
+  public void setEndDate(Date endDate) {
     this.endDate = endDate;
+  }
+
+  public Date getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
   }
 
   public String getStatus() {
@@ -45,45 +88,5 @@ public class Reservation {
 
   public void setStatus(String status) {
     this.status = status;
-  }
-
-  public boolean isDeliveryOption() {
-    return deliveryOption;
-  }
-
-  public void setDeliveryOption(boolean deliveryOption) {
-    this.deliveryOption = deliveryOption;
-  }
-
-  public long getClientId() {
-    return clientId;
-  }
-
-  public void setClientId(long clientId) {
-    this.clientId = clientId;
-  }
-
-  public long getPartnerId() {
-    return partnerId;
-  }
-
-  public void setPartnerId(long partnerId) {
-    this.partnerId = partnerId;
-  }
-
-  public long getListingId() {
-    return listingId;
-  }
-
-  public void setListingId(long listingId) {
-    this.listingId = listingId;
-  }
-
-  public Timestamp getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(Timestamp createdAt) {
-    this.createdAt = createdAt;
   }
 }

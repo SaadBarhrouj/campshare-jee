@@ -1,7 +1,7 @@
 package com.campshare.servlet;
 
 import com.campshare.dto.AdminDashboardStatsDTO;
-import com.campshare.dto.ListingInfoDTO;
+import com.campshare.model.Listing;
 import com.campshare.model.User;
 import com.campshare.service.AdminDashboardService;
 import com.campshare.service.ListingService;
@@ -22,7 +22,7 @@ public class AdminDashboardServlet extends HttpServlet {
 
   List<User> recentClients = userService.getRecentClients(RECENT_ITEMS_LIMIT);
   List<User> recentPartners = userService.getRecentPartners(RECENT_ITEMS_LIMIT);
-  List<ListingInfoDTO> recentListings = listingService.getRecentListingsWithDetails(RECENT_ITEMS_LIMIT);
+  List<Listing> recentListings = listingService.getRecentListings(RECENT_ITEMS_LIMIT);
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
