@@ -12,12 +12,21 @@ public class Reservation {
     private long partnerId;
     private long listingId;
     private Date createdAt;
+    private double montantTotal;
     //////////////////////
 
     private User client;  
     private User partner;  
     private Listing listing;
 
+    // + getter & setter
+    public double getMontantTotal() {
+        return montantTotal;
+    }
+
+    public void setMontantTotal(double montantTotal) {
+        this.montantTotal = montantTotal;
+    }
 
     
 

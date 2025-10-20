@@ -16,6 +16,14 @@ public interface ReservationDAO {
     List<Reservation> getSimilarListingsByCategory(String email);
     List<Reservation> getAllSimilarListingsByCategory(String email);
     List<Review> getReviewsAboutMe(String email);
+
+    int countCompletedReservationsByPartnerId(long partnerId);
+    int countActiveListeningByPartnerId(long partnerId);
+    int countListeningByPartnerId(long partnerId);
+    double sumPaymentThisMonth(long partnerId);
+    List<Review> getLastAvisPartnerForObject(String email);
+    List<Reservation> getPendingReservationsWithMontantTotal(String email);
+    List<Reservation> getReservationsWithMontantTotal(String email);
 }
 
 

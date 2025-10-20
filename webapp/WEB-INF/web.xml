@@ -4,5 +4,105 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
 
+        <display-name>CampShare</display-name>
+
+
+
+            <servlet>
+                <servlet-name>HomeServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.HomeServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>HomeServlet</servlet-name>
+                <url-pattern></url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>RegisterServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.RegisterServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>RegisterServlet</servlet-name>
+                <url-pattern>/register</url-pattern>
+            </servlet-mapping>
+            
+            <servlet>
+                <servlet-name>LoginServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.LoginServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>LoginServlet</servlet-name>
+                <url-pattern>/login</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>LogoutServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.LogoutServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>LogoutServlet</servlet-name>
+                <url-pattern>/logout</url-pattern>
+            </servlet-mapping>
+            
+            <servlet>
+                <servlet-name>ImageServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ImageServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>ImageServlet</servlet-name>
+                <url-pattern>/uploads/*</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>ListingsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ListingsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>ListingsServlet</servlet-name>
+                <url-pattern>/listings</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminDashboardServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminDashboardServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminDashboardServlet</servlet-name>
+                <url-pattern>/admin/dashboard</url-pattern>
+            </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminPartnersServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminPartnersServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminPartnersServlet</servlet-name>
+                <url-pattern>/admin/partners</url-pattern>
+            </servlet-mapping>
+            <servlet>
+                <servlet-name>AdminUserDetailApiServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminUserDetailApiServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminUserDetailApiServlet</servlet-name>
+                <url-pattern>/api/admin/user-details</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminToggleUserStatusServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminToggleUserStatusServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminToggleUserStatusServlet</servlet-name>
+                <url-pattern>/api/admin/toggle-user-status</url-pattern>
+            </servlet-mapping>
+
+            <servlet>
+                <servlet-name>AdminClientsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminClientsServlet</servlet-class>
+            </servlet>
+                <servlet-mapping>
+                    <servlet-name>AdminClientsServlet</servlet-name>
+                    <url-pattern>/admin/clients</url-pattern>
+                </servlet-mapping>
 
 </web-app>
