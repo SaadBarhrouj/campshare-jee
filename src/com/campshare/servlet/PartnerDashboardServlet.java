@@ -26,6 +26,7 @@ public class PartnerDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+
         PartnerService partnerService = new PartnerService();
         ReservationService reservationService = new ReservationService();
 

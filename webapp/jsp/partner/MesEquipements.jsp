@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -136,7 +139,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Équipements</h1>
                     <p class="text-gray-600 dark:text-gray-400 mt-1">Gérez toutes vos équipements.</p>
                 </div>
-                       @if (session('error'))
+                      <%-- ' @if (session('error'))
                             <div id="error-box" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-4" role="alert">
                                 <span class="block sm:inline">{{ session('error') }}</span>
                             </div>
@@ -151,7 +154,7 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif
+                        @endif' --%>
                 <div class="mt-4 md:mt-0">
                     <button id="add-equipment-button" class="px-4 py-3 bg-forest hover:bg-meadow text-white rounded-md shadow-lg flex items-center font-medium">
                         <i class="fas fa-plus mr-2"></i>
@@ -168,7 +171,7 @@
                     <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rechercher</label>
                         <div class="relative">
-                            <input type="text" name="search" id="search" value="{{ request('search') }}" placeholder="Rechercher par titre, description..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
+                            <input type="text" name="search" id="search" value="" placeholder="Rechercher par titre, description..." class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                                 <i class="fas fa-search text-gray-400"></i>
                             </div>
@@ -180,9 +183,9 @@
                         <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Catégorie</label>
                         <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="">Toutes les catégories</option>
-                            @foreach($categories as $category)
+                            <%-- @foreach($categories as $category)
                                 <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach
+                            @endforeach --%>
                         </select>
                     </div>
                     
@@ -223,21 +226,16 @@
                     </div>
                 </form>
             </div>
-
+            ${PartenerEquipment}
             <!-- Equipment Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" id="equipment-grid">
-                @foreach($AllEquipement as $equipment)
+                <c:forEach var="equipment" items="${PartenerEquipment}" >
                 <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
                     <div class="relative h-48">
-                        @if($equipment->images && count($equipment->images) > 0)
-                            <img src="{{ asset($equipment->images[0]->url) }}" 
-                                 alt="{{ $equipment->title }}" 
+                            <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}" 
+                                 alt="${equipment.title}" 
                                  class="w-full h-full object-cover">
-                        @else
-                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <i class="fas fa-campground text-4xl text-gray-400 dark:text-gray-500"></i>
-                            </div>
-                        @endif
+                       
                         
                         <div class="absolute top-2 right-2 flex space-x-2">
                             <button class="edit-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-forest dark:text-meadow hover:bg-forest hover:text-white dark:hover:bg-meadow transition-colors" 
@@ -259,18 +257,18 @@
                     <div class="p-4">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <h3 class="font-bold text-lg text-gray-900 dark:text-white truncate">{{ $equipment->title }}</h3>
-                                <span class="text-forest dark:text-meadow font-bold">{{ number_format($equipment->price_per_day, 2) }} MAD/jour</span>
+                                <h3 class="font-bold text-lg text-gray-900 dark:text-white truncate">${equipment.title}</h3>
+                                <span class="text-forest dark:text-meadow font-bold">${equipment.pricePerDay} MAD/jour</span>
                             </div>
                         </div>
                         
                         <div class="flex items-center mb-2">
                             <span class="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-1" data-category-id="{{ $equipment->category_id }}">
-                                {{ $equipment->category_name }}
+                                ${equipment.category.name}
                             </span>
                         </div>
                         
-                        <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">{{ $equipment->description }}</p>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">${equipment.description}</p>
 
 
                         <div class="flex items-center justify-between mt-6">
@@ -286,20 +284,20 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                </c:forEach>
             </div>
             
             <!-- Empty state if no equipment -->
-            @if(count($AllEquipement) === 0)
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 flex flex-col items-center justify-center">
-                <i class="fas fa-campground text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
-                <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Vous n'avez aucun équipement</h3>
-                <p class="text-gray-600 dark:text-gray-400 text-center mb-6">Commencez par ajouter votre premier équipement de camping pour le proposer à la location.</p>
-                <button id="add-first-equipment" class="px-5 py-3 bg-forest hover:bg-meadow text-white rounded-md shadow-lg flex items-center font-medium text-lg">
-                    <i class="fas fa-plus mr-2"></i> Ajouter un équipement
-                </button>
-            </div>
-            @endif
+            <c:if test="${fn:length(PartenerEquipment) == 0}">
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 flex flex-col items-center justify-center">
+                    <i class="fas fa-campground text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                    <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">Vous n'avez aucun équipement</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-center mb-6">Commencez par ajouter votre premier équipement de camping pour le proposer à la location.</p>
+                    <button id="add-first-equipment" class="px-5 py-3 bg-forest hover:bg-meadow text-white rounded-md shadow-lg flex items-center font-medium text-lg">
+                        <i class="fas fa-plus mr-2"></i> Ajouter un équipement
+                    </button>
+                </div>
+            </c:if>
         </div>
 </main>
     <!-- Add Equipment Modal -->

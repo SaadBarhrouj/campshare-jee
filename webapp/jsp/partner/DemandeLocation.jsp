@@ -162,20 +162,28 @@
                         </div>
 
                         <div class="flex flex-wrap gap-2">
-                            <!-- @php
-                                $statuses = ['all' => 'Toutes', 'Pending' => 'En Attente', 'confirmed' => 'Confirmée', 'ongoing' => 'ongoing', 'canceled' => 'canceled', 'completed' => 'completed'];
-                            @endphp
+                        <%
+                            java.util.LinkedHashMap<String, String> statuses = new java.util.LinkedHashMap<>();
+                            statuses.put("all", "Toutes");
+                            statuses.put("Pending", "En Attente");
+                            statuses.put("confirmed", "Confirmée");
+                            statuses.put("ongoing", "Ongoing");
+                            statuses.put("canceled", "Canceled");
+                            statuses.put("completed", "Completed");
+                            request.setAttribute("statuses", statuses);
+                        %>
 
-                            @foreach($statuses as $key => $label)
-                                <button 
-                                    type="button"
-                                    name="status"
-                                    value="{{ $key }}"
-                                    class="filter-chip {{ request('status', 'all') === $key ? 'active' : '' }}"
-                                >
-                                    <span>{{ $label }}</span>
-                                </button>
-                            @endforeach -->
+                        <c:set var="currentStatus" value="${param.status != null ? param.status : 'all'}" />
+
+                        <c:forEach var="entry" items="${statuses}">
+                            <button 
+                                type="button"
+                                name="status"
+                                value="${entry.key}"
+                                class="filter-chip ${currentStatus == entry.key ? 'active' : ''}">
+                                <span>${entry.value}</span>
+                            </button>
+                        </c:forEach>
                         </div>
                         <input type="hidden" name="status" id="selected-status" value="{{ request('status', 'all') }}">
 
@@ -374,6 +382,28 @@
                             {{ $AllReservationForPartner->links() }}
                         </div>
                     </div> -->
+                    <script>
+                        $(document).ready(function() {
+                            // When clicking a status chip
+                            $(".filter-chip").click(function() {
+                                var selectedStatus = $(this).val();
+                                $("#selected-status").val(selectedStatus); // update hidden input
+                                $("#filters-form").submit(); // submit the form
+                            });
+
+                            // When changing date or sort filters
+                            $("#date-filter, #sort-by").change(function() {
+                                $("#filters-form").submit();
+                            });
+
+                            // When typing in the search bar
+                            $("input[name='search']").on('keypress', function(e) {
+                                if (e.which === 13) { // Enter key
+                                    $("#filters-form").submit();
+                                }
+                            });
+                        });
+                        </script>
 
                     </div>
                 </div>

@@ -432,7 +432,7 @@
                 </div>
                 
                 <nav class="mt-6 space-y-1">
-                    <a href="/Partenaire/Dashboard"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/dashboard"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                         Tableau de bord
                     </a>
@@ -444,7 +444,7 @@
                         <i class="fas fa-bullhorn w-5 mr-3"></i>
                         Mes annonces
                     </a>
-                    <a href="/Partenaire/DemandeLocation" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/DemandeLocation" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-clipboard-list w-5 mr-3"></i>
                         Demandes location
                         <!--<span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{-- $NumberPendingReservation --}}</span>-->
