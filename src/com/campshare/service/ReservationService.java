@@ -3,7 +3,7 @@ import com.campshare.dao.interfaces.ReservationDAO;
 import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.model.Reservation;
 import com.campshare.model.Review;
-
+import com.campshare.model.User;
 import java.util.List;
 
 import com.campshare.dao.impl.ReservationDAOImpl;
@@ -48,6 +48,10 @@ public class ReservationService {
     }
     public List<Review> getReviewsAboutMe(String email) {
         return reservationDAO.getReviewsAboutMe(email);
+    }
+
+    public User getClientProfile(String email) {
+        return reservationDAO.getClientProfile(email);
     }
 
     private UserDAO userDAO = new UserDAOImpl();

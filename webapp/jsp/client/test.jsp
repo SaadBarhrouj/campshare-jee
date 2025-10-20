@@ -1,343 +1,377 @@
-<main class="flex-1 md:ml-64 bg-gray-50 dark:bg-gray-900 min-h-screen">
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampShare - Dashboard Client</title>
+
+    <!-- Styles / Scripts -->
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+
+    <link rel="icon" href="{{ asset('images/favicon_io/favicon.ico') }}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon_io/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon_io/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon_io/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('images/favicon_io/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ asset('images/favicon_io/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="CampShare - Louez facilement le matériel de camping dont vous avez besoin
+    directement entre particuliers.">
+    <meta name="keywords" content="camping, location, matériel, aventure, plein air, partage, communauté">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'forest': '#2D5F2B',
+                        'meadow': '#4F7942',
+                        'earth': '#8B7355',
+                        'wood': '#D2B48C',
+                        'sky': '#5D9ECE',
+                        'water': '#1E7FCB',
+                        'sunlight': '#FFAA33',
+                    }
+                }
+            },
+            darkMode: 'class',
+        }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+    </script>
+    
+
+</head>
+<body class="font-sans antialiased text-gray-800 dark:text-gray-200 dark:bg-gray-900 min-h-screen flex flex-col">
+<jsp:include page="components/sidebar.jsp" />
+<main class="flex-1 md:ml-64 bg-gray-50 dark:bg-gray-900">
     <div class="py-8 px-4 md:px-8">
-        <!-- Dashboard header -->
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-            <div>
-                <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
-                <p class="text-gray-600 dark:text-gray-400 mt-1">Bienvenue, ${user.username} ! Voici un resume de vos reservations.</p>
-            </div>
-         
-        </div>
-        
-        <!-- Stats cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <!-- Stats card 1 -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-blue-100 dark:bg-blue-900 mr-4">
-                        <i class="fas fa-shopping-cart text-blue-600 dark:text-blue-400"></i>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Total reservations</p>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${totalReservations}</h3>
-                        
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Stats card 2 -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-green-100 dark:bg-green-900 mr-4">
-                        <i class="fas fa-money-bill-wave text-green-600 dark:text-green-400"></i>
-                    </div>
-                    <div>
-                        <p class="text-gray-500 dark:text-gray-400 text-sm">Montant total depense</p>
-                        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${totalDepense}</h3>
-                      
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Stats card 3 -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                <div class="flex items-center">
-                    <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900 mr-4">
-                        <i class="fas fa-star text-yellow-600 dark:text-yellow-400"></i>
-                    </div>
-                <div>
-                    <p class="text-gray-500 dark:text-gray-400 text-sm">Note moyenne</p>
-
-                    <c:choose>
-                        <c:when test="${note_moyenne != null and note_moyenne != 0}">
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">${noteMoyenne}</h3>
-                        </c:when>
-                        <c:otherwise>
-                            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">Non note</h3>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
-
-                </div>
-            </div>
-        </div>
-        
-
-        <!-- My reservations section -->
         <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Mes reservations</h2>
-                <a href="{{ route('HomeClient.reservations') }}" data-target = "allRes" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
-                    Voir toutes mes réservations
-                </a>
-            </div>
-            
-
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <c:choose>
-                <c:when test="${not empty reservations}">
-                    <c:forEach var="res" items="${reservations}">
-                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
-                            <div class="relative h-40">
-                                <img src="${res.image.url}" alt="Image" class="w-full h-full object-cover" />
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                
-                                <%
-                                    java.util.Map<String, String> statusMap = new java.util.HashMap<>();
-                                    statusMap.put("pending", "En attente");
-                                    statusMap.put("confirmed", "Confirmée");
-                                    statusMap.put("ongoing", "En cours");
-                                    statusMap.put("canceled", "Annulée");
-                                    statusMap.put("completed", "Terminée");
-                                    request.setAttribute("statusMap", statusMap);
-                                %>
-
-                                
-                                <div class="absolute top-4 left-4">
-                                    <span class="bg-gray-400 text-white text-xs px-2 py-1 rounded-full">
-                                        <c:out value="${statusMap[res.status]}"/>
-                                    </span>
+            <section class="bg-gray-50 dark:bg-gray-800 py-10 border-b border-gray-200 dark:border-gray-700">
+                <div id="profileView">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex flex-col md:flex-row items-start md:items-center">
+                            <div class="relative mb-6 md:mb-0 md:mr-8">
+                                <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
+                                    <img src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}" 
+                                         alt="{{ $profile->username }}" 
+                                         class="w-full h-full object-cover" />
                                 </div>
-                                
-                                <div class="absolute bottom-4 left-4 right-4">
-                                    <h3 class="text-white font-bold text-lg truncate"><c:out value="${res.item.title}"/></h3>
-                                    <p class="text-gray-200 text-sm"><c:out value="${fn:substring(res.item.description, 0, 150)}"/></p>
+                                <div class="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center border-2 border-white dark:border-gray-700">
+                                    <i class="fas fa-check"></i>
                                 </div>
                             </div>
-                            
-                            <div class="p-4">
-                                <div class="flex items-start mb-4">
-                                    <c:if test="${not empty res.partner}">
-                                        <a href="#">
-                                            <img src="${res.partner.avatarUrl}" alt="image" class="w-8 h-8 rounded-full object-cover mr-3"/>
-                                        </a>
-                                        <div>
-                                            <a href="#">
-                                                <p class="font-medium text-gray-900 dark:text-white"><c:out value="${res.partner.username}"/></p>
-                                            </a>
-                                            <div class="flex items-center text-sm">
-                                                <c:if test="${res.partnerAvgRating != null}">
-                                                    <c:set var="fullStars" value="${res.partnerAvgRating.intValue()}"/>
-                                                    <c:set var="hasHalfStar" value="${res.partnerAvgRating - fullStars >= 0.5}"/>
+
+                            <div class="flex-1">
+                                <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
+                                    <div>
+                                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
+                                            <span id="viewUsername">${userProfile.first_name} ${userProfile.last_name} - ${userProfile.username}</span>
+                                            <span class="ml-3 text-sm font-medium px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
+                                                Membre depuis {{ \Carbon\Carbon::parse($userProfile.created_at)->format('Y') }}
+                                            </span>
+                                        </h1>
+                                        <div class="mt-2 flex items-center text-gray-600 dark:text-gray-300">
+                                            <i class="fas fa-map-marker-alt mr-2 text-gray-400"></i>
+                                            <span id="viewAddress"> ${userProfile.city.name} - ${userProfile.address}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-wrap gap-16 mt-6">
+                                    <div class="flex flex-col items-center">
+                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">
+                                            <div class="flex items-center">
+                                        
                                                     
                                                     <div class="flex text-amber-400 mr-1">
-                                                        <c:forEach var="i" begin="0" end="${fullStars - 1}">
-                                                            <i class="fas fa-star"></i>
-                                                        </c:forEach>
-                                                        <c:if test="${hasHalfStar}">
-                                                            <i class="fas fa-star-half-alt"></i>
-                                                        </c:if>
-                                                        <c:forEach var="i" begin="0" end="${4 - fullStars - (hasHalfStar ? 1 : 0)}">
-                                                            <i class="far fa-star"></i>
-                                                        </c:forEach>
+                                                        
+                                                            <i class="fas fa-star text-base"></i>
+                                                       
                                                     </div>
-                                                    <span class="text-gray-600 dark:text-gray-400">
-                                                        <fmt:formatNumber value="${res.partnerAvgRating}" type="number" maxFractionDigits="1"/>
+                                                    
+                                                    <span class="ml-1 text-2xl font-bold text-gray-900 dark:text-white">
+                                                     
                                                     </span>
-                                                </c:if>
-                                                <c:if test="${res.partnerAvgRating == null}">
-                                                    <div class="text-sm text-gray-500">No ratings yet</div>
-                                                </c:if>
+                                                
+                                                    <span class="text-gray-400 text-sm">Non noté</span>
+                                               
                                             </div>
                                         </div>
-                                    </c:if>
-                                </div>
-                                
-                                <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3 mb-4">
-                                    <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-600 dark:text-gray-400">Date</span>
-                                        <span class="font-medium text-gray-900 dark:text-white">
-                                            <fmt:formatDate value="${res.startDate}" pattern="yyyy-MM-dd"/> - 
-                                            <fmt:formatDate value="${res.endDate}" pattern="yyyy-MM-dd"/>
-                                        </span>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Note moyenne</div>
                                     </div>
-                                    <div class="flex justify-between text-sm mb-1">
-                                        <span class="text-gray-600 dark:text-gray-400">Prix</span>
-                                        <span class="font-medium text-gray-900 dark:text-white">${res.montantPaye} MAD</span>
+
+                                    <div class="flex flex-col items-center">
+                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${totalReservations }</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Résérvations réalisées</div>
+                                    </div>
+
+                                    <div class="flex flex-col items-center">
+                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${totalDepense}</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Montant total dépensé</div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class=" flex gap-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div>
+                            <h2 class="text-md font-bold text-gray-900 dark:text-white mb-1">Email</h2>
+                            <p class="text-gray-600 dark:text-gray-300 max-w-3xl" id="viewEmail">
+                                ${userProfile->email}
+                            </p>
+                        </div>
+                        <div>
+                            <h2 class="text-md font-bold text-gray-900 dark:text-white mb-1">Nº téléphone</h2>
+                            <p class="text-gray-600 dark:text-gray-300 max-w-3xl" id="viewPhone">
+                                ${userProfile->phone_number}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-right gap-4">
+                        <a href="{{ route('client.profile.index', $user->id) }}"
+                            class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                            <i class="fa-solid fa-address-card mr-2"></i> Mon profil Public
+                        </a>
+                        <button onclick="toggleEditMode(true)" 
+                               class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                            <i class="fas fa-edit mr-2"></i> Modifier le profil
+                        </button>
+                    </div>
+                </div>
+
+                <div id="profileEdit" class="hidden">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <form id="profileForm">
+                            @csrf
+                            @method('POST')                              
+                            <div class="flex flex-col md:flex-row items-start md:items-center mb-8">
+                                <div class="relative mb-6 md:mb-0 md:mr-8">
+                                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
+                                        <img id="avatarPreview" src="{{ asset($userProfile->avatar_url) ?? 'https://via.placeholder.com/150' }}" 
+                                             alt="${userProfile.username}" 
+                                             class="w-full h-full object-cover" />
+                                    </div>
+                                    <label for="avatarUpload" class="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center border-2 border-white dark:border-gray-700 cursor-pointer hover:bg-green-600 transition-colors">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" id="avatarUpload" name="avatar" accept="image/*" class="hidden">
+                                    </label>
+                                </div>
                                 
-                                <c:if test="${res.status eq 'pending'}">
-                                    <button onclick="cancelReservation(${res.id})"
-                                            class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 dark:text-red-400 text-sm rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-1">
-                                        <i class="fas fa-times mr-2"></i> Annuler
-                                    </button>
-                                </c:if>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </c:when>
-                <c:otherwise>
-                    <div class="rounded-lg shadow-sm overflow-hidden">
-                        <p class="mx-8 text-sm text-gray-600 dark:text-gray-400">Vous n'avez aucune réservation.</p>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
+                                <script>
+                                document.getElementById('avatarUpload').addEventListener('change', function(event) {
+                                    const file = event.target.files[0];
+                                    if (file) {
+                                        const reader = new FileReader();
+                                        
+                                        reader.onload = function(e) {
+                                            // Update the preview image
+                                            document.getElementById('avatarPreview').src = e.target.result;
+                                                                                        
+                                        };
+                                        
+                                        reader.readAsDataURL(file);
+                                    }
+                                });
+                                </script>
 
-     
-        
-
-
-       
-        
-        <!-- Equipment recommendations -->
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-900 dark:text-white">Équipements recommandés</h2>
-                <a href="{{ route('HomeClient.equips') }}" data-target = "allSim" class=" sidebar-link text-forest dark:text-meadow hover:underline text-sm font-medium">
-                    Voir plus de recommandations
-                </a>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Recommendation 1 -->
-                @forelse($similarListings as $item)
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                    
-                    <a href="{{ route('client.listings.show', $item->lis_id) }}">
-                    <div class="relative h-48">
-                        <img src="{{ $item->image_url }}" alt="Image" 
-                             class="w-full h-full object-cover" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white font-bold text-lg truncate">{{$item->listing_title}}</h3>
-                            <p class="text-gray-200 text-sm">{{$item->category_name}}</p>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg text-gray-900 dark:text-white">{{$item->price_per_day}} MAD</span>
-                                <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                @if($item->review_count)
-                                    @php
-                                        $rating = $item->avg_rating;
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                    @endphp
-                                    
-                                    <div class="flex items-center">
-                                        <div class="flex text-amber-400 mr-1">
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            
-                                            @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
-                                        </div>
-                                        <span class="text-gray-600 dark:text-gray-400">
-                                            {{ number_format($rating, 1) }}
-                                            <span class="text-xs text-gray-400 ml-1">({{ $item->review_count }})</span>
-                                        </span>
+                                <div class="flex-1 space-y-4">
+                                    <div>
+                                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom d'utilisateur</label>
+                                        <input type="text" id="username" name="username" value="{{ $profile->username }}"
+                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
                                     </div>
-                                @else
-                                    <div class="text-sm text-gray-500">No ratings yet</div>
-                                @endif
-                            </div>
-                        </div>
-                        
-                        <div class="text-sm mb-3">
-                            <span class="text-gray-600 dark:text-gray-300">
-                                Dispo. du {{ \Carbon\Carbon::parse($item->start_date)->format('d M') }} 
-                                au {{ \Carbon\Carbon::parse($item->end_date)->format('d M') }}
-                            </span>                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-600 dark:text-gray-300">
-                                <span class="font-medium text-green-800 dark:text-green-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> 
-                                    {{$item->city_name}}
-                                </span>
-                            </div>
-                            <a href="{{ route('client.listings.show', $item->lis_id) }}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                                Voir les détails
-                            </a>
-                        </div>
-                    </div>
-                    </a>
-                </div>
-                @empty
-                @foreach($liss as $lis)
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                    
-                    <a href="{{ route('client.listings.show', $lis->id) }}">
-                    <div class="relative h-48">
-                        <img src="{{ $lis->item?->images?->first() ? asset($lis->item->images->first()->url) : asset('images/item-default.jpg') }}" alt="Image" 
-                             class="w-full h-full object-cover" />
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white font-bold text-lg truncate">{{$lis->item->title}}</h3>
-                            <p class="text-gray-200 text-sm">{{$lis->item->category->name}}</p>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <div class="flex justify-between items-center mb-3">
-                            <div>
-                                <span class="font-bold text-lg text-gray-900 dark:text-white">{{$lis->item->price_per_day}} MAD</span>
-                                <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
-                            </div>
-                            <div class="flex items-center text-sm">
-                                @if($lis->item->averageRating() !=0)
-                                    @php
-                                        $rating = $lis->item->averageRating();
-                                        $fullStars = floor($rating);
-                                        $hasHalfStar = ($rating - $fullStars) >= 0.5;
-                                    @endphp
-                                    
-                                    <div class="flex items-center">
-                                        <div class="flex text-amber-400 mr-1">
-                                            @for ($i = 0; $i < $fullStars; $i++)
-                                                <i class="fas fa-star"></i>
-                                            @endfor
-                                            
-                                            @if ($hasHalfStar)
-                                                <i class="fas fa-star-half-alt"></i>
-                                            @endif
-                                            
-                                            @for ($i = 0; $i < (5 - $fullStars - ($hasHalfStar ? 1 : 0)); $i++)
-                                                <i class="far fa-star"></i>
-                                            @endfor
-                                        </div>
+
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                        <input type="email" id="email" name="email" value="{{ $profile->email }}"
+                                               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
                                     </div>
-                                @else
-                                    <div class="text-sm text-gray-500">No ratings yet</div>
-                                @endif
+                                </div>
+
                             </div>
-                        </div>
-                        
-                        <div class="text-sm mb-3">
-                            <span class="text-gray-600 dark:text-gray-300">
-                                Dispo. du {{ \Carbon\Carbon::parse($lis->start_date)->format('d M') }} 
-                                au {{ \Carbon\Carbon::parse($lis->end_date)->format('d M') }}
-                            </span>                        </div>
-                        
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-600 dark:text-gray-300">
-                                <span class="font-medium text-green-800 dark:text-green-600">
-                                    <i class="fas fa-map-marker-alt mr-1"></i> 
-                                    {{$lis->city->name}}
-                                </span>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mot de passe</label>
+                                    <input type="password" id="password" name="password" 
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+
+                                <div>
+                                    <label for="verify_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Verifie mote de passe</label>
+                                    <input type="password" id="confirm_password" name="confirm_password" 
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ville</label>
+                                    <select id="city" name="city_id" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                        <option value="">Sélectionnez votre ville</option>
+                                        @foreach($cities as $city)
+                                            <option value="{{ $city->id }}" {{ $profile->city_name == $city->name ? 'selected' : '' }}>
+                                                {{ $city->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="address" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Adresse</label>
+                                    <input type="text" id="address" name="address" value="{{ $profile->address }}"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                <div>
+                                    <label for="phone_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Téléphone</label>
+                                    <input type="text" id="phone_number" name="phone_number" value="{{ $profile->phone_number }}"
+                                           class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                    
+                                    
+                                    
+                                    <div class="flex flex-col items-start space-y-2">
+                                        <span class=" text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recevoir notifications</span>
+                                        
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="user-active-toggle"
+                                                class="sr-only peer"
+                                                {{ $profile->is_subscriber == 1 ? 'checked' : '' }}
+                                                onchange="document.getElementById('is_subscriber_field').value = this.checked ? '1' : '0'">
+                                            
+                                            <div class="w-11 h-6 bg-gray-300 peer-checked:bg-green-500 rounded-full peer -ransition-all duration-300 ease-in-out">
+                                            </div>
+                                            
+                                            <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform duration-300 ease-in-out peer-checked:translate-x-full"></div>
+                                        </label>
+                                        
+                                        <input type="hidden" id="is_subscriber_field" name="is_subscriber" value="{{ $profile->is_subscriber }}">
+                                    </div>
+                                     
+                                </div>
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" onclick="toggleEditMode(false)" 
+                                       class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    Annuler
+                                </button>
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                    Enregistrer les modifications
+                                </button>
                             </div>
-                            <a href="{{ route('client.listings.show', $lis->id) }}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
-                                Voir les détails
-                            </a>
-                        </div>
+                        </form>
                     </div>
-                    </a>
                 </div>
-                @endforeach
-                @endforelse
-                
-            </div>
+            </section>
         </div>
     </div>
 </main>
+
+<script>
+    function toggleEditMode(showEdit) {
+        const viewMode = document.getElementById('profileView');
+        const editMode = document.getElementById('profileEdit');
+        
+        if (showEdit) {
+            viewMode.classList.add('hidden');
+            editMode.classList.remove('hidden');
+        } else {
+            viewMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('avatarUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            document.getElementById('avatarPreview').src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Form submission
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch("{{ route('profile.update') }}", {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+    if (data.success) {
+        window.location.href = "{{ route('HomeClient.profile') }}";
+    } else {
+        alert('Error: ' + (data.message || 'Une erreur est survenue'));
+    }
+})
+
+});
+</script>
+<script>
+      
+      document.addEventListener('DOMContentLoaded', function() {
+          const openModalBtn = document.getElementById('openPartnerModalBtn');
+          const partnerModal = document.getElementById('partnerAcceptModal');
+          if (openModalBtn && partnerModal) {
+              const closeModalBtn = document.getElementById('closePartnerModalBtn');
+              const cancelModalBtn = document.getElementById('cancelPartnerModalBtn');
+              const openModal = () => {
+                  partnerModal.classList.remove('hidden');
+                  partnerModal.classList.add('flex');
+                  document.body.style.overflow = 'hidden';
+              };
+              const closeModal = () => {
+                  partnerModal.classList.add('hidden');
+                  partnerModal.classList.remove('flex');
+                  document.body.style.overflow = '';
+              };
+              openModalBtn.addEventListener('click', (event) => {
+                  event.preventDefault();
+                  openModal();
+              });
+              if (closeModalBtn) {
+                  closeModalBtn.addEventListener('click', closeModal);
+              }
+              if (cancelModalBtn) {
+                  cancelModalBtn.addEventListener('click', closeModal);
+              }
+              partnerModal.addEventListener('click', (event) => {
+                  if (event.target === partnerModal) {
+                      closeModal();
+                  }
+              });
+              document.addEventListener('keydown', (event) => {
+                  if (event.key === 'Escape' && !partnerModal.classList.contains('hidden')) {
+                      closeModal();
+                  }
+              });
+          }
+      });
+  </script>
+</body>
+</html>

@@ -13,11 +13,11 @@
     request.setAttribute("statusMap", statusMap);
 %>
 
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div id="reservations-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <c:choose>
         <c:when test="${not empty reservations}">
             <c:forEach var="res" items="${reservations}">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden">
+                <div class="reservation-card bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden" data-status="${res.status}">
                     <div class="relative h-40">
                         <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" 
                              alt="Image" class="w-full h-full object-cover" />
@@ -56,29 +56,29 @@
                                     </p>
                                     <div class="flex items-center text-sm">
                                         <c:choose>
-                                            <c:when test="${res.partner.avgRating != null and res.partner.avgRating != 0}">
-                                                <c:set var="rating" value="${res.partner.avgRating}" />
-                                                <c:set var="fullStars" value="${Math.floor(rating)}" />
-                                                <c:set var="hasHalfStar" value="${(rating - fullStars) ge 0.5}" />
-                                                <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />
-                                                
+                                            <c:when test="${res.partner.avgRating != 0}">
                                                 <div class="flex text-amber-400 mr-1">
-                                                    <c:forEach begin="0" end="${fullStars - 1}" var="i">
-                                                        <i class="fas fa-star"></i>
-                                                    </c:forEach>
-                                                    <c:if test="${hasHalfStar}">
-                                                        <i class="fas fa-star-half-alt"></i>
-                                                    </c:if>
-                                                    <c:forEach begin="0" end="${emptyStars - 1}" var="i">
-                                                        <i class="far fa-star"></i>
+                                                    <c:forEach var="i" begin="1" end="5">
+                                                        <c:choose>
+                                                            <c:when test="${i <= res.partner.avgRating}">
+                                                                <i class="fas fa-star text-base"></i>
+                                                            </c:when>
+                                                            <c:when test="${i - res.partner.avgRating <= 0.5 && i - res.partner.avgRating > 0}">
+                                                                <i class="fas fa-star-half-alt text-base"></i>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <i class="far fa-star text-base"></i>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:forEach>
                                                 </div>
-                                                <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">
-                                                    <fmt:formatNumber value="${rating}" maxFractionDigits="1"/>
+
+                                                <span class="text-gray-600 dark:text-gray-300 text-sm ml-1">
+                                                    <fmt:formatNumber value="${res.partner.avgRating}" maxFractionDigits="1"/>
                                                 </span>
                                             </c:when>
                                             <c:otherwise>
-                                                <div class="text-sm text-gray-500">No ratings yet</div>
+                                                <span class="text-gray-400 text-sm">Non note</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </div>
