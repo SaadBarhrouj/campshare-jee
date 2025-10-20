@@ -105,4 +105,13 @@
                     <url-pattern>/admin/clients</url-pattern>
                 </servlet-mapping>
 
+            <servlet>
+                <servlet-name>ClientHomeServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ClientHomeServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>ClientHomeServlet</servlet-name>
+                <url-pattern>/client/dashboard</url-pattern>
+            </servlet-mapping>
+
 </web-app>
