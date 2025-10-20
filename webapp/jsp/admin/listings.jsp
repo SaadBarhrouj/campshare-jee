@@ -135,17 +135,16 @@ pageEncoding="UTF-8"%>
 
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                         <div class="flex items-center">
-                            <div class="p-3 rounded-full bg-red-100 dark:bg-red-900/30 mr-4">
-                                <i class="fas fa-x text-red-600 dark:text-red-400"></i>
+                            <div class="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900/30 mr-4">
+                                <i class="fas fa-archive text-yellow-600 dark:text-yellow-400"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 dark:text-gray-400 text-sm">Annonces Inactifs</p>
+                                <p class="text-gray-500 dark:text-gray-400 text-sm">Annonces Archivées</p>
                                 <div class="flex items-center">
-                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><c:out value="${pageStats.inactive}"/></h3>
-                                    
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white"><c:out value="${pageStats.archived}"/></h3>
                                 </div>
                                 <p class="text-gray-600 dark:text-gray-400 text-xs mt-1">
-                                    (<fmt:formatNumber value="${pageStats.inactivePercentage}" maxFractionDigits="0"/>% du total)
+                                    (<fmt:formatNumber value="${pageStats.archivedPercentage}" maxFractionDigits="0"/>% du total)
                                 </p>
                             </div>
                         </div>

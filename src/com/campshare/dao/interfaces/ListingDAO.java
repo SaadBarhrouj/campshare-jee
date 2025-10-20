@@ -10,6 +10,8 @@ public interface ListingDAO {
 
   long countAllActive();
 
+  long countAllArchived();
+
   List<Listing> findAll();
 
   List<Listing> findRecent(int limit);

@@ -1,6 +1,7 @@
 package com.campshare.servlet;
 
 import com.campshare.dto.AdminDashboardStatsDTO;
+import com.campshare.dto.ListingsPageStatsDTO;
 import com.campshare.model.Listing;
 import com.campshare.service.AdminDashboardService;
 import com.campshare.service.ListingService;
@@ -23,6 +24,8 @@ public class AdminListingsServlet extends HttpServlet {
 
     List<Listing> listings = listingService.getAllListings();
     request.setAttribute("listings", listings);
+    ListingsPageStatsDTO pageStats = listingService.getListingPageStats();
+    request.setAttribute("pageStats", pageStats); 
     request.getRequestDispatcher("/jsp/admin/listings.jsp").forward(request, response);
   }
 }

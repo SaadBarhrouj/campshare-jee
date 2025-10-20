@@ -1,6 +1,7 @@
 package com.campshare.dao.impl;
 
 import com.campshare.dao.interfaces.ListingDAO;
+import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.model.Category;
 import com.campshare.model.City;
 import com.campshare.model.Item;
@@ -15,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListingDAOImpl implements ListingDAO {
-
+  private UserDAO userDAO = new UserDAOImpl();
   private final String BASE_SELECT_SQL = "SELECT " +
       "l.id as listing_id, l.status, l.start_date, l.end_date, l.created_at as listing_created_at, " +
       "l.longitude, l.latitude, l.delivery_option, " +
@@ -56,6 +57,22 @@ public class ListingDAOImpl implements ListingDAO {
       }
     } catch (SQLException e) {
       System.err.println("Erreur countAllActive: " + e.getMessage());
+      e.printStackTrace();
+    }
+    return 0;
+  }
+
+  @Override
+  public long countAllArchived() {
+    String sql = "SELECT COUNT(*) FROM listings WHERE status = 'archived'";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery()) {
+      if (rs.next()) {
+        return rs.getLong(1);
+      }
+    } catch (SQLException e) {
+      System.err.println("Erreur countAllArchived: " + e.getMessage());
       e.printStackTrace();
     }
     return 0;
@@ -239,7 +256,7 @@ public class ListingDAOImpl implements ListingDAO {
     List<Review> reviews = new ArrayList<>();
     String sql = "SELECT id, reservation_id, rating, comment, is_visible, type, reviewer_id, reviewee_id, item_id, created_at "
         +
-        "FROM reviews WHERE item_id = ? AND is_visible = true ORDER BY created_at DESC";
+        "FROM reviews WHERE item_id = ? AND is_visible = true AND type = 'forObject' ORDER BY created_at DESC";
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setLong(1, itemId);
@@ -254,6 +271,8 @@ public class ListingDAOImpl implements ListingDAO {
           review.setType(rs.getString("type"));
           review.setReviewerId(rs.getLong("reviewer_id"));
           review.setRevieweeId(rs.getLong("reviewee_id"));
+          User reviewer = userDAO.findById(review.getReviewerId());
+          review.setReviewer(reviewer);
           review.setItemId(rs.getLong("item_id"));
           review.setCreatedAt(rs.getTimestamp("created_at"));
           reviews.add(review);
