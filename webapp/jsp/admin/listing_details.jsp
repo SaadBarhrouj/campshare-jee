@@ -171,7 +171,6 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
                             
-                            <%-- Colonne de gauche pour la description --%>
                             <div class="md:col-span-2">
                                 <h4 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Description de l'équipement</h4>
                                 <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
@@ -231,7 +230,106 @@
                         </div>
                     </div>
 
-                </div>
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-star-half-alt mr-2 text-gray-500 dark:text-gray-400"></i> Évaluation Moyenne
+                            </h2>
+                            <c:set var="reviews" value="${listingDetails.item.reviews}"/>
+                            <c:set var="totalRating" value="0"/>
+                            <c:set var="reviewCount" value="${fn:length(reviews)}"/>
+
+                            <c:forEach var="review" items="${reviews}">
+                                <c:set var="totalRating" value="${totalRating + review.rating}"/>
+                            </c:forEach>
+
+                            <c:set var="averageRating" value="0"/>
+                            <c:if test="${reviewCount > 0}">
+                                <c:set var="averageRating" value="${totalRating / reviewCount}"/>
+                            </c:if>
+
+                            <div class="flex items-center space-x-2">
+                                <div class="flex text-yellow-400">
+                                    <c:forEach begin="1" end="5" var="i">
+                                        <c:choose>
+                                            <c:when test="${averageRating >= i}">
+                                                <i class="fas fa-star"></i>
+                                            </c:when>
+                                            <c:when test="${averageRating >= (i - 0.5)}">
+                                                <i class="fas fa-star-half-alt"></i> 
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="far fa-star"></i> 
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </c:forEach>
+                                </div>
+                                <span class="text-gray-600 dark:text-gray-400 text-sm">
+                                    (<fmt:formatNumber value="${averageRating}" maxFractionDigits="1"/> sur 5) - <c:out value="${reviewCount}"/> avis
+                                </span>
+                            </div>
+                        </div>
+
+
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                                <i class="fas fa-comments mr-2 text-gray-500 dark:text-gray-400"></i> Avis des Clients (<c:out value="${reviewCount}"/>)
+                            </h2>
+                            <div class="space-y-6 max-h-96 overflow-y-auto pr-2"> 
+
+                            
+                                <c:choose>
+                                    <c:when test="${reviewCount > 0}">
+                                        <c:forEach var="review" items="${reviews}">
+                                            <div class="pb-4 border-b border-gray-200 dark:border-gray-700 last:border-b-0">
+                                                <div class="flex items-center justify-between mb-1">
+                                                
+                                                <c:if test="${not empty review.reviewer}">
+                                                    <div class="flex items-center mb-2">
+                                                        <c:choose>
+                                                            <c:when test="${not empty fn:trim(review.reviewer.avatarUrl)}">
+                                                                <img class="h-8 w-8 rounded-full object-cover mr-3" src="${pageContext.request.contextPath}/uploads/${review.reviewer.avatarUrl}" alt="Avatar">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <img class="h-8 w-8 rounded-full object-cover mr-3" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <div>
+                                                            <button 
+                                                                type="button" 
+                                                                onclick="showUserDetails(${review.reviewer.id})" 
+                                                                class="text-sm font-semibold text-gray-900 dark:text-white hover:text-admin-secondary dark:hover:text-admin-accent transition-colors">
+                                                                <c:out value="${review.reviewer.firstName} ${review.reviewer.lastName}"/>
+                                                            </button>
+                                                            <p class="text-xs text-gray-500 dark:text-gray-400">
+                                                                <fmt:formatDate value="${review.createdAt}" pattern="dd MMM yyyy"/>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </c:if>
+                                                    <div class="flex text-yellow-400 text-sm">
+                                                        <c:forEach begin="1" end="5" var="i">
+                                                            <i class="${i <= review.rating ? 'fas' : 'far'} fa-star"></i>
+                                                        </c:forEach>
+                                                    </div>
+                                                    
+                                                </div>
+                                                <p class="text-gray-700 dark:text-gray-300 text-sm">
+                                                    <c:out value="${review.comment}"/>
+                                                </p>
+                                                
+                                            </div>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p class="text-gray-500 dark:text-gray-400 text-sm">Aucun avis n'a encore été laissé pour cet équipement.</p>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+
+                    </div>
+
+                
 
                 <div class="space-y-6">
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
