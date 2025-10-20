@@ -6,6 +6,8 @@ import java.util.List;
 public interface  ItemDAO {
 
     List<Item> getPartnerEquipement(String email) ;
+
+    List<Item> findAll();
     
 
     

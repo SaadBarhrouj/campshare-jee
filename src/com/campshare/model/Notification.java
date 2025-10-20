@@ -5,18 +5,16 @@ import java.sql.Timestamp;
 public class Notification {
     private long id;
     private long userId;
-    private String type; // Enum values as String
+    private String type; 
     private String message;
     private boolean isRead;
-    private Long listingId;      // nullable
-    private Long reservationId;  // nullable
+    private Long listingId;     
+    private Long reservationId;  
     private Timestamp createdAt;
 
-    // Default constructor
     public Notification() {
     }
 
-    // Parameterized constructor
     public Notification(long id, long userId, String type, String message, boolean isRead,
                         Long listingId, Long reservationId, Timestamp createdAt) {
         this.id = id;
@@ -29,7 +27,6 @@ public class Notification {
         this.createdAt = createdAt;
     }
 
-    // Getters and Setters
     public long getId() {
         return id;
     }
@@ -94,7 +91,7 @@ public class Notification {
         this.createdAt = createdAt;
     }
 
-    // toString
+    
     @Override
     public String toString() {
         return "Notification{" +

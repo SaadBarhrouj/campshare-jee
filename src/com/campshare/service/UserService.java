@@ -101,6 +101,10 @@ public class UserService {
         userDAO.updateStatus(userId, isActive);
     }
 
+    public long getUserCountByRole(String role) {
+        return userDAO.countByRole(role);
+    }
+
     private boolean isValidEmail(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -113,6 +117,14 @@ public class UserService {
         Pattern pattern = Pattern.compile(passwordRegex);
         Matcher matcher = pattern.matcher(password);
         return matcher.matches();
+    }
+
+    public List<User> getRecentPartners(int limit) {
+        return userDAO.findRecentByRole("partner", limit);
+    }
+
+    public List<User> getRecentClients(int limit) {
+        return userDAO.findRecentByRole("client", limit);
     }
 
 }

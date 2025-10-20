@@ -41,10 +41,10 @@ function closeModal() {
 function fillModalWithData(data) {
   const user = data.user;
   const fullName = `${user.firstName || ""} ${user.lastName || ""}`;
-
+  const contextPath = "/webapp";
   document.getElementById("modal-user-avatar").src = user.avatarUrl
-    ? `/webapp${user.avatarUrl}`
-    : "https://i.pravatar.cc/150";
+    ? `${contextPath}/uploads/${user.avatarUrl}`
+    : `${contextPath}/assets/images/default-avatar.png`;
   document.getElementById("modal-user-fullname").textContent = fullName;
   document.getElementById("modal-user-email").textContent = user.email || "N/A";
   document.getElementById("modal-user-phone").textContent =
@@ -168,46 +168,134 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-   const saveButton = document.getElementById("modal-save-changes");
+  const saveButton = document.getElementById("modal-save-changes");
 
-   if (saveButton) {
-     saveButton.addEventListener("click", async () => {
-       const userId = document.getElementById(
-         "modal-user-id-hidden"
-       ).textContent;
+  if (saveButton) {
+    saveButton.addEventListener("click", async () => {
+      const userId = document.getElementById(
+        "modal-user-id-hidden"
+      ).textContent;
 
-       const newIsActiveStatus = document.getElementById(
-         "modal-user-active-toggle"
-       ).checked;
+      const newIsActiveStatus = document.getElementById(
+        "modal-user-active-toggle"
+      ).checked;
 
-       if (!userId) {
-         alert("Erreur : ID de l'utilisateur non trouvé.");
-         return;
-       }
+      if (!userId) {
+        alert("Erreur : ID de l'utilisateur non trouvé.");
+        return;
+      }
 
-       try {
-         const response = await fetch(
-           `/webapp/api/admin/toggle-user-status?id=${userId}`,
-           {
-             method: "POST",
-             headers: {
-               "Content-Type": "application/json",
-             },
-             body: JSON.stringify({ isActive: newIsActiveStatus }),
-           }
-         );
+      try {
+        const response = await fetch(
+          `/webapp/api/admin/toggle-user-status?id=${userId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ isActive: newIsActiveStatus }),
+          }
+        );
 
-         if (!response.ok) {
-           throw new Error("La mise à jour du statut a échoué.");
-         }
+        if (!response.ok) {
+          throw new Error("La mise à jour du statut a échoué.");
+        }
 
-         alert("Le statut du partenaire a été mis à jour avec succès !");
-         closeModal();
-         location.reload(); 
-       } catch (error) {
-         console.error("Erreur lors de la mise à jour du statut:", error);
-         alert(error.message);
-       }
-     });
-   }
+        alert("Le statut du partenaire a été mis à jour avec succès !");
+        closeModal();
+        location.reload();
+      } catch (error) {
+        console.error("Erreur lors de la mise à jour du statut:", error);
+        alert(error.message);
+      }
+    });
+  }
+
+  const registrationBarChartCanvas = document.getElementById(
+    "registrationBarChart"
+  );
+
+  if (registrationBarChartCanvas) {
+    fetch("/webapp/api/admin/chart-data")
+      .then((response) => response.json())
+      .then((data) => {
+        const registrationData = data.registrationStats;
+
+        if (!registrationData) {
+          throw new Error(
+            "Les données 'registrationStats' sont manquantes dans la réponse de l'API."
+          );
+        }
+
+        new Chart(registrationBarChartCanvas, {
+          type: "bar",
+          data: {
+            labels: registrationData.labels,
+            datasets: registrationData.datasets,
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              title: {
+                display: true,
+                text: "Inscriptions Journalières",
+              },
+              legend: {
+                position: "top",
+              },
+            },
+            scales: {
+              x: { stacked: true },
+              y: { stacked: true, beginAtZero: true },
+            },
+          },
+        });
+      })
+      .catch((error) => {
+        console.error("Erreur sur le graphique d'inscriptions:", error);
+        const ctx = registrationBarChartCanvas.getContext("2d");
+        ctx.fillText(
+          "Erreur de chargement des données.",
+          registrationBarChartCanvas.width / 2,
+          registrationBarChartCanvas.height / 2
+        );
+      });
+  }
+
+  const bookingCountChartCanvas = document.getElementById("bookingCountChart");
+  if (bookingCountChartCanvas) {
+    fetch("/webapp/api/admin/chart-data")
+      .then((response) => response.json())
+      .then((data) => {
+        const bookingData = data.bookingCountStats;
+
+        if (!bookingData) {
+          throw new Error("Les données 'bookingCountStats' sont manquantes...");
+        }
+
+        new Chart(bookingCountChartCanvas, {
+          type: "line",
+          data: {
+            labels: bookingData.labels,
+            datasets: bookingData.datasets,
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: "Nombre de Réservations par Jour",
+              },
+            },
+            scales: { y: { beginAtZero: true } },
+          },
+        });
+      })
+      .catch((error) =>
+        console.error("Erreur sur le graphique des réservations:", error)
+      );
+  }
 });

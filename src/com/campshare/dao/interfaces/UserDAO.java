@@ -3,6 +3,9 @@ package com.campshare.dao.interfaces;
 import com.campshare.model.User;
 import java.util.List;
 
+import com.campshare.dto.DailyRegistrationStatsDTO;
+import com.campshare.model.User;
+
 public interface UserDAO {
     User findByEmail(String email);
 
@@ -21,4 +24,8 @@ public interface UserDAO {
     void updateStatus(long userId, boolean isActive);
 
     long countByRoleAndStatus(String role, boolean isActive);
+
+    List<DailyRegistrationStatsDTO> getDailyRegistrationStats(int days);
+
+    List<User> findRecentByRole(String role, int limit);
 }

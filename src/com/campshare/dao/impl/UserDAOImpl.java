@@ -1,6 +1,7 @@
 package com.campshare.dao.impl;
 
 import com.campshare.dao.interfaces.UserDAO;
+import com.campshare.dto.DailyRegistrationStatsDTO;
 import com.campshare.model.User;
 import com.campshare.util.DatabaseManager;
 
@@ -48,6 +49,36 @@ public class UserDAOImpl implements UserDAO {
             throw new RuntimeException("Erreur de base de données lors de la recherche par username.", e);
         }
         return null;
+    }
+
+    @Override
+    public List<DailyRegistrationStatsDTO> getDailyRegistrationStats(int days) {
+        List<DailyRegistrationStatsDTO> stats = new ArrayList<>();
+
+        String sql = "SELECT DATE(created_at) as registration_date, role, COUNT(*) as count " +
+                "FROM users " +
+                "WHERE created_at >= CURDATE() - INTERVAL ? DAY " +
+                "GROUP BY registration_date, role " +
+                "ORDER BY registration_date DESC";
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, days - 1);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    DailyRegistrationStatsDTO dto = new DailyRegistrationStatsDTO();
+                    dto.setDate(rs.getDate("registration_date").toLocalDate());
+                    dto.setRole(rs.getString("role"));
+                    dto.setCount(rs.getInt("count"));
+                    stats.add(dto);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stats;
     }
 
     @Override
@@ -189,6 +220,29 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public List<User> findRecentByRole(String role, int limit) {
+        List<User> users = new ArrayList<>();
+        String sql = "SELECT * FROM users WHERE role = ? ORDER BY created_at DESC LIMIT ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, role);
+            pstmt.setInt(2, limit);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    User user = mapResultSetToUser(rs);
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {

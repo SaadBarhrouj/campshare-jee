@@ -4,6 +4,7 @@ import com.campshare.model.Reservation;
 import com.campshare.model.Review;
 import com.campshare.model.User;
 import java.util.List;
+import com.campshare.dto.DailyStatsDTO;
 
 public interface ReservationDAO {
 
@@ -25,5 +26,10 @@ public interface ReservationDAO {
     List<Reservation> getPendingReservationsWithMontantTotal(String email);
     List<Reservation> getReservationsWithMontantTotal(String email);
     User getClientProfile(String email);
+
+
+    List<DailyStatsDTO> getDailyBookingCountStats(int days);
+    long countAllConfirmed();
+    double getTotalRevenueAllTime();
 }
 
