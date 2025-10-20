@@ -2,7 +2,7 @@ package com.campshare.dao.interfaces;
 
 import com.campshare.model.Reservation;
 import com.campshare.model.Review;
-
+import com.campshare.model.User;
 import java.util.List;
 
 public interface ReservationDAO {
