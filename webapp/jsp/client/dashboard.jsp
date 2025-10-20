@@ -177,11 +177,29 @@
                                                 </p>
                                                 <div class="flex items-center text-sm">
                                                     <c:choose>
-                                                        <c:when test="${noteMoyenne != null and noteMoyenne != 0}">
-                                                            <fmt:formatNumber value="" maxFractionDigits="1" />
+                                                        <c:when test="${res.partner.avgRating != 0}">
+                                                            <div class="flex text-amber-400 mr-1">
+                                                                <c:forEach var="i" begin="1" end="5">
+                                                                    <c:choose>
+                                                                        <c:when test="${i <= res.partner.avgRating}">
+                                                                            <i class="fas fa-star text-base"></i>
+                                                                        </c:when>
+                                                                        <c:when test="${i - res.partner.avgRating <= 0.5 && i - res.partner.avgRating > 0}">
+                                                                            <i class="fas fa-star-half-alt text-base"></i>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <i class="far fa-star text-base"></i>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </c:forEach>
+                                                            </div>
+
+                                                            <span class="text-gray-600 dark:text-gray-300 text-sm ml-1">
+                                                                <fmt:formatNumber value="${res.partner.avgRating}" maxFractionDigits="1"/>
+                                                            </span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <div class="text-sm text-gray-500">No ratings yet</div>
+                                                            <span class="text-gray-400 text-sm">Non noté</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>

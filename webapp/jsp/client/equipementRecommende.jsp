@@ -114,8 +114,8 @@
                                             </div>
                                             <div class="flex items-center text-sm">
                                                     <c:choose>
-                                                        <c:when test="${item.partner != null && item.partner.reviewCount > 0}">
-                                                            <c:set var="rating" value="${item.partner.avgRating}" />
+                                                        <c:when test="${res.partner != null && res.partner.reviewCount > 0}">
+                                                            <c:set var="rating" value="${res.partner.avgRating}" />
                                                             <c:set var="fullStars" value="${fn:substringBefore(rating, '.')}" />
                                                             <c:set var="hasHalfStar" value="${(rating - fullStars) ge 0.5}" />
                                                             <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />

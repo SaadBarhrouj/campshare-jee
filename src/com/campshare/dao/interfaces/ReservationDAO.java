@@ -2,6 +2,7 @@ package com.campshare.dao.interfaces;
 
 import com.campshare.model.Reservation;
 import com.campshare.model.Review;
+
 import java.util.List;
 
 public interface ReservationDAO {
@@ -23,5 +24,6 @@ public interface ReservationDAO {
     List<Review> getLastAvisPartnerForObject(String email);
     List<Reservation> getPendingReservationsWithMontantTotal(String email);
     List<Reservation> getReservationsWithMontantTotal(String email);
+    User getClientProfile(String email);
 }
 

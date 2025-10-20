@@ -82,7 +82,7 @@
                 <option value="pending" ${selectedStatus == 'pending' ? 'selected' : ''}>En attente</option>
                 <option value="confirmed" ${selectedStatus == 'confirmed' ? 'selected' : ''}>Confirmé</option>
                 <option value="ongoing" ${selectedStatus == 'ongoing' ? 'selected' : ''}>En cours</option>
-                <option value="completed" ${selectedStatus == 'completed' ? 'selected' : ''}>Terminé</option>
+                <option value="completed" ${selectedStatus == 'completed' ? 'selected' : ''}>Terminée</option>
                 <option value="canceled" ${selectedStatus == 'canceled' ? 'selected' : ''}>Annulé</option>
             </select>
         </div>
@@ -127,49 +127,44 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const statusFilter = document.getElementById('statusFilter');
-    
+    const container = document.getElementById('reservations-container');
+
+    function ensureNoResultsElement() {
+        let el = container.querySelector('#no-results');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'no-results';
+            el.className = 'rounded-lg shadow-sm overflow-hidden col-span-2 text-center py-8 text-gray-600 dark:text-gray-400';
+            el.textContent = 'Aucune réservation trouvée pour ce statut.';
+            const grid = container.querySelector('#reservations-grid');
+            if (grid) grid.appendChild(el);
+        }
+        return el;
+    }
+
+    function filterReservations(selected) {
+        const grid = container.querySelector('#reservations-grid');
+        if (!grid) return;
+        const cards = grid.querySelectorAll('.reservation-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const status = (card.getAttribute('data-status') || '').toLowerCase();
+            const show = selected === 'all' || selected === '' || status === selected;
+            card.style.display = show ? '' : 'none';
+            if (show) visibleCount++;
+        });
+
+        const noResults = ensureNoResultsElement();
+        noResults.style.display = visibleCount === 0 ? '' : 'none';
+    }
+
     if (statusFilter) {
+        // Initial state
+        filterReservations(statusFilter.value || 'all');
+
         statusFilter.addEventListener('change', function() {
-            const status = this.value;
-            console.log('Filter changed to:', status);
-            
-            // Show loading state
-            document.getElementById('reservations-container').innerHTML = '<div class="text-center py-8"><div class="text-gray-500">Chargement...</div></div>';
-            
-            fetch(`${window.location.pathname}?status=${status}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'text/html',
-                }
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                return response.text();
-            })
-            .then(html => {
-                console.log('Response received, length:', html.length);
-                
-                // Parse the response to extract just the reservations grid
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const newReservationsContainer = doc.querySelector('#reservations-container');
-                
-                if (newReservationsContainer) {
-                    console.log('Found reservations container, updating...');
-                    document.getElementById('reservations-container').innerHTML = newReservationsContainer.innerHTML;
-                } else {
-                    console.log('No reservations container found, response is likely the grid component directly');
-                    // The response should be the grid component directly
-                    document.getElementById('reservations-container').innerHTML = html;
-                    console.log('Updated reservations container with response');
-                }
-            })
-            .catch(error => {
-                console.error('Error filtering reservations:', error);
-                // Fallback: reload the page with the filter parameter
-                window.location.href = `${window.location.pathname}?status=${status}`;
-            });
+            filterReservations(this.value);
         });
     }
 });

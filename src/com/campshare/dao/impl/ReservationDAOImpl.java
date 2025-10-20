@@ -154,6 +154,7 @@ public class ReservationDAOImpl implements ReservationDAO{
                 partner.setId(rs.getInt("partner_id"));
                 partner.setUsername(rs.getString("partner_username"));
                 partner.setAvatarUrl(rs.getString("partner_img"));
+                partner.setAvgRating(rs.getDouble("partner_avg_rating"));
                 reservation.setPartner(partner);
 
                 // Item info
@@ -246,6 +247,7 @@ public class ReservationDAOImpl implements ReservationDAO{
                 partner.setId(rs.getInt("partner_id"));
                 partner.setUsername(rs.getString("partner_username"));
                 partner.setAvatarUrl(rs.getString("partner_img"));
+                partner.setAvgRating(rs.getDouble("partner_avg_rating"));
                 reservation.setPartner(partner);
 
                 // Item info
@@ -356,6 +358,7 @@ public class ReservationDAOImpl implements ReservationDAO{
                 reservation.setStartDate(rs.getDate("start_date"));
                 reservation.setEndDate(rs.getDate("end_date"));
                 String dbStatus = rs.getString("status");
+                partner.setAvgRating(rs.getDouble("partner_avg_rating"));
                 reservation.setStatus(dbStatus);
                 
                 // Debug: Print the actual status from database
@@ -1151,6 +1154,77 @@ public class ReservationDAOImpl implements ReservationDAO{
 
         return reservations;
     }
+
+    //profile client
+
+
+    public User getClientProfile(String email) {
+        User user = null;
+
+        String sql = """
+            SELECT 
+                u.id,
+                u.first_name,
+                u.last_name,
+                u.username,
+                u.email,
+                u.phone_number,
+                u.password,
+                u.address,
+                u.avatar_url,
+                u.is_subscriber,
+                u.is_active,
+                u.city_id,
+                c.name AS city_name,
+                AVG(r.rating) AS avg_rating,
+                COUNT(r.id) AS review_count,
+                u.created_at
+            FROM users u
+            LEFT JOIN reviews r 
+                ON r.reviewee_id = u.id 
+                AND r.type = 'forClient'
+            JOIN cities c 
+                ON c.id = u.city_id
+            WHERE u.email = ?
+            GROUP BY 
+                u.id, u.first_name, u.last_name, u.username, u.email, 
+                u.phone_number, u.password, u.address, u.avatar_url, 
+                u.is_subscriber, u.is_active, u.city_id, c.name, u.created_at
+            LIMIT 1
+        """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getLong("id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setPhoneNumber(rs.getString("phone_number"));
+                user.setPassword(rs.getString("password"));
+                user.setAddress(rs.getString("address"));
+                user.setAvatarUrl(rs.getString("avatar_url"));
+                user.setSubscriber(rs.getBoolean("is_subscriber"));
+                user.setActive(rs.getBoolean("is_active"));
+                user.setCityId(rs.getLong("city_id"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setAvgRating(rs.getDouble("avg_rating"));
+                user.setReviewCount(rs.getInt("review_count"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
 
 
 
