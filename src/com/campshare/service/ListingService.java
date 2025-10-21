@@ -1,13 +1,17 @@
 package com.campshare.service;
 
+import com.campshare.dao.impl.ItemDAOImpl;
 import com.campshare.dao.impl.ListingDAOImpl;
 import com.campshare.dao.interfaces.ListingDAO;
+import com.campshare.dao.interfaces.ItemDAO;
 import com.campshare.dto.ListingsPageStatsDTO;
+import com.campshare.model.Item;
 import com.campshare.model.Listing;
 import java.util.List;
 
 public class ListingService {
   private ListingDAO listingDAO = new ListingDAOImpl();
+  private ItemDAO itemDAO = new ItemDAOImpl();
 
   public List<Listing> getRecentListings(int limit) {
     return listingDAO.findRecent(limit);
@@ -49,5 +53,17 @@ public class ListingService {
     }
 
     return stats;
+  }
+
+  public boolean updateListingContent(long itemId, String title, String description, long categoryId) {
+    return listingDAO.updateListingContent(itemId, title, description, categoryId);
+  }
+
+  public boolean updateListing(Listing listing, Item item) {
+
+    boolean itemUpdated = itemDAO.updateItem(item);
+    boolean listingUpdated = listingDAO.updateListing(listing);
+
+    return itemUpdated && listingUpdated;
   }
 }

@@ -226,9 +226,11 @@ pageEncoding="UTF-8"%>
                     <c:forEach var="listing" items="${listings}">
                         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col">
                             
-                            <div class="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                                <i class="fas fa-image fa-3x text-gray-400 dark:text-gray-500"></i>
-                            </div>
+                        <div class="h-48 overflow-hidden">
+                            <img src="${pageContext.request.contextPath}/assets/images/hero-image.jpg"
+                                alt="Image de l'annonce" 
+                                class="w-full h-full object-cover object-center"> 
+                        </div>
                             
                             <div class="p-5 flex flex-col flex-grow">
                                 <div class="flex justify-between items-start mb-2">
@@ -299,7 +301,7 @@ pageEncoding="UTF-8"%>
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <a href="#" 
+                                            <a href="${pageContext.request.contextPath}/admin/listings/edit?id=${listing.id}" 
                                             class="p-2 rounded-md text-yellow-600 bg-yellow-100 hover:bg-yellow-200 dark:text-yellow-400 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors" 
                                             title="Modifier">
                                                 <i class="fas fa-pencil-alt"></i>

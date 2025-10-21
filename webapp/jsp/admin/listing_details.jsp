@@ -373,6 +373,10 @@
                             </form>
                         </c:if>
                         
+                        <a href="${pageContext.request.contextPath}/admin/listings/edit?id=${listingDetails.id}" 
+                        class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors">
+                        <i class="fas fa-pencil-alt mr-2"></i> Modifier
+                        </a>
                         <form action="${pageContext.request.contextPath}/admin/listings/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette annonce ?');">
                             <input type="hidden" name="listingId" value="${listingDetails.id}">
                             <button type="submit" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">

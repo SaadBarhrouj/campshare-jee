@@ -31,4 +31,24 @@ public class ItemDAOImpl implements ItemDAO {
     }
     return items;
   }
+
+  @Override
+  public boolean updateItem(Item item) {
+    String sql = "UPDATE items SET title = ?, description = ?, price_per_day = ?, category_id = ? WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setString(1, item.getTitle());
+      pstmt.setString(2, item.getDescription());
+      pstmt.setDouble(3, item.getPricePerDay());
+      pstmt.setLong(4, item.getCategoryId());
+      pstmt.setLong(5, item.getId()); // Le 'id' va dans la clause WHERE
+
+      return pstmt.executeUpdate() > 0; // Retourne true si une ligne a été modifiée
+    } catch (SQLException e) {
+      System.err.println("Erreur lors de la mise à jour de l'item: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
 }

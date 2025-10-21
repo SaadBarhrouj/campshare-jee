@@ -2,6 +2,7 @@ package com.campshare.dao.interfaces;
 
 import java.util.List;
 
+import com.campshare.model.Item;
 import com.campshare.model.Listing;
 
 public interface ListingDAO {
@@ -21,5 +22,9 @@ public interface ListingDAO {
   boolean updateStatus(long listingId, String newStatus);
 
   boolean delete(long listingId);
+
+  boolean updateListingContent(long itemId, String title, String description, long categoryId);
+
+  boolean updateListing(Listing listing);
 
 }

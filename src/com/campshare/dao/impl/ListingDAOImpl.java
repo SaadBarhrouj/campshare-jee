@@ -284,4 +284,43 @@ public class ListingDAOImpl implements ListingDAO {
     }
     return reviews;
   }
+
+  @Override
+  public boolean updateListingContent(long itemId, String title, String description, long categoryId) {
+    String sql = "UPDATE items SET title = ?, description = ?, category_id = ? WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setString(1, title);
+      pstmt.setString(2, description);
+      pstmt.setLong(3, categoryId);
+      pstmt.setLong(4, itemId);
+
+      return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public boolean updateListing(Listing listing) {
+    String sql = "UPDATE listings SET start_date = ?, end_date = ?, city_id = ?, delivery_option = ? WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setDate(1, listing.getStartDate());
+      pstmt.setDate(2, listing.getEndDate());
+      pstmt.setLong(3, listing.getCityId());
+      pstmt.setBoolean(4, listing.isDeliveryOption());
+      pstmt.setLong(5, listing.getId()); 
+
+      return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Erreur lors de la mise à jour du listing: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
 }
