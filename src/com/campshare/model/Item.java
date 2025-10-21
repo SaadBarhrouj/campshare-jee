@@ -12,48 +12,16 @@ public class Item {
     private long categoryId;
     private Timestamp createdAt;
 
-    ////////////////////
-
+    // Relationships
     private List<Review> reviews;
     private List<Image> images;   
     private Category category;
     private User partner; 
 
-    public User getPartner() {
-        return partner;
-    }
-    public void setPartner(User partner) {
-        this.partner = partner;
-    }
+    // Default Constructor
+    public Item() {}
 
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    
-    public void setImages(List<Image> images) {
-        this.images = images;
-    }
-    public List<Image> getImages() {
-        return images;
-    }
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-    public Category getCategory() {
-        return category;
-    }
-
-
-    // Default constructor
-    public Item() {
-    }
-
-    // Parameterized constructor
+    // Parameterized Constructor
     public Item(long id, long partnerId, String title, String description, double pricePerDay, long categoryId, Timestamp createdAt) {
         this.id = id;
         this.partnerId = partnerId;
@@ -119,6 +87,56 @@ public class Item {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Relationship Getters and Setters
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
+    public List<Image> getImages() {
+        return images;
+    }
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public User getPartner() {
+        return partner;
+    }
+    public void setPartner(User partner) {
+        this.partner = partner;
+    }
+
+    // Business logic methods
+    public boolean hasImages() {
+        return images != null && !images.isEmpty();
+    }
+
+    public boolean hasReviews() {
+        return reviews != null && !reviews.isEmpty();
+    }
+
+    public double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) return 0.0;
+        return reviews.stream()
+                .mapToInt(Review::getRating)
+                .average()
+                .orElse(0.0);
+    }
+
+    public int getReviewCount() {
+        return reviews != null ? reviews.size() : 0;
     }
 
     // toString

@@ -7,5 +7,6 @@ public interface  ItemDAO {
 
     List<Item> getPartnerEquipement(String email) ;
 
+    Item findById(long id);
     
 }

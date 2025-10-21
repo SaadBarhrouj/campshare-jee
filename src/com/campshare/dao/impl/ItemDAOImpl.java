@@ -101,6 +101,59 @@ public class ItemDAOImpl implements ItemDAO {
         return items;
     }
 
+    @Override
+    public Item findById(long id) {
+        String sql = "SELECT i.id AS item_id, i.partner_id, i.title, i.description, i.price_per_day, i.category_id, i.created_at, " +
+                     "c.id AS category_id, c.name AS category_name " +
+                     "FROM items i JOIN categories c ON c.id = i.category_id WHERE i.id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Item item = new Item();
+                    item.setId(rs.getLong("item_id"));
+                    item.setPartnerId(rs.getLong("partner_id"));
+                    item.setTitle(rs.getString("title"));
+                    item.setDescription(rs.getString("description"));
+                    item.setPricePerDay(rs.getDouble("price_per_day"));
+                    item.setCategoryId(rs.getLong("category_id"));
+                    item.setCreatedAt(rs.getTimestamp("created_at"));
+
+                    Category category = new Category();
+                    category.setId(rs.getLong("category_id"));
+                    category.setName(rs.getString("category_name"));
+                    item.setCategory(category);
+
+                    // Load images for item (first few)
+                    item.setImages(fetchImagesForItem(id, conn));
+                    return item;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private List<Image> fetchImagesForItem(long itemId, Connection conn) throws SQLException {
+        List<Image> images = new ArrayList<>();
+        String sql = "SELECT id, item_id, url FROM images WHERE item_id = ? ORDER BY id ASC";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, itemId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Image img = new Image();
+                    img.setId(rs.getLong("id"));
+                    img.setItemId(rs.getLong("item_id"));
+                    img.setUrl(rs.getString("url"));
+                    images.add(img);
+                }
+            }
+        }
+        return images;
+    }
+
     // Helper method to fetch reviews for an item
     private List<Review> getItemReviews(long itemId, Connection conn) throws SQLException {
         List<Review> reviews = new ArrayList<>();
