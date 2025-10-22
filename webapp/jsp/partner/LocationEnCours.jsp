@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
@@ -214,28 +217,29 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                        {{$NumberLocationsEncours}} Réservations en cours
+                        {{$NumberLocationsEncours}} Réservations endddd cours
                     </span>
                 </div>
 
                 <!-- Request items -->
+                ${PartenerReservavtion}aaaaaaaaaaaaaaaaaaaaaaa
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     <div id="reservations1">
-                        @foreach($LocationsEncours as $Reservation)
+                        <c:forEach var="location" items="${PartenerReservavtion}" >
                             <div class="px-6 py-4">
                                 <div class="flex flex-col lg:flex-row lg:items-start">
                                     <div class="flex gap-2 mb-4 lg:mb-0 lg:mr-28 w-full lg:w-auto">
                                         <div class="flex items-center lg:w-16">
-                                            <img src="{{asset($Reservation->avatar_url)}}"
-                                                alt="Mehdi Idrissi" 
+                                            <img src="${pageContext.request.contextPath}/assets/images/users/${location.client.avatarUrl}"
+                                                alt="${location.client.username}" 
                                                 class="w-12 h-12 rounded-full object-cover" />
                                             <div class="lg:hidden ml-3">
-                                                <h3 class="font-medium text-gray-900 dark:text-white">{{$Reservation->username}}</h3>
+                                                <h3 class="font-medium text-gray-900 dark:text-white">${location.client.username}</h3>
                                                 
                                             </div>
                                         </div>
                                         <div class="hidden lg:block mt-2">
-                                            <h3 class="font-medium text-gray-900 dark:text-white text-center">{{$Reservation->username}}</h3>
+                                            <h3 class="font-medium text-gray-900 dark:text-white text-center">${location.client.username}</h3>
                                             
                                         </div>
                                     </div>
@@ -244,24 +248,36 @@
                                         <div>
                                             <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Équipement</p>
                                             <p class="font-medium text-gray-900 dark:text-white flex items-center">
-                                                <span class="truncate">{{$Reservation->title}}</span>
+                                                <span class="truncate">${location.listing.item.title}</span>
                                             </p>
                                         </div>
                                         <div>
-                                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Durée de résérvation</p>
-                                            <p class="font-medium text-gray-900 dark:text-white">{{$Reservation->start_date}} - {{$Reservation->end_date}}</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">( {{$Reservation->number_days}} jours )</p>
+                                           
+                                                <fmt:parseDate value="${location.startDate}" pattern="yyyy-MM-dd" var="startDate" />
+                                                <fmt:parseDate value="${location.endDate}" pattern="yyyy-MM-dd" var="endDate" />
+
+                                                <c:set var="diffMs" value="${endDate.time - startDate.time}" />
+
+                                                <!-- Convert to days (1000 * 60 * 60 * 24 = 86400000) -->
+                                                <c:set var="diffDays" value="${diffMs / (1000*60*60*24)}" />
+
+                
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Durée de résérvation</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">${location.startDate} - ${location.endDate}</p>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">( ${diffDays} jours )</p>
                                         </div>
                                         <div>
+                                            <c:set var="montantTotal" value="${location.listing.item.pricePerDay * diffDays}" />
+
                                             <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Montant</p>
-                                            <p class="font-medium text-gray-900 dark:text-white">{{$Reservation->montant_total}} MAD</p>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">( {{$Reservation->price_per_day }} MAD/jour )</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">${montantTotal} MAD</p>
+                                                <p class="text-xs text-gray-500 dark:text-gray-400">( ${location.listing.item.pricePerDay} MAD /jour )</p>
                                         </div>
                                     </div>
 
                                 </div>
                             </div>
-                        @endforeach
+                        </c:forEach>
                     </div>
 
 

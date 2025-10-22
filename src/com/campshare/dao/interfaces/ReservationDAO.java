@@ -25,5 +25,6 @@ public interface ReservationDAO {
     List<Reservation> getPendingReservationsWithMontantTotal(String email);
     List<Reservation> getReservationsWithMontantTotal(String email);
     User getClientProfile(String email);
+    List<Reservation> getLocationsEncours(String email);
 }
 
