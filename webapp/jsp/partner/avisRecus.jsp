@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
 <head>
@@ -209,11 +212,12 @@
                     {{$LesAvis->count()}} Total Avis Reçus
                 </span>
             </div>
+            ${ParteneReviews}
 
             <!-- Request items -->
             <div class="divide-y divide-gray-200 dark:divide-gray-700">
                 <div id="Avis">
-                    @foreach($LesAvis as $Avis)
+                    <c:forEach var="review" items="${ParteneReviews}" >
                         <div class="px-6 py-4">
                             <div class="flex flex-col lg:flex-row lg:items-start">
                                 
@@ -223,14 +227,14 @@
                                         <div class="flex gap-2 items-center content-center mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto">
                                             <div class="flex items-center content-center w-12">
                                                 <a href="{{ route('client.profile.index', 21) }}">
-                                                <img src="{{ asset($Avis->avatar_url) }}"
+                                                <img src="${pageContext.request.contextPath}/assets/images/users/${review.reviewer.avatarUrl}"
                                                     alt="Mehdi Idrissi" 
                                                     class="w-12 h-12 rounded-full object-cover" />
                                                 </a>
                                             </div>
                                             <div class="lg:block mt-2 pb-2">
                                                 <a href="{{ route('client.profile.index', 21) }}">
-                                                    <h3 class="font-medium text-gray-900 dark:text-white ">{{$Avis->username}}</h3>
+                                                    <h3 class="font-medium text-gray-900 dark:text-white ">${review.reviewer.username}</h3>
                                                 </a>
                                             </div>
                                         </div>
@@ -240,34 +244,38 @@
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Note reçue</p>
                                         <div class="flex items-center text-sm">
                                             <i class="fas fa-star text-amber-400 mr-1"></i>
-                                            <span>{{ $Avis->rating }}</span>
+                                            <span>${review.rating}</span>
                                         </div>
 
                                     </div>
                                     <div class="col-span-4">
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire</p>
-                                        <p class="font-medium text-gray-900 dark:text-white">{{$Avis->comment}}</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">${review.comment}</p>
                                     </div>
-                                    @if($Avis->object_title)
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Sur l'équipement</p>
-                                        <p class="font-medium text-gray-900 dark:text-white">{{$Avis->object_title}}</p>
-                                    </div>
-                                    @else
-                                    <div>
-                                        <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Sur vous</p>
-                                        <p class="font-medium text-gray-900 dark:text-white">-</p>
-                                    </div>
-                                    @endif
+                                    <c:choose>
+                                        <c:when test="${not empty review.item.title}">
+                                            <div>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Sur l'équipement</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">${review.item.title}</p>
+                                            </div>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <div>
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Sur vous</p>
+                                                <p class="font-medium text-gray-900 dark:text-white">-</p>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <div>
                                         <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Date</p>
-                                        <p class="font-medium text-gray-900 dark:text-white">{{$Avis->created_at}}</p>
+                                        <p class="font-medium text-gray-900 dark:text-white">${review.createdAt}</p>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-                    @endforeach
+                    </c:forEach>
                 </div>
 
 

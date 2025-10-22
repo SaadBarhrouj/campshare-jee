@@ -7,4 +7,5 @@ public interface ListingDAO {
   List<Listing> findAll();
 
   long countAll();
+  List<Listing> getPartnerListings(String email);
 }

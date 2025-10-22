@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.campshare.model.Review;
 import com.campshare.model.User;
 import com.campshare.model.Item;
-import com.campshare.model.Reservation;
+import com.campshare.model.Listing;
 
 
 import com.campshare.service.ItemService;
@@ -20,8 +20,8 @@ import com.campshare.service.PartnerService;
 import com.campshare.service.ReservationService;
 
 
-@WebServlet("/partner/AvisRecu")
-public class PartnerAvisRecuServlet extends HttpServlet {
+@WebServlet("/partner/MesAnnonces")
+public class PartnerMesAnnonceServlet extends HttpServlet {
 
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -29,19 +29,20 @@ public class PartnerAvisRecuServlet extends HttpServlet {
 
         PartnerService partnerService = new PartnerService();
 
+        ItemService itemService = new ItemService();
 
 
         String email = "maronakram@gmail.com";
         User user = partnerService.getClientByEmail(email);
         request.setAttribute("user", user);
 
-        List<Review> ParteneReviews = partnerService.getPartnerAvisRecu(email);
-        request.setAttribute("ParteneReviews", ParteneReviews);
+        List<Listing> PartenerListings = partnerService.getPartnerListings(email);
+        request.setAttribute("PartenerListings", PartenerListings);
 
 
 
         // On redirige vers la JSP du dashboard
-        request.getRequestDispatcher("/jsp/partner/avisRecus.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/partner/MesAnnonces.jsp").forward(request, response);
     }
     
 }

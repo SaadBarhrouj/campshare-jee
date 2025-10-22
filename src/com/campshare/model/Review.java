@@ -2,6 +2,8 @@ package com.campshare.model;
 
 import java.sql.Timestamp;
 
+import java.util.Date;
+
 public class Review {
     private long id;
     private long reservationId;
@@ -12,7 +14,7 @@ public class Review {
     private long reviewerId;
     private long revieweeId;
     private long itemId;
-    private Timestamp createdAt;
+    private Date createdAt;
 
     private User reviewer;  
     private User reviewee;  
@@ -146,11 +148,11 @@ public class Review {
         this.itemId = itemId;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
