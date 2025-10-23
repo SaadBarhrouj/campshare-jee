@@ -27,4 +27,10 @@ public interface UserDAO {
     List<DailyRegistrationStatsDTO> getDailyRegistrationStats(int days);
 
     List<User> findRecentByRole(String role, int limit);
+
+    boolean updateUserProfile(User user);
+
+    boolean updateUserPassword(long userId, String newHashedPassword);
+
+    boolean updateUserAvatar(long userId, String avatarUrl);
 }

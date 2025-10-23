@@ -265,4 +265,82 @@ public class UserDAOImpl implements UserDAO {
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
     }
+
+    @Override
+    public boolean updateUserProfile(User user) {
+        if (user == null || user.getId() <= 0 || user.getFirstName() == null || user.getLastName() == null
+                || user.getEmail() == null) {
+            System.err.println("updateUserProfile: Données utilisateur invalides.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getFirstName());
+            pstmt.setString(2, user.getLastName());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setLong(4, user.getId());
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la mise à jour du profil utilisateur (ID: " + user.getId() + "): "
+                    + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(long userId, String newHashedPassword) {
+        if (userId <= 0 || newHashedPassword == null || newHashedPassword.isEmpty()) {
+            System.err.println("updateUserPassword: ID utilisateur ou mot de passe invalide.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newHashedPassword);
+            pstmt.setLong(2, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Erreur SQL lors de la mise à jour du mot de passe (ID: " + userId + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserAvatar(long userId, String avatarUrl) {
+        if (userId <= 0 || avatarUrl == null || avatarUrl.isEmpty()) {
+            System.err.println("updateUserAvatar: ID utilisateur ou URL d'avatar invalide.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET avatar_url = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, avatarUrl);
+            pstmt.setLong(2, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err
+                    .println("Erreur SQL lors de la mise à jour de l'avatar (ID: " + userId + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
