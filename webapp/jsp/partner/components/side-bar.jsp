@@ -436,11 +436,11 @@
                         <i class="fas fa-tachometer-alt w-5 mr-3"></i>
                         Tableau de bord
                     </a>
-                    <a href="/Partenaire/MesEquipement" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/MesEquipements" class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-campground w-5 mr-3"></i>
                         Mes équipements
                     </a>
-                    <a href="/Partenaire/Mesannonces"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/MesAnnonces"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-bullhorn w-5 mr-3"></i>
                         Mes annonces
                     </a>
@@ -449,14 +449,14 @@
                         Demandes location
                         <!--<span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{-- $NumberPendingReservation --}}</span>-->
                     </a>
-                    <a href="/Partenaire/LocationEnCours"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/LocationEnCours"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-exchange-alt w-5 mr-3"></i>
                         Locations en cours
                         <!--<span class="ml-auto bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">{{-- $NumberLocationsEncours --}}</span>-->
                     </a>
                     
                  
-                    <a href=""  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <a href="/webapp/partner/AvisRecu"  class="sidebar-link2 flex items-center px-4 py-3 text-base font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                         <i class="fas fa-star w-5 mr-3"></i>
                         Avis reçus
                     </a>
