@@ -141,7 +141,7 @@
                 </div>
 
                 <!-- Filters and search -->
-                <form  id="filters-form" >
+                <div  id="filters-form" >
 
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
                         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
@@ -180,7 +180,7 @@
                                 type="button"
                                 name="status"
                                 value="${entry.key}"
-                                class="filter-chip ${currentStatus == entry.key ? 'active' : ''}">
+                                class="filter-chip">
                                 <span>${entry.value}</span>
                             </button>
                         </c:forEach>
@@ -195,10 +195,10 @@
                                     name="date" 
                                     class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow text-sm custom-input"
                                 >
-                                    <option value="all" {{ request('date') == 'all' ? 'selected' : '' }}>Toutes les dates</option>
-                                    <option value="this-month" {{ request('date') == 'this-month' ? 'selected' : '' }}>Ce mois-ci</option>
-                                    <option value="last-month" {{ request('date') == 'last-month' ? 'selected' : '' }}>Mois dernier</option>
-                                    <option value="last-3-months" {{ request('date') == 'last-3-months' ? 'selected' : '' }}>3 derniers mois</option>
+                                    <option value="all"> Toutes les dates</option>
+                                    <option value="this-month" >Ce mois-ci</option>
+                                    <option value="last-month" >Mois dernier</option>
+                                    <option value="last-3-months" >3 derniers mois</option>
                                 </select>
                             </div>
 
@@ -209,14 +209,14 @@
                                     name="sort" 
                                     class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow text-sm custom-input"
                                 >
-                                    <option value="date-desc" {{ request('sort') == 'date-desc' ? 'selected' : '' }}>Date (plus récent)</option>
-                                    <option value="date-asc" {{ request('sort') == 'date-asc' ? 'selected' : '' }}>Date (plus ancien)</option>
+                                    <option value="date-desc" >Date (plus récent)</option>
+                                    <option value="date-asc">Date (plus ancien)</option>
                                 
                                 </select>
                             </div>
                         </div>
                     </div>
-                </form>
+                </div>
 
                 <!-- Rental requests list -->
                 <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden mb-6">
@@ -230,9 +230,13 @@
 
                     <!-- Request items -->
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
-                        <div id="">
+                        <div id="reservations-container">
                             <c:forEach var="reservation" items="${ReservationsWithMontantTotal}" >
-                                <div class="px-6 py-4">
+                                <div class="reservation-card px-6 py-4"
+                                data-status="${reservation.status}"
+                                data-client="${reservation.client.username}"
+                                data-equipment="${reservation.listing.item.title}"
+                                data-date="${reservation.createdAt}">
                                     <div class="flex flex-col lg:flex-row lg:items-start">
 
 
@@ -382,33 +386,100 @@
                             {{ $AllReservationForPartner->links() }}
                         </div>
                     </div> -->
-                    <script>
-                        $(document).ready(function() {
-                            // When clicking a status chip
-                            $(".filter-chip").click(function() {
-                                var selectedStatus = $(this).val();
-                                $("#selected-status").val(selectedStatus); // update hidden input
-                                $("#filters-form").submit(); // submit the form
-                            });
-
-                            // When changing date or sort filters
-                            $("#date-filter, #sort-by").change(function() {
-                                $("#filters-form").submit();
-                            });
-
-                            // When typing in the search bar
-                            $("input[name='search']").on('keypress', function(e) {
-                                if (e.which === 13) { // Enter key
-                                    $("#filters-form").submit();
-                                }
-                            });
-                        });
-                        </script>
+                    
 
                     </div>
                 </div>
             </div>
         </main>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchInput = document.querySelector("input[name='search']");
+        const statusButtons = document.querySelectorAll(".filter-chip");
+        const dateSelect = document.getElementById("date-filter");
+        const sortSelect = document.getElementById("sort-by");
+        const container = document.getElementById("reservations-container");
+        const cards = Array.from(container.getElementsByClassName("reservation-card"));
+
+        let selectedStatus = "all";
+
+        // STATUS FILTER
+        statusButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                selectedStatus = btn.value;
+                statusButtons.forEach(b => b.classList.remove("bg-forest", "text-white"));
+                btn.classList.add("bg-forest", "text-white");
+                applyFilters();
+            });
+        });
+
+        // MAIN FILTER FUNCTION
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const dateFilter = dateSelect.value;
+            const sortBy = sortSelect.value;
+
+            const now = new Date();
+
+            let filtered = cards.filter(card => {
+                const client = card.dataset.client.toLowerCase();
+                const equipment = card.dataset.equipment.toLowerCase();
+                const status = card.dataset.status.toLowerCase();
+                const dateStr = card.dataset.date;
+                const date = new Date(dateStr);
+
+                // search
+                const matchesSearch = !searchTerm || client.includes(searchTerm) || equipment.includes(searchTerm);
+                // status
+                const matchesStatus = selectedStatus === "all" || status === selectedStatus.toLowerCase();
+                // date
+                let matchesDate = true;
+                if (dateFilter === "this-month") {
+                    matchesDate = (date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear());
+                } else if (dateFilter === "last-month") {
+                    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    matchesDate = (date.getMonth() === lastMonth.getMonth() && date.getFullYear() === lastMonth.getFullYear());
+                } else if (dateFilter === "last-3-months") {
+                    const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+                    matchesDate = date >= threeMonthsAgo;
+                }
+
+                return matchesSearch && matchesStatus && matchesDate;
+            });
+
+            // SORT
+            filtered.sort((a, b) => {
+                const dateA = new Date(a.dataset.date);
+                const dateB = new Date(b.dataset.date);
+                return sortBy === "date-asc" ? dateA - dateB : dateB - dateA;
+            });
+
+            // RENDER
+            container.innerHTML = "";
+            filtered.forEach(card => container.appendChild(card));
+
+            // Optional: show message if empty
+            if (filtered.length === 0) {
+                container.innerHTML = `<p class="text-center text-gray-500 mt-4">Aucune réservation trouvée.</p>`;
+            }
+        }
+
+        // EVENT LISTENERS
+        searchInput.addEventListener("input", debounce(applyFilters, 300));
+        dateSelect.addEventListener("change", applyFilters);
+        sortSelect.addEventListener("change", applyFilters);
+
+        // helper: debounce
+        function debounce(fn, delay) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn(...args), delay);
+            };
+        }
+    });
+</script>
+
 
 
 </body>

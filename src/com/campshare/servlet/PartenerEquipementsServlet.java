@@ -9,13 +9,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.campshare.model.Review;
+import com.campshare.model.Category;
 import com.campshare.model.User;
 import com.campshare.model.Item;
 
 import com.campshare.service.ItemService;
 import com.campshare.service.PartnerService;
 import com.campshare.service.ReservationService;
+import com.campshare.service.CategoryService;
+
 
 
 @WebServlet("/partner/MesEquipements")
@@ -26,6 +28,7 @@ public class PartenerEquipementsServlet extends HttpServlet {
             throws ServletException, IOException {
 
         PartnerService partnerService = new PartnerService();
+        CategoryService categoryService = new CategoryService();
 
         ItemService itemService = new ItemService();
 
@@ -36,6 +39,9 @@ public class PartenerEquipementsServlet extends HttpServlet {
 
         List<Item> PartenerEquipment = itemService.getPartnerEquipment(email);
         request.setAttribute("PartenerEquipment", PartenerEquipment);
+
+        List<Category> categories = categoryService.getAllCategories();
+        request.setAttribute("categories", categories);
 
 
 

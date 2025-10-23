@@ -139,22 +139,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Équipements</h1>
                     <p class="text-gray-600 dark:text-gray-400 mt-1">Gérez toutes vos équipements.</p>
                 </div>
-                      <%-- ' @if (session('error'))
-                            <div id="error-box" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-4" role="alert">
-                                <span class="block sm:inline">{{ session('error') }}</span>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-4" role="alert">
-                                <strong class="font-bold">Whoops!</strong>
-                                <ul class="list-disc pl-5">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif' --%>
+                    
                 <div class="mt-4 md:mt-0">
                     <button id="add-equipment-button" class="px-4 py-3 bg-forest hover:bg-meadow text-white rounded-md shadow-lg flex items-center font-medium">
                         <i class="fas fa-plus mr-2"></i>
@@ -166,7 +151,7 @@
 
             <!-- Filters and search -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
-                <form action="{{ route('partenaire.equipements') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-5 gap-x-16">
+                <div  class="grid grid-cols-1 md:grid-cols-3 gap-5 gap-x-16">
                     <!-- Recherche -->
                     <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rechercher</label>
@@ -183,31 +168,16 @@
                         <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Catégorie</label>
                         <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="">Toutes les catégories</option>
-                            <%-- @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach --%>
+                        <c:forEach var="category" items="${categories}">
+                            <option value="${category.id}" ${param.category == category.id ? 'selected' : ''}>
+                                ${category.name}
+                            </option>
+                        </c:forEach>
                         </select>
                     </div>
                     
-                    <!-- Prix -->
+
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Intervalle de prix</label>
-                        <div class="flex space-x-2 items-center">
-                            <div class="flex-1">
-                                <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" placeholder="Prix min" min="0" 
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
-                            </div>
-                            <span class="text-gray-500 dark:text-gray-400">-</span>
-                            <div class="flex-1">
-                                <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" placeholder="Prix max" min="0"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
-                            </div>
-                            <span class="text-gray-500 dark:text-gray-400">MAD</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Tri -->
-                    <div>
                         <label for="sort_by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trier par</label>
                         <select name="sort_by" id="sort_by" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Plus récents</option>
@@ -216,21 +186,21 @@
                             <option value="title-asc" {{ request('sort_by') == 'title-asc' ? 'selected' : '' }}>Titre A-Z</option>
                             <option value="title-desc" {{ request('sort_by') == 'title-desc' ? 'selected' : '' }}>Titre Z-A</option>
                         </select>
+                        
                     </div>
                     
-                    <!-- Bouton filtrer -->
-                    <div class="flex items-end md:col-span-4">
-                        <button type="submit" class="w-full md:w-auto px-4 py-2 bg-forest hover:bg-meadow text-white rounded-md shadow-sm flex items-center justify-center">
-                            <i class="fas fa-filter mr-2"></i> Filtrer
-                        </button>
-                    </div>
-                </form>
+                    
+                </div>
             </div>
-            ${PartenerEquipment}
+            <%-- ${PartenerEquipment} --%>
             <!-- Equipment Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" id="equipment-grid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" id="equipment-container">
                 <c:forEach var="equipment" items="${PartenerEquipment}" >
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
+                data-title="${equipment.title}"
+                data-description="${equipment.description}"
+                data-category="${equipment.category.id}"
+                data-price="${equipment.pricePerDay}">
                     <div class="relative h-48">
                             <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}" 
                                  alt="${equipment.title}" 
@@ -622,6 +592,69 @@
             </div>
         </div>
     </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('search');
+        const categorySelect = document.getElementById('category');
+        const sortBySelect = document.getElementById('sort_by');
+        const container = document.getElementById('equipment-container');
+        const cards = Array.from(container.getElementsByClassName('equipment-card'));
+
+        // Filter + Sort function
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const selectedCategory = categorySelect.value;
+            const sortBy = sortBySelect.value;
+
+            // Filter
+            let filtered = cards.filter(card => {
+                const title = card.dataset.title.toLowerCase();
+                const description = card.dataset.description.toLowerCase();
+                const category = card.dataset.category;
+
+                const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesCategory = !selectedCategory || category === selectedCategory;
+                
+                return matchesSearch && matchesCategory;
+            });
+
+            // Sort
+            filtered.sort((a, b) => {
+                const priceA = parseFloat(a.dataset.price);
+                const priceB = parseFloat(b.dataset.price);
+                const titleA = a.dataset.title.toLowerCase();
+                const titleB = b.dataset.title.toLowerCase();
+
+                switch (sortBy) {
+                    case 'price-asc': return priceA - priceB;
+                    case 'price-desc': return priceB - priceA;
+                    case 'title-asc': return titleA.localeCompare(titleB);
+                    case 'title-desc': return titleB.localeCompare(titleA);
+                    default: return 0; // newest → keep original order
+                }
+            });
+
+            // Clear and re-render
+            container.innerHTML = '';
+            filtered.forEach(card => container.appendChild(card));
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', debounce(applyFilters, 300));
+        categorySelect.addEventListener('change', applyFilters);
+        sortBySelect.addEventListener('change', applyFilters);
+
+        // Debounce helper (for smoother search)
+        function debounce(fn, delay) {
+            let timeout;
+            return (...args) => {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => fn(...args), delay);
+            };
+        }
+    });
+</script>
 </body>
 
 
