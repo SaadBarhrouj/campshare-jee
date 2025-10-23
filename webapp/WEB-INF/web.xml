@@ -164,6 +164,21 @@
                 <servlet-name>AdminDeleteListingServlet</servlet-name>
                 <url-pattern>/admin/listings/delete</url-pattern>
             </servlet-mapping>
-
+            <servlet>
+                <servlet-name>AdminEditListingServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminEditListingServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminEditListingServlet</servlet-name>
+                <url-pattern>/admin/listings/edit</url-pattern>
+            </servlet-mapping> 
             
+            <servlet>
+                <servlet-name>AdminProfileServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.AdminProfileServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>AdminProfileServlet</servlet-name>
+                <url-pattern>/admin/profile</url-pattern>
+            </servlet-mapping>
 </web-app>
