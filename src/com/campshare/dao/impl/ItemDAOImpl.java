@@ -1,20 +1,25 @@
 package com.campshare.dao.impl;
 
+import com.campshare.dao.interfaces.ItemDAO;
+import com.campshare.model.Category;
+import com.campshare.model.Image;
+import com.campshare.model.Item;
+import com.campshare.model.Review;
+import com.campshare.util.DatabaseManager;
+
+import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.campshare.dao.interfaces.ItemDAO;
+import javax.servlet.ServletContext;
+import javax.servlet.http.Part;
 
-
-import com.campshare.model.Image;
-import com.campshare.model.Item;
-import com.campshare.model.Review;
-import com.campshare.model.Category;
-import com.campshare.util.DatabaseManager;
 
 
 
@@ -125,6 +130,90 @@ public class ItemDAOImpl implements ItemDAO {
 
         return reviews;
     }
+    public int createItem(Item equipment) {
+        String itemSql = "INSERT INTO items (partner_id, title, description, price_per_day, category_id) VALUES (?, ?, ?, ?, ?)";
+        String imageSql = "INSERT INTO images (item_id, url) VALUES (?, ?)";
+
+        int itemId = -1;
+
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+
+            // Insert item
+            try (PreparedStatement stmt = conn.prepareStatement(itemSql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setDouble(1, equipment.getPartner().getId());
+                stmt.setString(2, equipment.getTitle());
+                stmt.setString(3, equipment.getDescription());
+                stmt.setDouble(4, equipment.getPricePerDay());
+                stmt.setDouble(5, equipment.getCategory().getId());
+                stmt.executeUpdate();
+
+                ResultSet rs = stmt.getGeneratedKeys();
+                if (rs.next()) {
+                    itemId = rs.getInt(1);
+                } else {
+                    conn.rollback();
+                    return -1;
+                }
+            }
+
+            // Insert images (the servlet already created Image objects with url)
+            if (equipment.getImages() != null) {
+                try (PreparedStatement imgStmt = conn.prepareStatement(imageSql)) {
+                    for (Image img : equipment.getImages()) {
+                        imgStmt.setInt(1, itemId);
+                        imgStmt.setString(2, img.getUrl()); // just the file name
+                        imgStmt.addBatch();
+                    }
+                    imgStmt.executeBatch();
+                }
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return itemId;
+    }
+
+    public boolean deleteItem(int itemId) {
+        String deleteImagesSql = "DELETE FROM images WHERE item_id = ?";
+        String deleteItemSql = "DELETE FROM items WHERE id = ?";
+        String deleteListingsSql = "DELETE FROM listings WHERE item_id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection()) {
+            // Start a transaction
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmtImages = conn.prepareStatement(deleteImagesSql)) {
+                stmtImages.setInt(1, itemId);
+                stmtImages.executeUpdate();
+            }
+            try (PreparedStatement stmtListings = conn.prepareStatement(deleteListingsSql)) {
+                stmtListings.setInt(1, itemId);
+                stmtListings.executeUpdate();
+            }
+
+            int affectedRows;
+            try (PreparedStatement stmtItem = conn.prepareStatement(deleteItemSql)) {
+                stmtItem.setInt(1, itemId);
+                affectedRows = stmtItem.executeUpdate();
+            }
+
+
+
+            // Commit the transaction
+            conn.commit();
+
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
 
 
 }

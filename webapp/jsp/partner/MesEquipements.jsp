@@ -210,15 +210,15 @@
                         <div class="absolute top-2 right-2 flex space-x-2">
                             <button class="edit-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-forest dark:text-meadow hover:bg-forest hover:text-white dark:hover:bg-meadow transition-colors" 
                                     data-id="{{ $equipment->id }}" 
-                                    data-title="{{ $equipment->title }}" 
+                                    data-title="${equipment.title}" 
                                     data-description="{{ $equipment->description }}" 
                                     data-price="{{ $equipment->price_per_day }}" 
                                     data-category="{{ $equipment->category_id }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="delete-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-red-500 hover:bg-red-500 hover:text-white transition-colors" 
-                                    data-id="{{ $equipment->id }}" 
-                                    data-title="{{ $equipment->title }}">
+                                    data-id="${equipment.id}" 
+                                    data-title="${equipment.title}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -279,8 +279,7 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <form id="add-equipment-form" action="{{ route('partenaire.equipements.create') }}" method="POST" enctype="multipart/form-data" class="p-6">
-                @csrf
+            <form id="add-equipment-form" action="${pageContext.request.contextPath}/partner/AddItem" method="POST" enctype="multipart/form-data" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre</label>
@@ -293,9 +292,9 @@
                         <select id="category_id" name="category_id" required
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="">Sélectionner une catégorie</option>
-                            @foreach(\App\Models\Category::all() as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.id}">${category.name}</option>
+                            </c:forEach>
                         </select>
                     </div>
                     
@@ -345,7 +344,10 @@
                 </div>
             </form>
         </div>
-    </div><!-- Edit Equipment Modal -->
+    </div>
+    
+    
+    <!-- Edit Equipment Modal -->
     <div id="edit-equipment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-5xl w-full max-h-screen overflow-y-auto no-scrollbar">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
@@ -428,7 +430,8 @@
                 </div>
             </form>
         </div>
-    </div><!-- Delete Equipment Modal -->
+    </div>
+    <!-- Delete Equipment Modal -->
     <div id="delete-equipment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -445,6 +448,7 @@
                 <form id="delete-equipment-form" action="" method="POST">
                     @csrf
                     @method('DELETE')
+                    <input type="hidden" name="_method" value="DELETE" />
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="cancel-delete" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                             Annuler
@@ -456,7 +460,8 @@
                 </form>
             </div>
         </div>
-    </div><!-- Delete All Equipment Modal -->
+    </div>
+    <!-- Delete All Equipment Modal -->
     <div id="delete-all-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -594,67 +599,550 @@
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const searchInput = document.getElementById('search');
-        const categorySelect = document.getElementById('category');
-        const sortBySelect = document.getElementById('sort_by');
-        const container = document.getElementById('equipment-container');
-        const cards = Array.from(container.getElementsByClassName('equipment-card'));
+        const addEquipmentButton = document.getElementById('add-equipment-button');
+        const addEquipmentForm = document.getElementById('add-equipment-form');
+        const addEquipmentModal = document.getElementById('add-equipment-modal');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const imageInput = document.getElementById('images');
+        const deleteEquipmentModal = document.getElementById('delete-equipment-modal');
+        const deleteEquipmentForm = document.getElementById('delete-equipment-form');
+        const contextPath = '${pageContext.request.contextPath}';
 
-        // Filter + Sort function
-        function applyFilters() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
-            const selectedCategory = categorySelect.value;
-            const sortBy = sortBySelect.value;
 
-            // Filter
-            let filtered = cards.filter(card => {
-                const title = card.dataset.title.toLowerCase();
-                const description = card.dataset.description.toLowerCase();
-                const category = card.dataset.category;
+        const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
+        const detailsModal = document.getElementById('equipment-details-modal');
 
-                const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
-                const matchesCategory = !selectedCategory || category === selectedCategory;
-                
-                return matchesSearch && matchesCategory;
+            // Show Add Equipment Modal
+
+        if (addEquipmentButton) {
+            addEquipmentButton.addEventListener('click', () => {
+                addEquipmentModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
             });
-
-            // Sort
-            filtered.sort((a, b) => {
-                const priceA = parseFloat(a.dataset.price);
-                const priceB = parseFloat(b.dataset.price);
-                const titleA = a.dataset.title.toLowerCase();
-                const titleB = b.dataset.title.toLowerCase();
-
-                switch (sortBy) {
-                    case 'price-asc': return priceA - priceB;
-                    case 'price-desc': return priceB - priceA;
-                    case 'title-asc': return titleA.localeCompare(titleB);
-                    case 'title-desc': return titleB.localeCompare(titleA);
-                    default: return 0; // newest → keep original order
+        }
+        if (addEquipmentForm) {
+            addEquipmentForm.addEventListener('submit', function(e) {
+                // Compter le nombre d'inputs de fichier cachés (qui contiennent les images réelles)
+                const hiddenInputs = addEquipmentForm.querySelectorAll('input[type="file"].hidden-file-input');
+                const imageCount = hiddenInputs.length;
+                const errorDiv = document.getElementById('image-count-error');
+                
+                if (imageCount < 1 || imageCount > 5) {
+                    e.preventDefault();
+                    errorDiv.textContent = imageCount < 1 
+                        ? "Veuillez sélectionner au moins 1 image."
+                        : "Veuillez sélectionner au maximum 5 images.";
+                    errorDiv.classList.remove('hidden');
+                    return false;
+                } else {
+                    errorDiv.classList.add('hidden');
+                    return true;
                 }
             });
-
-            // Clear and re-render
-            container.innerHTML = '';
-            filtered.forEach(card => container.appendChild(card));
+        }
+        if (imageInput) {
+            imageInput.addEventListener('change', function() {
+                handleFileSelect(this.files, imagePreviewContainer);
+            });
+        }
+        function handleFileSelect(files, previewContainer) {
+            // Limiter à maximum 5 images au total
+            const maxFiles = 5;
+            const currentImages = previewContainer.querySelectorAll('.relative').length;
+            const maxNewImages = maxFiles - currentImages;
+            
+            if (maxNewImages <= 0) {
+                const errorDiv = previewContainer.id === 'image-preview-container' 
+                    ? document.getElementById('image-count-error') 
+                    : document.getElementById('edit-image-count-error');
+                
+                if (errorDiv) {
+                    errorDiv.textContent = "Maximum 5 images autorisées. Veuillez supprimer des images avant d'en ajouter d'autres.";
+                    errorDiv.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            const filesToProcess = files.length > maxNewImages ? Array.from(files).slice(0, maxNewImages) : files;
+            
+            // Déterminer le formulaire parent
+            const formId = previewContainer.id === 'image-preview-container' 
+                ? 'add-equipment-form' 
+                : 'edit-equipment-form';
+            const form = document.getElementById(formId);
+            
+            for (let i = 0; i < filesToProcess.length; i++) {
+                const file = filesToProcess[i];
+                
+                if (!file.type.match('image.*')) {
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'relative';
+                    imgContainer.dataset.fileIndex = Date.now() + '_' + i; // Identifiant unique
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-32 object-cover rounded-md';
+                    imgContainer.appendChild(img);
+                    
+                    // Créer un champ de fichier caché pour cette image spécifique
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'file';
+                    hiddenInput.name = 'images[]';
+                    hiddenInput.classList.add('hidden-file-input');
+                    hiddenInput.style.display = 'none';
+                    
+                    // Créer un objet DataTransfer pour y mettre le fichier
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    hiddenInput.files = dataTransfer.files;
+                    
+                    // Ajouter l'input au formulaire
+                    form.appendChild(hiddenInput);
+                    
+                    // Stocker la référence à l'input dans le conteneur d'image
+                    imgContainer.dataset.inputId = hiddenInput.id = 'file-input-' + imgContainer.dataset.fileIndex;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
+                    removeBtn.innerHTML = '<i class="fas fa-times text-xs"></i>';
+                    removeBtn.addEventListener('click', function() {
+                        // Supprimer l'input de fichier associé
+                        const inputToRemove = document.getElementById(imgContainer.dataset.inputId);
+                        if (inputToRemove) {
+                            inputToRemove.remove();
+                        }
+                        
+                        // Supprimer la prévisualisation
+                        imgContainer.remove();
+                        
+                        // Masquer le message d'erreur après la suppression
+                        const errorDiv = previewContainer.id === 'image-preview-container' 
+                            ? document.getElementById('image-count-error') 
+                            : document.getElementById('edit-image-count-error');
+                        
+                        if (errorDiv) {
+                            errorDiv.classList.add('hidden');
+                        }
+                        
+                        // Mettre à jour le compteur d'images
+                        updateImageCount(previewContainer);
+                    });
+                    imgContainer.appendChild(removeBtn);
+                    
+                    previewContainer.appendChild(imgContainer);
+                    
+                    // Mettre à jour le compteur d'images
+                    updateImageCount(previewContainer);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            // Afficher message d'erreur si dépassement
+            const errorDiv = previewContainer.id === 'image-preview-container' 
+                ? document.getElementById('image-count-error') 
+                : document.getElementById('edit-image-count-error');
+            
+            if (files.length > maxNewImages && errorDiv) {
+                errorDiv.textContent = `Vous ne pouvez ajouter que ${maxNewImages} image(s) supplémentaire(s). Seules les ${maxNewImages} premières ont été sélectionnées.`;
+                errorDiv.classList.remove('hidden');
+            } else if (errorDiv) {
+                errorDiv.classList.add('hidden');
+            }
+            
+            // Réinitialiser l'input de fichier principal pour permettre de sélectionner à nouveau le même fichier
+            const mainFileInput = previewContainer.id === 'image-preview-container' 
+                ? document.getElementById('images') 
+                : document.getElementById('edit-images');
+            
+            mainFileInput.value = '';
+        }
+        function updateImageCount(previewContainer) {
+            const isEdit = previewContainer.id === 'edit-image-preview-container';
+            const imageCount = previewContainer.querySelectorAll('.relative').length;
+            
+            // Pour l'édition, on compte aussi les images existantes
+            if (isEdit) {
+                const currentImagesContainer = document.getElementById('current-images-container');
+                const keptImagesCount = currentImagesContainer ? currentImagesContainer.querySelectorAll('input[name="keep_images[]"]').length : 0;
+                const totalCount = imageCount + keptImagesCount;
+                
+                const countElement = document.getElementById('edit-image-count');
+                if (countElement) {
+                    countElement.textContent = totalCount;
+                }
+            } else {
+                // Pour l'ajout simple
+                const countElement = document.getElementById('image-count');
+                if (countElement) {
+                    countElement.textContent = imageCount;
+                }
+            }
         }
 
-        // Event listeners
-        searchInput.addEventListener('input', debounce(applyFilters, 300));
-        categorySelect.addEventListener('change', applyFilters);
-        sortBySelect.addEventListener('change', applyFilters);
+        document.querySelectorAll('.delete-equipment-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const equipmentId = this.dataset.id;
+                document.getElementById('delete-equipment-name').textContent = this.dataset.title;
+                const form = document.getElementById('delete-equipment-form');
 
-        // Debounce helper (for smoother search)
-        function debounce(fn, delay) {
-            let timeout;
-            return (...args) => {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => fn(...args), delay);
-            };
-        }
-    });
-</script>
+                form.action = contextPath + '/partner/DeleteItem' + '/' + equipmentId;
+                deleteEquipmentModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+            // View Equipment Details
+        viewDetailsButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const id = button.getAttribute('data-id');
+                
+                // Afficher le modal avec indicateur de chargement
+                const modal = document.getElementById('equipment-details-modal');
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                
+                // Initialiser les éléments avec des indicateurs de chargement
+                document.getElementById('detail-title').textContent = 'Chargement...';
+                document.getElementById('detail-price').textContent = '...';
+                document.getElementById('detail-category').textContent = '...';
+                document.getElementById('detail-description').textContent = 'Chargement des informations...';
+                document.getElementById('detail-annonces-count').textContent = '...';
+                document.getElementById('detail-active-annonces').textContent = '...';
+                document.getElementById('detail-reservations-count').textContent = '...';
+                document.getElementById('detail-completed-reservations').textContent = '...';
+                document.getElementById('detail-avg-rating').textContent = '...';
+                document.getElementById('detail-review-count').textContent = '...';
+                document.getElementById('detail-revenue').textContent = '...';
+                document.getElementById('detail-reviews-summary').textContent = 'Chargement...';
+                
+                // Vider le conteneur d'images et afficher un placeholder
+                const imageSlider = document.getElementById('detail-image-slider');
+                imageSlider.innerHTML = `
+                    <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
+                        <i class="fas fa-sync fa-spin text-5xl text-gray-400 dark:text-gray-500"></i>
+                    </div>
+                `;
+                
+                // Charger les données détaillées de l'équipement
+                fetch(`/partenaire/equipements/${id}/details`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erreur lors du chargement des détails');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Mettre à jour les informations de base
+                        const equipment = data.equipment;
+                        const stats = data.stats;
+                        
+                        document.getElementById('detail-title').textContent = equipment.title;
+                        document.getElementById('detail-price').textContent = `${equipment.price_per_day} MAD/jour`;
+                        document.getElementById('detail-category').textContent = equipment.category ? equipment.category.name : 'Non catégorisé';
+                        document.getElementById('detail-description').textContent = equipment.description || 'Aucune description';
+                        
+                        // Statistiques
+                        document.getElementById('detail-annonces-count').textContent = stats.annonces_count;
+                        document.getElementById('detail-active-annonces').textContent = `${stats.active_annonce_count} actives`;
+                        document.getElementById('detail-reservations-count').textContent = stats.reservations_count;
+                        document.getElementById('detail-completed-reservations').textContent = `${stats.completed_reservations_count} terminées`;
+                        document.getElementById('detail-revenue').textContent = `${stats.revenue.toLocaleString()} MAD`;
+                        
+                        // Avis
+                        const avgRating = equipment.reviews && equipment.reviews.length > 0 
+                            ? equipment.reviews.reduce((sum, review) => sum + review.rating, 0) / equipment.reviews.length 
+                            : 0;
+                        document.getElementById('detail-avg-rating').textContent = avgRating.toFixed(1);
+                        document.getElementById('detail-review-count').textContent = `${equipment.reviews ? equipment.reviews.length : 0} avis`;
+                        document.getElementById('detail-reviews-summary').textContent = equipment.reviews && equipment.reviews.length > 0 
+                            ? `${equipment.reviews.length} avis` 
+                            : 'Aucun avis';
+                        
+                        // Images
+                        imageSlider.innerHTML = '';
+                        
+                        // Créer le carousel d'images
+                        if (equipment.images && equipment.images.length > 0) {
+                            // Conteneur pour les indicateurs
+                            const imageDots = document.createElement('div');
+                            imageDots.className = 'flex justify-center mt-2 space-x-2';
+                            imageDots.id = 'detail-image-dots';
+                            
+                            // Ajouter chaque image au slider
+                            equipment.images.forEach((image, index) => {
+                                // Créer la diapositive d'image
+                                const imgDiv = document.createElement('div');
+                                imgDiv.className = 'w-full h-64 flex-shrink-0 snap-center relative';
+                                imgDiv.setAttribute('data-index', index);
+                                imgDiv.innerHTML = `
+                                    <img src="/${image.url}" alt="${equipment.title}" class="w-full h-full object-cover">
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
+                                        ${index + 1}/${equipment.images.length}
+                                    </div>
+                                `;
+                                imageSlider.appendChild(imgDiv);
+                                
+                                // Créer l'indicateur (point) pour cette image
+                                const dot = document.createElement('button');
+                                //dot.className = `w-3 h-3 rounded-full ${index === 0 ? 'bg-forest dark:bg-meadow' : 'bg-gray-300 dark:bg-gray-600'}`;
+                                dot.setAttribute('data-index', index);
+                                dot.addEventListener('click', () => {
+                                    // Faire défiler jusqu'à cette image
+                                    const imgElement = imageSlider.querySelector(`[data-index="${index}"]`);
+                                    if (imgElement) {
+                                        imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    }
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                    dot.classList.add('bg-forest', 'dark:bg-meadow');
+                                });
+                                imageDots.appendChild(dot);
+                            });
+                            
+                            // Ajouter les indicateurs sous le slider
+                            const sliderContainer = imageSlider.closest('.bg-gray-100, .dark\\:bg-gray-700');
+                            sliderContainer.appendChild(imageDots);
+                            
+                            // Ajouter des contrôles de navigation (boutons précédent/suivant)
+                            const prevButton = document.createElement('button');
+                            prevButton.className = 'absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10';
+                            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                            prevButton.addEventListener('click', () => {
+                                // Trouver l'image visible actuelle
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Calculer l'index de l'image précédente
+                                const prevIndex = (currentIndex - 1 + equipment.images.length) % equipment.images.length;
+                                
+                                // Faire défiler jusqu'à l'image précédente
+                                const imgElement = imageSlider.querySelector(`[data-index="${prevIndex}"]`);
+                                if (imgElement) {
+                                    imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    const activeDot = imageDots.querySelector(`[data-index="${prevIndex}"]`);
+                                    if (activeDot) {
+                                        activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                        activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                    }
+                                }
+                            });
+                            
+                            const nextButton = document.createElement('button');
+                            nextButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10';
+                            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                            nextButton.addEventListener('click', () => {
+                                // Trouver l'image visible actuelle
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Calculer l'index de l'image suivante
+                                const nextIndex = (currentIndex + 1) % equipment.images.length;
+                                
+                                // Faire défiler jusqu'à l'image suivante
+                                const imgElement = imageSlider.querySelector(`[data-index="${nextIndex}"]`);
+                                if (imgElement) {
+                                    imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    const activeDot = imageDots.querySelector(`[data-index="${nextIndex}"]`);
+                                    if (activeDot) {
+                                        activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                        activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                    }
+                                }
+                            });
+                            
+                            // Ajouter les boutons de navigation directement au slider
+                            sliderContainer.appendChild(prevButton);
+                            sliderContainer.appendChild(nextButton);
+                            sliderContainer.style.position = 'relative';
+                            
+                            // Détecter le changement d'image lors du défilement
+                            imageSlider.addEventListener('scroll', () => {
+                                // Calculer l'index de l'image actuellement visible
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Mettre à jour les indicateurs
+                                imageDots.querySelectorAll('button').forEach(btn => {
+                                    btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                    btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                });
+                                const activeDot = imageDots.querySelector(`[data-index="${currentIndex}"]`);
+                                if (activeDot) {
+                                    activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                    activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                }
+                            });
+                        } else {
+                            // Add placeholder if no images
+                            const placeholderDiv = document.createElement('div');
+                            placeholderDiv.className = 'w-full h-64 bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center';
+                            placeholderDiv.innerHTML = '<i class="fas fa-campground text-5xl text-gray-400 dark:text-gray-500"></i>';
+                            imageSlider.appendChild(placeholderDiv);
+                        }
+                        
+                        // Lien pour créer une annonce
+                        const createAnnonceLink = document.getElementById('detail-create-annonce-link');
+                        createAnnonceLink.href = `/partenaire/annonces/create/${equipment.id}`;
+                        
+                        // Avis
+                        const reviewsContainer = document.getElementById('detail-reviews-container');
+                        const noReviewsMessage = document.getElementById('no-reviews-message');
+                        
+                        // Clear previous reviews
+                        reviewsContainer.innerHTML = '';
+                        
+                        if (!equipment.reviews || equipment.reviews.length === 0) {
+                            reviewsContainer.appendChild(noReviewsMessage);
+                        } else {
+                            equipment.reviews.forEach(review => {
+                                const reviewDiv = document.createElement('div');
+                                //reviewDiv.className = 'bg-gray-50 dark:bg-gray-700 p-4 rounded-lg';
+                                
+                                // Create stars
+                                let stars = '';
+                                for (let i = 0; i < 5; i++) {
+                                    if (i < review.rating) {
+                                        stars += '<i class="fas fa-star text-amber-400"></i>';
+                                    } else {
+                                        stars += '<i class="far fa-star text-amber-400"></i>';
+                                    }
+                                }
+                                
+                                const reviewerName = review.reviewer ? review.reviewer.username || 'Utilisateur' : 'Utilisateur';
+
+                                const reviewerAvata = "{{ asset('') }}";
+                                const reviewerAvatar = reviewerAvata + review.reviewer.avatar_url;
+                                
+                                const reviewDate = new Date(review.created_at).toLocaleDateString('fr-FR');
+                                
+                                reviewDiv.innerHTML = `
+                                    <div class="flex items-center mb-2">
+                                        <img src="${reviewerAvatar}" alt="${reviewerName}" class="w-8 h-8 rounded-full mr-2">
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-white">${reviewerName}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">${reviewDate}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex mb-2">
+                                        ${stars}
+                                    </div>
+                                    <p class="text-gray-700 dark:text-gray-300">${review.comment || 'Aucun commentaire'}</p>
+                                `;
+                                
+                                reviewsContainer.appendChild(reviewDiv);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                        // Afficher un message d'erreur
+                        document.getElementById('detail-title').textContent = 'Erreur de chargement';
+                        document.getElementById('detail-description').textContent = 'Une erreur est survenue lors du chargement des détails de l\'équipement. Veuillez réessayer.';
+                        
+                        // Vider le conteneur d'images et afficher une icône d'erreur
+                        imageSlider.innerHTML = `
+                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-5xl text-red-500"></i>
+                            </div>
+                        `;
+                    });
+            });
+        });
+
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search');
+            const categorySelect = document.getElementById('category');
+            const sortBySelect = document.getElementById('sort_by');
+            const container = document.getElementById('equipment-container');
+            const cards = Array.from(container.getElementsByClassName('equipment-card'));
+
+            // Filter + Sort function
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const selectedCategory = categorySelect.value;
+                const sortBy = sortBySelect.value;
+
+                // Filter
+                let filtered = cards.filter(card => {
+                    const title = card.dataset.title.toLowerCase();
+                    const description = card.dataset.description.toLowerCase();
+                    const category = card.dataset.category;
+
+                    const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+                    const matchesCategory = !selectedCategory || category === selectedCategory;
+                    
+                    return matchesSearch && matchesCategory;
+                });
+
+                // Sort
+                filtered.sort((a, b) => {
+                    const priceA = parseFloat(a.dataset.price);
+                    const priceB = parseFloat(b.dataset.price);
+                    const titleA = a.dataset.title.toLowerCase();
+                    const titleB = b.dataset.title.toLowerCase();
+
+                    switch (sortBy) {
+                        case 'price-asc': return priceA - priceB;
+                        case 'price-desc': return priceB - priceA;
+                        case 'title-asc': return titleA.localeCompare(titleB);
+                        case 'title-desc': return titleB.localeCompare(titleA);
+                        default: return 0; // newest → keep original order
+                    }
+                });
+
+                // Clear and re-render
+                container.innerHTML = '';
+                filtered.forEach(card => container.appendChild(card));
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', debounce(applyFilters, 300));
+            categorySelect.addEventListener('change', applyFilters);
+            sortBySelect.addEventListener('change', applyFilters);
+
+            // Debounce helper (for smoother search)
+            function debounce(fn, delay) {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => fn(...args), delay);
+                };
+            }
+        });
+    </script>
 </body>
 
 
