@@ -266,33 +266,57 @@
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         <div class="flex space-x-2 justify-end">
-                                            <a href="{{ route('partenaire.annonces.details', $annonce->id) }}" class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-800/50" title="Voir les détails">
-                                                <i class="fas fa-eye mr-1"></i> Voir
+                                            <a href="${pageContext.request.contextPath}/partner/AnnonceDetails?listing_id=${annonce.id}" 
+                                            class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-800/50" 
+                                            title="Voir les détails">
+                                            <i class="fas fa-eye mr-1"></i> Voir
                                             </a>
+
                                             
-                                            <a href="{{ route('partenaire.annonces.edit', $annonce->id) }}" class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded hover:bg-indigo-200 dark:hover:bg-indigo-800/50" title="Modifier l'annonce">
+                                            <a  href="${pageContext.request.contextPath}/partner/AnnonceEdit?listing_id=${annonce.id}"  class="px-2 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded hover:bg-indigo-200 dark:hover:bg-indigo-800/50" title="Modifier l'annonce">
                                                 <i class="fas fa-edit mr-1"></i> Modifier
                                             </a>
                                             
-                                            <form action="{{ route('partenaire.annonces.update', $annonce) }}" method="POST" class="inline-block">
-                                                <%-- @csrf --%>
-                                                <%-- @method('PUT') --%>
-                                                <input type="hidden" name="status" value="{{ $annonce->status === 'active' ? 'archived' : 'active' }}">
-                                                <button type="submit" class="{{ $annonce->status === 'active' ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 hover:bg-orange-200 dark:hover:bg-orange-800/50' : 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-800/50' }} px-2 py-1 rounded" title="{{ $annonce->status === 'active' ? 'Désactiver l\'annonce' : 'Activer l\'annonce' }}">
+                                            <form action="${pageContext.request.contextPath}/partner/MesAnnonces" method="POST" class="inline-block">
+                                                <input type="hidden" name="action" value="toggle_status">
+                                                <input type="hidden" name="listing_id" value="${annonce.id}">
+                                                
                                                 <c:choose>
                                                     <c:when test="${annonce.status == 'active'}">
-                                                        <i class="fas fa-toggle-off mr-1"></i> Archiver
+                                                        <input type="hidden" name="status" value="archived">
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <i class="fas fa-toggle-on mr-1"></i> Activer
+                                                        <input type="hidden" name="status" value="active">
                                                     </c:otherwise>
                                                 </c:choose>
+                                                
+                                                <button type="submit"
+                                                    class="<c:choose>
+                                                            <c:when test='${annonce.status == "active"}'>
+                                                                bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400 hover:bg-orange-200 dark:hover:bg-orange-800/50
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-800/50
+                                                            </c:otherwise>
+                                                        </c:choose> px-2 py-1 rounded"
+                                                    title="<c:choose>
+                                                            <c:when test='${annonce.status == "active"}'>Désactiver l'annonce</c:when>
+                                                            <c:otherwise>Activer l'annonce</c:otherwise>
+                                                        </c:choose>">
+                                                    <c:choose>
+                                                        <c:when test="${annonce.status == 'active'}">
+                                                            <i class="fas fa-toggle-off mr-1"></i> Archiver
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="fas fa-toggle-on mr-1"></i> Activer
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </button>
                                             </form>
-                                            
-                                            <form action="{{ route('partenaire.annonces.delete', $annonce) }}" method="POST" class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
-                                                <%-- @csrf --%>
-                                                <%-- @method('DELETE') --%>
+
+                                            <form  action="${pageContext.request.contextPath}/partner/MesAnnonces" method="POST"  class="inline-block" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="listing_id" value="${annonce.id}">
                                                 <button type="submit" class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-800/50" title="Supprimer l'annonce">
                                                     <i class="fas fa-trash mr-1"></i> Supprimer
                                                 </button>
@@ -306,10 +330,7 @@
                         </table>
                     </div>
                     
-                            <!-- Pagination -->
-                            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700">
-                                {{ $annonces->withQueryString()->links() }}
-                            </div>
+                            
                 </c:otherwise>
                 </c:choose>
             </div>

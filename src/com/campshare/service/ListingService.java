@@ -283,4 +283,14 @@ public class ListingService {
 
     return stats;
   }
+  public boolean deleteAnnonce(long id) {
+    return listingDAO.deleteAnnonce(id);
+  }
+
+  public boolean updateStatus(long id, String newStatus) {
+    return listingDAO.updateStatus(id, newStatus);
+  }
+  public boolean updateListing(long listingId, long cityId, String startDate, String endDate, String deliveryOption, Double latitude, Double longitude) {
+    return listingDAO.updateListing(listingId, cityId, startDate, endDate,deliveryOption, latitude, longitude);
+  }
 }

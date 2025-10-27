@@ -36,6 +36,11 @@ public interface ListingDAO {
 
   boolean delete(long listingId);
   List<Listing> getPartnerListings(String email);
+  boolean deleteAnnonce(long id);
+  boolean updateListing(long listingId, long cityId, String startDate, String endDate,
+                                 String deliveryOption, Double latitude, Double longitude
+                                );
+  
 
 
 }

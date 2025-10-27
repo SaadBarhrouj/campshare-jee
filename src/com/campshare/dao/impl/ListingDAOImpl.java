@@ -668,4 +668,47 @@ public class ListingDAOImpl implements ListingDAO {
     return listings;
 }
 
+  @Override
+  public boolean deleteAnnonce(long id) {
+      String sql = "DELETE FROM listings WHERE id = ?";
+      
+      try (Connection conn = DatabaseManager.getConnection();
+          PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+          stmt.setLong(1, id);
+          return stmt.executeUpdate() > 0;
+          
+      } catch (SQLException e) {
+          System.out.println("Error deleting annonce: " + e.getMessage());
+          return false;
+      }
+  }
+
+      public boolean updateListing(long listingId, long cityId, String startDate, String endDate,
+                                 String deliveryOption, Double latitude, Double longitude) {
+        String sql = "UPDATE listings SET city_id = ?, start_date = ?, end_date = ?, delivery_option = ?, " +
+                     "latitude = ?, longitude = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+              deliveryOption = deliveryOption.equals("true") ? "1" : "0";
+
+            stmt.setLong(1, cityId);
+            stmt.setString(2, startDate);
+            stmt.setString(3, endDate);
+            stmt.setString(4, deliveryOption);
+            stmt.setObject(5, latitude); // use setObject to allow null
+            stmt.setObject(6, longitude);
+           
+            stmt.setLong(7, listingId);
+
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Error updating listing: " + e.getMessage());
+            return false;
+        }
+    }
+
+
 }

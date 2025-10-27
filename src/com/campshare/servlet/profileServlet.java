@@ -11,6 +11,7 @@ import com.campshare.model.User;
 import com.campshare.service.ClientService;
 import com.campshare.service.ReservationService;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.annotation.MultipartConfig;
@@ -58,87 +59,90 @@ public class profileServlet extends HttpServlet {
 
 
         @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("=== doPost method called ===");
-        
-        // Handle profile update
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
         String action = request.getParameter("action");
-        System.out.println("Action: " + action);
-        
+
         if ("update".equals(action)) {
-            // Get form parameters
+
+            // Read input fields
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
             String username = request.getParameter("username");
             String email = request.getParameter("email");
             String phoneNumber = request.getParameter("phoneNumber");
             String password = request.getParameter("password");
-            
-            System.out.println("First Name: " + firstName);
-            System.out.println("Last Name: " + lastName);
-            System.out.println("Username: " + username);
-            System.out.println("Email: " + email);
-            System.out.println("Phone: " + phoneNumber);
-            
-            // Handle file upload
+
             String avatarFileName = null;
+
+            // ✅ Handle avatar upload
             try {
                 Part filePart = request.getPart("avatar");
                 if (filePart != null && filePart.getSize() > 0) {
                     avatarFileName = getFileName(filePart);
-                    System.out.println("Uploaded file: " + avatarFileName);
-                    // Save the file to your server
-                    // String uploadPath = getServletContext().getRealPath("") + "images/avatars";
-                    // filePart.write(uploadPath + File.separator + fileName);
+
+                    String uploadPath = getServletContext().getRealPath("/images/avatars/");
+                    File uploadDir = new File(uploadPath);
+                    if (!uploadDir.exists()) uploadDir.mkdirs();
+
+                    filePart.write(uploadPath + File.separator + avatarFileName);
+
+                    System.out.println("✅ Avatar uploaded: " + avatarFileName);
                 }
             } catch (Exception e) {
-                System.out.println("Error handling file upload: " + e.getMessage());
+                System.out.println("⚠ Avatar upload error: " + e.getMessage());
             }
-            
-            // ✅ ACTUALLY UPDATE THE USER IN DATABASE
-            try {
-                ReservationService reservationService = new ReservationService();
-                boolean updateSuccess = reservationService.updateUserProfile(
-                    email, // use email to identify the user
-                    firstName,
-                    lastName,
-                    username,
-                    phoneNumber,
-                    password, // can be null if not changing password
-                    avatarFileName // can be null if not changing avatar
-                );
-                
-                if (updateSuccess) {
-                    System.out.println("✅ User profile updated successfully!");
-                    // Set success message
-                    request.getSession().setAttribute("successMessage", "Profil mis à jour avec succès!");
-                } else {
-                    System.out.println("❌ Failed to update user profile!");
-                    request.getSession().setAttribute("errorMessage", "Erreur lors de la mise à jour du profil!");
+
+            ReservationService reservationService = new ReservationService();
+            boolean updateSuccess = reservationService.updateUserProfile(
+                    email, firstName, lastName, username, phoneNumber,
+                    password, avatarFileName
+            );
+
+            if (updateSuccess) {
+                System.out.println("✅ Profile updated!");
+
+                // ✅ Update session user manually (no DB fetch)
+                User user = (User) request.getSession().getAttribute("user");
+                if (user != null) {
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    user.setUsername(username);
+                    user.setEmail(email);
+                    user.setPhoneNumber(phoneNumber);
+
+                    if (avatarFileName != null && !avatarFileName.trim().isEmpty()) {
+                        user.setAvatarUrl(avatarFileName);
+                    }
+                    if (password != null && !password.trim().isEmpty()) {
+                        user.setPassword(password); // (recommended: hash)
+                    }
+
+                    request.getSession().setAttribute("user", user);
                 }
-                
-            } catch (Exception e) {
-                System.out.println("❌ Error updating user: " + e.getMessage());
-                e.printStackTrace();
-                request.getSession().setAttribute("errorMessage", "Erreur: " + e.getMessage());
+
+                request.getSession().setAttribute("successMessage", "Profil mis à jour avec succès!");
+
+            } else {
+                System.out.println("❌ Failed to update profile!");
+                request.getSession().setAttribute("errorMessage", "Erreur lors de la mise à jour!");
             }
-            
-            // Redirect back to profile
-            response.sendRedirect(request.getContextPath() + "/client/profile");
-        } else {
-            System.out.println("Action is not 'update'");
+
             response.sendRedirect(request.getContextPath() + "/client/profile");
         }
     }
+
     private String getFileName(Part part) {
         String contentDisp = part.getHeader("content-disposition");
-        String[] tokens = contentDisp.split(";");
-        for (String token : tokens) {
+        for (String token : contentDisp.split(";")) {
             if (token.trim().startsWith("filename")) {
                 return token.substring(token.indexOf("=") + 2, token.length() - 1);
             }
         }
         return "";
     }
+
+
 
 }

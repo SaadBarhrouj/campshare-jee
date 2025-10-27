@@ -1311,29 +1311,40 @@ public class ReservationDAOImpl implements ReservationDAO{
 
 
 
-    public boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) {
+   public boolean updateUserProfile(String email, String firstName, String lastName, String username,
+                                 String phoneNumber, String password, String avatarFileName) {
         Connection conn = null;
         PreparedStatement pstmt = null;
-        
+        ResultSet rs = null;
+
         try {
             conn = DatabaseManager.getConnection();
-            
+
+            // ✅ Keep old avatar if null/empty
+            if (avatarFileName == null || avatarFileName.trim().isEmpty()) {
+                String query = "SELECT avatar_url FROM users WHERE email = ?";
+                pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, email);
+                rs = pstmt.executeQuery();
+                if (rs.next()) {
+                    avatarFileName = rs.getString("avatar_url");
+                }
+                pstmt.close();
+            }
+
+            String sql;
             if (password != null && !password.trim().isEmpty()) {
-                // Update with password
-                String sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, " +
-                            "phone_number = ?, avatar_url = ?, password = ? WHERE email = ?";
+                sql = "UPDATE users SET first_name=?, last_name=?, username=?, phone_number=?, avatar_url=?, password=? WHERE email=?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, firstName);
                 pstmt.setString(2, lastName);
                 pstmt.setString(3, username);
                 pstmt.setString(4, phoneNumber);
                 pstmt.setString(5, avatarFileName);
-                pstmt.setString(6, password); // You should hash the password first!
+                pstmt.setString(6, password); // hash later
                 pstmt.setString(7, email);
             } else {
-                // Update without password
-                String sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, " +
-                            "phone_number = ?, avatar_url = ? WHERE email = ?";
+                sql = "UPDATE users SET first_name=?, last_name=?, username=?, phone_number=?, avatar_url=? WHERE email=?";
                 pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, firstName);
                 pstmt.setString(2, lastName);
@@ -1342,22 +1353,16 @@ public class ReservationDAOImpl implements ReservationDAO{
                 pstmt.setString(5, avatarFileName);
                 pstmt.setString(6, email);
             }
-            
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-            
+
+            return pstmt.executeUpdate() > 0;
+
         } catch (SQLException e) {
-            System.out.println("Error updating user profile: " + e.getMessage());
             e.printStackTrace();
             return false;
         } finally {
-            // Close resources
-            try {
-                if (pstmt != null) pstmt.close();
-                if (conn != null) conn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            try { if (rs != null) rs.close(); } catch (Exception ignored) {}
+            try { if (pstmt != null) pstmt.close(); } catch (Exception ignored) {}
+            try { if (conn != null) conn.close(); } catch (Exception ignored) {}
         }
     }
     public List<Reservation> getLocationsEncours(String email)  {
