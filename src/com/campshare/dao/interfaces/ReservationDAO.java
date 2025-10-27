@@ -39,6 +39,7 @@ public interface ReservationDAO {
 
     List<Reservation> getConfirmedReservationsByListingId(long listingId);
 
+    boolean store(Reservation reservation);
 
 }
 

@@ -20,6 +20,10 @@ public class Reservation {
     this.deliveryOption = deliveryOption;
   }
 
+  public boolean getDeliveryOption() {
+    return deliveryOption;
+  }
+
   public long getClientId() {
     return clientId;
   }

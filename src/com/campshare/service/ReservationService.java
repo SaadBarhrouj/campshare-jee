@@ -89,5 +89,9 @@ public class ReservationService {
     public List<Reservation> getConfirmedReservationsByListingId(long listingId) {
         return reservationDAO.getConfirmedReservationsByListingId(listingId);
     }
+
+    public boolean store(Reservation reservation) {
+        return reservationDAO.store(reservation);
+    }
 }
 

@@ -543,7 +543,7 @@
 
                             <c:choose>
                                 <c:when test="${not empty sessionScope.authenticatedUser}">
-                            <form id="reservation-form" method="POST" action="#">
+                            <form id="reservation-form" method="POST" action="${pageContext.request.contextPath}/listing">
                                 <input type="hidden" name="listing_id" value="${listing.id}">
                                 <input type="hidden" name="start_date" id="start_date">
                                 <input type="hidden" name="end_date" id="end_date">

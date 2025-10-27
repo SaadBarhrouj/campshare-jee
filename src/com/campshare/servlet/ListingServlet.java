@@ -1,6 +1,8 @@
 package com.campshare.servlet;
 
 import com.campshare.model.Reservation;
+import com.campshare.model.User;
+import com.campshare.service.ItemService;
 import com.campshare.service.ListingService;
 import com.campshare.service.ReservationService;
 
@@ -96,4 +98,69 @@ public class ListingServlet extends HttpServlet {
 
     req.getRequestDispatcher("/jsp/listing/listing.jsp").forward(req, resp);
   }
+
+  @Override
+  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    try {
+        // Retrieve parameters
+        Long listingId = Long.parseLong(req.getParameter("listing_id"));
+        String startDateStr = req.getParameter("start_date");
+        String endDateStr = req.getParameter("end_date");
+        boolean deliveryOption = req.getParameter("delivery_option") != null;
+
+        User authenticatedUser = (User) req.getSession().getAttribute("authenticatedUser");
+        if (authenticatedUser == null) {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            return;
+        }
+
+        Long clientId = authenticatedUser.getId();
+
+
+        ListingService listingService = new ListingService();
+        var listing = listingService.getListingById(listingId);
+
+        ItemService itemService = new ItemService();
+        var item = itemService.findByListingId(listingId);
+
+
+        Long partnerId = item.getPartnerId(); 
+
+
+        // Parse dates
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = sdf.parse(startDateStr);
+        Date endDate = sdf.parse(endDateStr);
+
+        // Build reservation
+        Reservation reservation = new Reservation();
+        reservation.setStartDate(startDate);
+        reservation.setEndDate(endDate);
+        reservation.setStatus("pending");
+        reservation.setDeliveryOption(deliveryOption);
+        reservation.setClientId(clientId);
+        reservation.setPartnerId(partnerId);
+        reservation.setListingId(listingId);
+
+        // Store reservation
+        ReservationService reservationService = new ReservationService();
+        boolean success = reservationService.store(reservation);
+
+        if (success) {
+            req.setAttribute("successMessage", "Votre réservation a été enregistrée avec succès !");
+        } else {
+            req.setAttribute("errorMessage", "Une erreur est survenue lors de l'enregistrement de votre réservation.");
+        }
+
+        // Forward back to the same listing page (you can also redirect)
+        req.setAttribute("listing", listing);
+        req.getRequestDispatcher("/jsp/listing/listing.jsp").forward(req, resp);
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        req.setAttribute("errorMessage", "Erreur interne : " + e.getMessage());
+        req.getRequestDispatcher("/jsp/listing/listing.jsp").forward(req, resp);
+    }
+  }
+
 }
