@@ -13,6 +13,10 @@ public class ItemService {
     public List<Item> getPartnerEquipment(String email) {
         return itemDAO.getPartnerEquipement(email);
     }
+
+    public Item getItemById(long id) {
+        return itemDAO.findById(id);
+    }
     
 
 

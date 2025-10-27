@@ -1,4 +1,5 @@
    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+   <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
 
    <!-- Header -->
     <nav class="bg-white bg-opacity-95 dark:bg-gray-800 dark:bg-opacity-95 shadow-md fixed w-full z-50 transition-all duration-300">
@@ -6,7 +7,7 @@
             <div class="flex justify-between h-16">
                 <div class="flex-shrink-0 flex items-center">
                     <!-- Logo -->
-                    <a href="" class="flex items-center">
+                    <a href="${pageContext.request.contextPath}" class="flex items-center">
                         <span class="text-forest dark:text-meadow text-3xl font-extrabold">Camp<span class="text-sunlight">Share</span></span>
                     </a>
                 </div>
@@ -14,7 +15,7 @@
                  <c:choose>
                   <c:when test="${not empty authenticatedUser}">
                 <div class="hidden md:flex items-center space-x-8">
-                    <a href="" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
+                    <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
                             <c:if test="${authenticatedUser.role == 'client'}">
                                 <button type="button" id="openPartnerModalBtn" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 cursor-pointer">
                                     Devenir Partenaire
@@ -107,6 +108,7 @@
                         </c:when>
                         <c:otherwise>
                         <div class="flex items-center space-x-4 ml-4">
+                            <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
                             <a href="${pageContext.request.contextPath}/login" class="px-4 py-2 font-medium rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Connexion</a>
                             <a href="${pageContext.request.contextPath}/register" class="px-4 py-2 font-medium rounded-md bg-sunlight hover:bg-amber-600 text-white shadow-md transition duration-300">Inscription</a>
                         </div>

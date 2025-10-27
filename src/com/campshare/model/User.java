@@ -1,6 +1,7 @@
 package com.campshare.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class User {
 
@@ -23,21 +24,15 @@ public class User {
     private double avgRating;
     private int reviewCount;
 
+    // Relationships
+    private City city;
+    private List<Listing> listings;
+    private List<Review> reviewsReceived;
+
+    // Default Constructor
     public User() {}
 
-    public double getAvgRating() {
-        return avgRating;
-    }
-    public void setAvgRating(double avgRating) {
-        this.avgRating = avgRating;
-    }
-
-    public int getReviewCount() {
-        return reviewCount;
-    }
-    public void setReviewCount(int reviewCount) {
-        this.reviewCount = reviewCount;
-    }
+    // Getters and Setters
     public long getId() { return id; }
     public void setId(long id) { this.id = id; }
     public String getFirstName() { return firstName; }
@@ -70,4 +65,29 @@ public class User {
     public void setCityId(long cityId) { this.cityId = cityId; }
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+
+    // Relationship getters and setters
+    public City getCity() { return city; }
+    public void setCity(City city) { this.city = city; }
+
+    public List<Listing> getListings() { return listings; }
+    public void setListings(List<Listing> listings) { this.listings = listings; }
+
+    public List<Review> getReviewsReceived() { return reviewsReceived; }
+    public void setReviewsReceived(List<Review> reviewsReceived) { this.reviewsReceived = reviewsReceived; }
+    
+    // Business logic methods
+    public double getAvgRating() {
+        return avgRating;
+    }
+    public void setAvgRating(double avgRating) {
+        this.avgRating = avgRating;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
+    }
 }

@@ -6,31 +6,18 @@ import java.sql.Timestamp;
 public class Listing {
     private long id;
     private long itemId;
-    private String status; // "active" or "archived"
+    private String status; 
     private Date startDate;
     private Date endDate;
     private long cityId;
-    private Double longitude; // nullable
-    private Double latitude;  // nullable
+    private Double longitude; 
+    private Double latitude;  
     private boolean deliveryOption;
     private Timestamp createdAt;
 
-    private Item item; // Associated Item
-    private City city; // Associated City
-
-    public void setCity(City city) {
-        this.city = city;
-    }
-    public City getCity() {
-        return city;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-    public Item getItem() {
-        return item;
-    }
+    // Relationships
+    private Item item; 
+    private City city; 
 
     // Default constructor
     public Listing() {
@@ -52,7 +39,6 @@ public class Listing {
     }
 
     // Getters and Setters
-  
     public long getId() {
         return id;
     }
@@ -131,6 +117,30 @@ public class Listing {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    // Relationship getters and setters
+    public void setCity(City city) {
+        this.city = city;
+    }
+    public City getCity() {
+        return city;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+    public Item getItem() {
+        return item;
+    }
+
+    // Business logic methods
+    public boolean isActive() {
+        return status == "active";
+    }
+
+    public boolean hasDeliveryOption() {
+        return deliveryOption;
     }
 
     // toString

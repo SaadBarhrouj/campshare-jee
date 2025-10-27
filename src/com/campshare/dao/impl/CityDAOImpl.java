@@ -34,4 +34,44 @@ public class CityDAOImpl implements CityDAO {
     }
     return cities;
   }
+
+  @Override
+  public City findById(long id) {
+    String sql = "SELECT id, name FROM cities WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setLong(1, id);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          City city = new City();
+          city.setId(rs.getLong("id"));
+          city.setName(rs.getString("name"));
+          return city;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erreur de base de données lors de la récupération de la ville par ID.", e);
+    }
+    return null;
+  }
+
+  @Override
+  public City findByName(String name) {
+    String sql = "SELECT id, name FROM cities WHERE name = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setString(1, name);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          City city = new City();
+          city.setId(rs.getLong("id"));
+          city.setName(rs.getString("name"));
+          return city;
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Erreur de base de données lors de la récupération de la ville par nom.", e);
+    }
+    return null;
+  }
 }
