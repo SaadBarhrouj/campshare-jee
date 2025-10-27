@@ -21,6 +21,8 @@ import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
+
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Part;
@@ -58,7 +60,10 @@ public class PartnerService {
     }
     public boolean deleteItem(int itemId) {
         return itemDAO.deleteItem(itemId);
-        
+    }
+    
+    public Optional<Item> findItemWithImages(int itemId) {
+        return itemDAO.findItemWithImages(itemId);
     }
 
 }

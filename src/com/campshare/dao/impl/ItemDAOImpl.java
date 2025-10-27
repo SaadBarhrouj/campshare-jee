@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Part;
@@ -213,7 +214,50 @@ public class ItemDAOImpl implements ItemDAO {
         }
     }
 
+    public Optional<Item> findItemWithImages(int equipmentId) {
+        String sql = "SELECT i.*, img.id AS img_id, img.url AS img_url " +
+                     "FROM items i LEFT JOIN images img ON img.item_id = i.id " +
+                     "WHERE i.id = ?";
 
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, equipmentId);
+            ResultSet rs = stmt.executeQuery();
+
+            Item item = null;
+
+            while (rs.next()) {
+                if (item == null) {
+                    item = new Item();
+                    item.setId(rs.getInt("id"));
+                    item.setDescription(rs.getString("description"));
+                    item.setPricePerDay(rs.getDouble("price_per_day"));
+                    item.setTitle(rs.getString("title"));
+                    item.setPartnerId(rs.getInt("partner_id"));
+                }
+                List<Image> images = new ArrayList<>();
+                int imgId = rs.getInt("img_id");
+                if (imgId > 0) {
+                    Image img = new Image();
+                    img.setId(imgId);
+                    img.setUrl(rs.getString("img_url"));
+                    images.add(img);
+                }
+                item.setImages(images);
+            }
+
+            if (item != null) {
+                
+                return Optional.of(item);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Optional.empty();
+    }
 
 
 }
