@@ -1416,7 +1416,7 @@ public List<Reservation> getConfirmedReservationsByListingId(long listingId) {
     String sql = """
         SELECT id, listing_id, client_id, partner_id, start_date, end_date, status, delivery_option, created_at
         FROM reservations
-        WHERE listing_id = ? AND status IN ('pending', 'confirmed', 'ongoing')
+        WHERE listing_id = ? AND status IN ('confirmed', 'ongoing', 'completed')
         ORDER BY start_date ASC
     """;
     
