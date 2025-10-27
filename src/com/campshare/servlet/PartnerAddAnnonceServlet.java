@@ -2,6 +2,7 @@ package com.campshare.servlet;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,42 +12,48 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.campshare.model.Category;
 import com.campshare.model.User;
+import com.campshare.model.City;
+
 import com.campshare.model.Item;
 
-import com.campshare.service.ItemService;
+import com.campshare.service.CityService;
 import com.campshare.service.PartnerService;
-
+import com.campshare.service.ReservationService;
 import com.campshare.service.CategoryService;
 
 
 
-@WebServlet("/partner/MesEquipements")
-public class PartenerEquipementsServlet extends HttpServlet {
+@WebServlet("/partner/AddAnnonce")
+public class PartnerAddAnnonceServlet extends HttpServlet {
 
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         PartnerService partnerService = new PartnerService();
-        CategoryService categoryService = new CategoryService();
+        CityService cityService = new CityService();
+        int equipmentId = Integer.parseInt(request.getParameter("equipment_id"));
 
-        ItemService itemService = new ItemService();
+        List<City> cities = cityService.getAllCities();
+        request.setAttribute("cities", cities);
+
 
 
         String email = "maronakram@gmail.com";
         User user = partnerService.getClientByEmail(email);
         request.setAttribute("user", user);
+        Optional<Item> opitem = partnerService.findItemWithImages(equipmentId);
+        Item item = opitem.get();
+        request.setAttribute("item", item);
+        System.out.println("aaaaaaaaaaaaaaaa");
+        System.out.println(item);
+        
 
-        List<Item> PartenerEquipment = itemService.getPartnerEquipment(email);
-        request.setAttribute("PartenerEquipment", PartenerEquipment);
-
-        List<Category> categories = categoryService.getAllCategories();
-        request.setAttribute("categories", categories);
 
 
 
         // On redirige vers la JSP du dashboard
-        request.getRequestDispatcher("/jsp/partner/MesEquipements.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/partner/annonce-form.jsp").forward(request, response);
     }
     
 }

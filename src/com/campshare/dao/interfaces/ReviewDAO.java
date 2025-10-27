@@ -10,5 +10,9 @@ public interface ReviewDAO {
 
     long countByItemId(long itemId);
     double getAverageRatingByItemId(long itemId);
+    List<Review> getPartnerAvisRecu(String email) ;
+
+    
+
     
 }

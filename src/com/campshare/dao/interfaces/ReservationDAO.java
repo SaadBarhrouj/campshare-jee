@@ -35,5 +35,8 @@ public interface ReservationDAO {
     boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) ;
 
 
+    List<Reservation> getLocationsEncours(String email);
+
+
 }
 

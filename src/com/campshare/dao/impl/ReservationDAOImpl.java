@@ -1360,5 +1360,54 @@ public class ReservationDAOImpl implements ReservationDAO{
             }
         }
     }
+    public List<Reservation> getLocationsEncours(String email)  {
+    List<Reservation> locations = new ArrayList<>();
+
+    String sql = "SELECT C.username, i.title, R.start_date, R.end_date, C.avatar_url, R.created_at, " +
+                 "i.price_per_day, " +
+                 "((DATEDIFF(R.end_date, R.start_date) + 1) * i.price_per_day + " +
+                 "CASE WHEN R.delivery_option = 1 THEN 50 ELSE 0 END) AS montant_total, " +
+                 "(DATEDIFF(R.end_date, R.start_date) + 1) AS number_days " +
+                 "FROM users U " +
+                 "JOIN reservations R ON R.partner_id = U.id " +
+                 "JOIN listings L ON L.id = R.listing_id " +
+                 "JOIN items i ON i.id = L.item_id " +
+                 "JOIN users C ON C.id = R.client_id " +
+                 "WHERE U.email = ? AND R.status = 'ongoing' " +
+                 "LIMIT 5";
+
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setString(1, email);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Reservation reservation = new Reservation();
+            User client = new User();
+            Item item = new Item();
+            client.setUsername(rs.getString("username"));
+            item.setTitle(rs.getString("title"));
+            reservation.setStartDate(rs.getDate("start_date"));
+            reservation.setEndDate(rs.getDate("end_date"));
+            client.setAvatarUrl(rs.getString("avatar_url"));
+            reservation.setCreatedAt(rs.getTimestamp("created_at"));
+            item.setPricePerDay(rs.getDouble("price_per_day"));
+            //loc.setMontantTotal(rs.getDouble("montant_total"));
+            //loc.setNumberDays(rs.getInt("number_days"));
+            reservation.setClient(client);
+            Listing listing = new Listing();
+            listing.setItem(item);
+            reservation.setListing(listing);
+
+            locations.add(reservation);
+        }
+    } catch (SQLException e) {
+            e.printStackTrace();
+    }
+
+    return locations;
+}
+
 
 }

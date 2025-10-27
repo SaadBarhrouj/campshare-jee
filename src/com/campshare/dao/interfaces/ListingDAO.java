@@ -35,6 +35,7 @@ public interface ListingDAO {
   boolean updateStatus(long listingId, String newStatus);
 
   boolean delete(long listingId);
+  List<Listing> getPartnerListings(String email);
 
 
 }

@@ -139,22 +139,7 @@
                     <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Équipements</h1>
                     <p class="text-gray-600 dark:text-gray-400 mt-1">Gérez toutes vos équipements.</p>
                 </div>
-                      <%-- ' @if (session('error'))
-                            <div id="error-box" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-4" role="alert">
-                                <span class="block sm:inline">{{ session('error') }}</span>
-                            </div>
-                        @endif
-
-                        @if ($errors->any())
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-4 mx-4" role="alert">
-                                <strong class="font-bold">Whoops!</strong>
-                                <ul class="list-disc pl-5">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif' --%>
+                    
                 <div class="mt-4 md:mt-0">
                     <button id="add-equipment-button" class="px-4 py-3 bg-forest hover:bg-meadow text-white rounded-md shadow-lg flex items-center font-medium">
                         <i class="fas fa-plus mr-2"></i>
@@ -166,7 +151,7 @@
 
             <!-- Filters and search -->
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
-                <form action="{{ route('partenaire.equipements') }}" method="GET" class="grid grid-cols-1 md:grid-cols-3 gap-5 gap-x-16">
+                <div  class="grid grid-cols-1 md:grid-cols-3 gap-5 gap-x-16">
                     <!-- Recherche -->
                     <div class="md:col-span-2">
                         <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rechercher</label>
@@ -183,31 +168,16 @@
                         <label for="category" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Catégorie</label>
                         <select name="category" id="category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="">Toutes les catégories</option>
-                            <%-- @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
-                            @endforeach --%>
+                        <c:forEach var="category" items="${categories}">
+                            <option value="${category.id}" ${param.category == category.id ? 'selected' : ''}>
+                                ${category.name}
+                            </option>
+                        </c:forEach>
                         </select>
                     </div>
                     
-                    <!-- Prix -->
+
                     <div class="md:col-span-2">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Intervalle de prix</label>
-                        <div class="flex space-x-2 items-center">
-                            <div class="flex-1">
-                                <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" placeholder="Prix min" min="0" 
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
-                            </div>
-                            <span class="text-gray-500 dark:text-gray-400">-</span>
-                            <div class="flex-1">
-                                <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" placeholder="Prix max" min="0"
-                                       class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
-                            </div>
-                            <span class="text-gray-500 dark:text-gray-400">MAD</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Tri -->
-                    <div>
                         <label for="sort_by" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Trier par</label>
                         <select name="sort_by" id="sort_by" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Plus récents</option>
@@ -216,21 +186,21 @@
                             <option value="title-asc" {{ request('sort_by') == 'title-asc' ? 'selected' : '' }}>Titre A-Z</option>
                             <option value="title-desc" {{ request('sort_by') == 'title-desc' ? 'selected' : '' }}>Titre Z-A</option>
                         </select>
+                        
                     </div>
                     
-                    <!-- Bouton filtrer -->
-                    <div class="flex items-end md:col-span-4">
-                        <button type="submit" class="w-full md:w-auto px-4 py-2 bg-forest hover:bg-meadow text-white rounded-md shadow-sm flex items-center justify-center">
-                            <i class="fas fa-filter mr-2"></i> Filtrer
-                        </button>
-                    </div>
-                </form>
+                    
+                </div>
             </div>
-            ${PartenerEquipment}
+            <%-- ${PartenerEquipment} --%>
             <!-- Equipment Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" id="equipment-grid">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8" id="equipment-container">
                 <c:forEach var="equipment" items="${PartenerEquipment}" >
-                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden">
+                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow overflow-hidden"
+                data-title="${equipment.title}"
+                data-description="${equipment.description}"
+                data-category="${equipment.category.id}"
+                data-price="${equipment.pricePerDay}">
                     <div class="relative h-48">
                             <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}" 
                                  alt="${equipment.title}" 
@@ -239,16 +209,16 @@
                         
                         <div class="absolute top-2 right-2 flex space-x-2">
                             <button class="edit-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-forest dark:text-meadow hover:bg-forest hover:text-white dark:hover:bg-meadow transition-colors" 
-                                    data-id="{{ $equipment->id }}" 
-                                    data-title="{{ $equipment->title }}" 
-                                    data-description="{{ $equipment->description }}" 
-                                    data-price="{{ $equipment->price_per_day }}" 
-                                    data-category="{{ $equipment->category_id }}">
+                                    data-id="${equipment.id}" 
+                                    data-title="${equipment.title}" 
+                                    data-description="${equipment.description}" 
+                                    data-price="${equipment.pricePerDay}" 
+                                    data-category="${equipment.category.id}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button class="delete-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-red-500 hover:bg-red-500 hover:text-white transition-colors" 
-                                    data-id="{{ $equipment->id }}" 
-                                    data-title="{{ $equipment->title }}">
+                                    data-id="${equipment.id}" 
+                                    data-title="${equipment.title}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
@@ -263,7 +233,7 @@
                         </div>
                         
                         <div class="flex items-center mb-2">
-                            <span class="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-1" data-category-id="{{ $equipment->category_id }}">
+                            <span class="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 rounded-full px-2 py-1" data-category-id="${equipment.category.id}">
                                 ${equipment.category.name}
                             </span>
                         </div>
@@ -273,12 +243,12 @@
 
                         <div class="flex items-center justify-between mt-6">
                             
-                                <a href="{{ route('partenaire.annonces.create', ['equipment_id' => $equipment->id]) }}" 
+                                <a href="${pageContext.request.contextPath}/partner/annonces/create?equipment_id=${equipment.id}" 
                                    class="px-3 py-2 bg-forest hover:bg-meadow text-white rounded-md shadow-sm flex items-center justify-center text-sm ">
                                     <i class="fas fa-bullhorn mr-2"></i> Publier
                                 </a>
                                 <button class="view-details-btn px-3 py-2 border border-forest text-forest dark:border-meadow dark:text-meadow hover:bg-forest dark:hover:text-white dark:hover:bg-meadow rounded-md text-sm font-medium flex items-center justify-center" 
-                                        data-id="{{ $equipment->id }}">
+                                        data-id="${equipment.id}">
                                     <i class="fas fa-eye mr-2"></i> Voir détails
                                 </button>
                         </div>
@@ -309,8 +279,7 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <form id="add-equipment-form" action="{{ route('partenaire.equipements.create') }}" method="POST" enctype="multipart/form-data" class="p-6">
-                @csrf
+            <form id="add-equipment-form" action="${pageContext.request.contextPath}/partner/AddItem" method="POST" enctype="multipart/form-data" class="p-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="md:col-span-2">
                         <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Titre</label>
@@ -323,9 +292,9 @@
                         <select id="category_id" name="category_id" required
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow">
                             <option value="">Sélectionner une catégorie</option>
-                            @foreach(\App\Models\Category::all() as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.id}">${category.name}</option>
+                            </c:forEach>
                         </select>
                     </div>
                     
@@ -375,7 +344,10 @@
                 </div>
             </form>
         </div>
-    </div><!-- Edit Equipment Modal -->
+    </div>
+    
+    
+    <!-- Edit Equipment Modal -->
     <div id="edit-equipment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-5xl w-full max-h-screen overflow-y-auto no-scrollbar">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10">
@@ -384,9 +356,8 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
             </div>
-            <form id="edit-equipment-form" method="POST" enctype="multipart/form-data" class="p-6">
-                @csrf
-                @method('PUT')
+            <form id="edit-equipment-form" action="${pageContext.request.contextPath}/partner/UpdateItem" method="POST" enctype="multipart/form-data" class="p-6">
+                <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" id="edit-equipment-id" name="equipment_id">
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -401,9 +372,9 @@
                         <select id="edit-category_id" name="category_id" required
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow ">
                             <option value="">Sélectionner une catégorie</option>
-                            @foreach(\App\Models\Category::all() as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
-                            @endforeach
+                            <c:forEach var="category" items="${categories}">
+                                <option value="${category.id}">${category.name}</option>
+                            </c:forEach>
                         </select>
                     </div>
                     
@@ -458,7 +429,8 @@
                 </div>
             </form>
         </div>
-    </div><!-- Delete Equipment Modal -->
+    </div>
+    <!-- Delete Equipment Modal -->
     <div id="delete-equipment-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -473,8 +445,7 @@
                 </p>
                 
                 <form id="delete-equipment-form" action="" method="POST">
-                    @csrf
-                    @method('DELETE')
+                    <input type="hidden" name="_method" value="DELETE" />
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="cancel-delete" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                             Annuler
@@ -486,7 +457,8 @@
                 </form>
             </div>
         </div>
-    </div><!-- Delete All Equipment Modal -->
+    </div>
+    <!-- Delete All Equipment Modal -->
     <div id="delete-all-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-md w-full">
             <div class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -501,9 +473,8 @@
                     <strong>Attention :</strong> Vous êtes sur le point de supprimer <strong>tous</strong> vos équipements. Cette action est irréversible et supprimera également toutes les images et avis associés.
                 </p>
                 
-                <form id="delete-all-form" action="{{ route('partenaire.equipements.delete-all') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
+                <form id="delete-all-form" action="${pageContext.request.contextPath}/partner/DeleteAllItems" method="POST">
+                    <input type="hidden" name="_method" value="DELETE" />
                     <div class="flex justify-end space-x-3">
                         <button type="button" id="cancel-delete-all" class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors">
                             Annuler
@@ -614,7 +585,7 @@
                 </div>
                 
                 <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-end">
-                    <a id="detail-create-annonce-link" href="#" class="px-4 py-2 bg-forest hover:bg-meadow dark:bg-meadow dark:hover:bg-forest/partenaire/annonces/create/ text-white font-medium rounded-md shadow-sm transition-colors">
+                    <a id="detail-create-annonce-link" href="#" class="px-4 py-2 bg-forest hover:bg-meadow dark:bg-meadow dark:hover:bg-forest text-white font-medium rounded-md shadow-sm transition-colors">
                         <i class="fas fa-bullhorn mr-2"></i>
                         Créer une annonce
                     </a>
@@ -622,6 +593,643 @@
             </div>
         </div>
     </div>
+
+    <script>
+        const addEquipmentButton = document.getElementById('add-equipment-button');
+        const addEquipmentForm = document.getElementById('add-equipment-form');
+        const addEquipmentModal = document.getElementById('add-equipment-modal');
+        const imagePreviewContainer = document.getElementById('image-preview-container');
+        const imageInput = document.getElementById('images');
+        const deleteEquipmentModal = document.getElementById('delete-equipment-modal');
+        const deleteEquipmentForm = document.getElementById('delete-equipment-form');
+        const contextPath = '${pageContext.request.contextPath}';
+
+
+        const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
+        const detailsModal = document.getElementById('equipment-details-modal');
+
+            // Show Add Equipment Modal
+
+        if (addEquipmentButton) {
+            addEquipmentButton.addEventListener('click', () => {
+                addEquipmentModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        }
+        if (addEquipmentForm) {
+            addEquipmentForm.addEventListener('submit', function(e) {
+                // Compter le nombre d'inputs de fichier cachés (qui contiennent les images réelles)
+                const hiddenInputs = addEquipmentForm.querySelectorAll('input[type="file"].hidden-file-input');
+                const imageCount = hiddenInputs.length;
+                const errorDiv = document.getElementById('image-count-error');
+                
+                if (imageCount < 1 || imageCount > 5) {
+                    e.preventDefault();
+                    errorDiv.textContent = imageCount < 1 
+                        ? "Veuillez sélectionner au moins 1 image."
+                        : "Veuillez sélectionner au maximum 5 images.";
+                    errorDiv.classList.remove('hidden');
+                    return false;
+                } else {
+                    errorDiv.classList.add('hidden');
+                    return true;
+                }
+            });
+        }
+        if (imageInput) {
+            imageInput.addEventListener('change', function() {
+                handleFileSelect(this.files, imagePreviewContainer);
+            });
+        }
+        function handleFileSelect(files, previewContainer) {
+            // Limiter à maximum 5 images au total
+            const maxFiles = 5;
+            const currentImages = previewContainer.querySelectorAll('.relative').length;
+            const maxNewImages = maxFiles - currentImages;
+            
+            if (maxNewImages <= 0) {
+                const errorDiv = previewContainer.id === 'image-preview-container' 
+                    ? document.getElementById('image-count-error') 
+                    : document.getElementById('edit-image-count-error');
+                
+                if (errorDiv) {
+                    errorDiv.textContent = "Maximum 5 images autorisées. Veuillez supprimer des images avant d'en ajouter d'autres.";
+                    errorDiv.classList.remove('hidden');
+                }
+                return;
+            }
+            
+            const filesToProcess = files.length > maxNewImages ? Array.from(files).slice(0, maxNewImages) : files;
+            
+            // Déterminer le formulaire parent
+            const formId = previewContainer.id === 'image-preview-container' 
+                ? 'add-equipment-form' 
+                : 'edit-equipment-form';
+            const form = document.getElementById(formId);
+            
+            for (let i = 0; i < filesToProcess.length; i++) {
+                const file = filesToProcess[i];
+                
+                if (!file.type.match('image.*')) {
+                    continue;
+                }
+                
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'relative';
+                    imgContainer.dataset.fileIndex = Date.now() + '_' + i; // Identifiant unique
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-32 object-cover rounded-md';
+                    imgContainer.appendChild(img);
+                    
+                    // Créer un champ de fichier caché pour cette image spécifique
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'file';
+                    hiddenInput.name = 'images[]';
+                    hiddenInput.classList.add('hidden-file-input');
+                    hiddenInput.style.display = 'none';
+                    
+                    // Créer un objet DataTransfer pour y mettre le fichier
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    hiddenInput.files = dataTransfer.files;
+                    
+                    // Ajouter l'input au formulaire
+                    form.appendChild(hiddenInput);
+                    
+                    // Stocker la référence à l'input dans le conteneur d'image
+                    imgContainer.dataset.inputId = hiddenInput.id = 'file-input-' + imgContainer.dataset.fileIndex;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.className = 'absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
+                    removeBtn.innerHTML = '<i class="fas fa-times text-xs"></i>';
+                    removeBtn.addEventListener('click', function() {
+                        // Supprimer l'input de fichier associé
+                        const inputToRemove = document.getElementById(imgContainer.dataset.inputId);
+                        if (inputToRemove) {
+                            inputToRemove.remove();
+                        }
+                        
+                        // Supprimer la prévisualisation
+                        imgContainer.remove();
+                        
+                        // Masquer le message d'erreur après la suppression
+                        const errorDiv = previewContainer.id === 'image-preview-container' 
+                            ? document.getElementById('image-count-error') 
+                            : document.getElementById('edit-image-count-error');
+                        
+                        if (errorDiv) {
+                            errorDiv.classList.add('hidden');
+                        }
+                        
+                        // Mettre à jour le compteur d'images
+                        updateImageCount(previewContainer);
+                    });
+                    imgContainer.appendChild(removeBtn);
+                    
+                    previewContainer.appendChild(imgContainer);
+                    
+                    // Mettre à jour le compteur d'images
+                    updateImageCount(previewContainer);
+                };
+                
+                reader.readAsDataURL(file);
+            }
+            
+            // Afficher message d'erreur si dépassement
+            const errorDiv = previewContainer.id === 'image-preview-container' 
+                ? document.getElementById('image-count-error') 
+                : document.getElementById('edit-image-count-error');
+            
+            if (files.length > maxNewImages && errorDiv) {
+                errorDiv.textContent = `Vous ne pouvez ajouter que ${maxNewImages} image(s) supplémentaire(s). Seules les ${maxNewImages} premières ont été sélectionnées.`;
+                errorDiv.classList.remove('hidden');
+            } else if (errorDiv) {
+                errorDiv.classList.add('hidden');
+            }
+            
+            // Réinitialiser l'input de fichier principal pour permettre de sélectionner à nouveau le même fichier
+            const mainFileInput = previewContainer.id === 'image-preview-container' 
+                ? document.getElementById('images') 
+                : document.getElementById('edit-images');
+            
+            mainFileInput.value = '';
+        }
+        function updateImageCount(previewContainer) {
+            const isEdit = previewContainer.id === 'edit-image-preview-container';
+            const imageCount = previewContainer.querySelectorAll('.relative').length;
+            
+            // Pour l'édition, on compte aussi les images existantes
+            if (isEdit) {
+                const currentImagesContainer = document.getElementById('current-images-container');
+                const keptImagesCount = currentImagesContainer ? currentImagesContainer.querySelectorAll('input[name="keep_images[]"]').length : 0;
+                const totalCount = imageCount + keptImagesCount;
+                
+                const countElement = document.getElementById('edit-image-count');
+                if (countElement) {
+                    countElement.textContent = totalCount;
+                }
+            } else {
+                // Pour l'ajout simple
+                const countElement = document.getElementById('image-count');
+                if (countElement) {
+                    countElement.textContent = imageCount;
+                }
+            }
+        }
+
+        document.querySelectorAll('.delete-equipment-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const equipmentId = this.dataset.id;
+                document.getElementById('delete-equipment-name').textContent = this.dataset.title;
+                const form = document.getElementById('delete-equipment-form');
+
+                form.action = contextPath + '/partner/DeleteItem' + '/' + equipmentId;
+                deleteEquipmentModal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+        // View Equipment Details
+        viewDetailsButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const id = button.getAttribute('data-id');
+                
+                // Afficher le modal avec indicateur de chargement
+                const modal = document.getElementById('equipment-details-modal');
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+                
+                // Initialiser les éléments avec des indicateurs de chargement
+                document.getElementById('detail-title').textContent = 'Chargement...';
+                document.getElementById('detail-price').textContent = '...';
+                document.getElementById('detail-category').textContent = '...';
+                document.getElementById('detail-description').textContent = 'Chargement des informations...';
+                document.getElementById('detail-annonces-count').textContent = '...';
+                document.getElementById('detail-active-annonces').textContent = '...';
+                document.getElementById('detail-reservations-count').textContent = '...';
+                document.getElementById('detail-completed-reservations').textContent = '...';
+                document.getElementById('detail-avg-rating').textContent = '...';
+                document.getElementById('detail-review-count').textContent = '...';
+                document.getElementById('detail-revenue').textContent = '...';
+                document.getElementById('detail-reviews-summary').textContent = 'Chargement...';
+                
+                // Vider le conteneur d'images et afficher un placeholder
+                const imageSlider = document.getElementById('detail-image-slider');
+                imageSlider.innerHTML = `
+                    <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
+                        <i class="fas fa-sync fa-spin text-5xl text-gray-400 dark:text-gray-500"></i>
+                    </div>
+                `;
+                
+                // Charger les données détaillées de l'équipement
+                console.log('Fetching equipment details for ID:', id);
+                console.log('URL:', `${contextPath}/partner/equipment/details?id=${id}`);
+                
+                fetch(`${contextPath}/partner/equipment/details?id=${id}`)
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        console.log('Response ok:', response.ok);
+                        if (!response.ok) {
+                            throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Mettre à jour les informations de base
+                        const equipment = data.equipment;
+                        const stats = data.stats;
+                        
+                        document.getElementById('detail-title').textContent = equipment.title;
+                        document.getElementById('detail-price').textContent = `${equipment.price_per_day} MAD/jour`;
+                        document.getElementById('detail-category').textContent = equipment.category ? equipment.category.name : 'Non catégorisé';
+                        document.getElementById('detail-description').textContent = equipment.description || 'Aucune description';
+                        
+                        // Statistiques
+                        document.getElementById('detail-annonces-count').textContent = stats.annonces_count;
+                        document.getElementById('detail-active-annonces').textContent = `${stats.active_annonce_count} actives`;
+                        document.getElementById('detail-reservations-count').textContent = stats.reservations_count;
+                        document.getElementById('detail-completed-reservations').textContent = `${stats.completed_reservations_count} terminées`;
+                        document.getElementById('detail-revenue').textContent = `${stats.revenue.toLocaleString()} MAD`;
+                        
+                        // Avis
+                        const avgRating = equipment.reviews && equipment.reviews.length > 0 
+                            ? equipment.reviews.reduce((sum, review) => sum + review.rating, 0) / equipment.reviews.length 
+                            : 0;
+                        document.getElementById('detail-avg-rating').textContent = avgRating.toFixed(1);
+                        document.getElementById('detail-review-count').textContent = `${equipment.reviews ? equipment.reviews.length : 0} avis`;
+                        document.getElementById('detail-reviews-summary').textContent = equipment.reviews && equipment.reviews.length > 0 
+                            ? `${equipment.reviews.length} avis` 
+                            : 'Aucun avis';
+                        
+                        // Images
+                        imageSlider.innerHTML = '';
+                        
+                        // Créer le carousel d'images
+                        if (equipment.images && equipment.images.length > 0) {
+                            // Conteneur pour les indicateurs
+                            const imageDots = document.createElement('div');
+                            imageDots.className = 'flex justify-center mt-2 space-x-2';
+                            imageDots.id = 'detail-image-dots';
+                            
+                            // Ajouter chaque image au slider
+                            equipment.images.forEach((image, index) => {
+                                // Créer la diapositive d'image
+                                const imgDiv = document.createElement('div');
+                                imgDiv.className = 'w-full h-64 flex-shrink-0 snap-center relative';
+                                imgDiv.setAttribute('data-index', index);
+                                imgDiv.innerHTML = `
+                                    <img src="/${image.url}" alt="${equipment.title}" class="w-full h-full object-cover">
+                                    <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
+                                        ${index + 1}/${equipment.images.length}
+                                    </div>
+                                `;
+                                imageSlider.appendChild(imgDiv);
+                                
+                                // Créer l'indicateur (point) pour cette image
+                                const dot = document.createElement('button');
+                                dot.className = `w-3 h-3 rounded-full `;
+                                dot.setAttribute('data-index', index);
+                                dot.addEventListener('click', () => {
+                                    // Faire défiler jusqu'à cette image
+                                    const imgElement = imageSlider.querySelector(`[data-index="${index}"]`);
+                                    if (imgElement) {
+                                        imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    }
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    dot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                    dot.classList.add('bg-forest', 'dark:bg-meadow');
+                                });
+                                imageDots.appendChild(dot);
+                            });
+                            
+                            // Ajouter les indicateurs sous le slider
+                            const sliderContainer = imageSlider.closest('.bg-gray-100, .dark\\:bg-gray-700');
+                            sliderContainer.appendChild(imageDots);
+                            
+                            // Ajouter des contrôles de navigation (boutons précédent/suivant)
+                            const prevButton = document.createElement('button');
+                            prevButton.className = 'absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10';
+                            prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
+                            prevButton.addEventListener('click', () => {
+                                // Trouver l'image visible actuelle
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Calculer l'index de l'image précédente
+                                const prevIndex = (currentIndex - 1 + equipment.images.length) % equipment.images.length;
+                                
+                                // Faire défiler jusqu'à l'image précédente
+                                const imgElement = imageSlider.querySelector(`[data-index="${prevIndex}"]`);
+                                if (imgElement) {
+                                    imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    const activeDot = imageDots.querySelector(`[data-index="${prevIndex}"]`);
+                                    if (activeDot) {
+                                        activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                        activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                    }
+                                }
+                            });
+                            
+                            const nextButton = document.createElement('button');
+                            nextButton.className = 'absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10';
+                            nextButton.innerHTML = '<i class="fas fa-chevron-right"></i>';
+                            nextButton.addEventListener('click', () => {
+                                // Trouver l'image visible actuelle
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Calculer l'index de l'image suivante
+                                const nextIndex = (currentIndex + 1) % equipment.images.length;
+                                
+                                // Faire défiler jusqu'à l'image suivante
+                                const imgElement = imageSlider.querySelector(`[data-index="${nextIndex}"]`);
+                                if (imgElement) {
+                                    imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+                                    
+                                    // Mettre à jour les indicateurs
+                                    imageDots.querySelectorAll('button').forEach(btn => {
+                                        btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                        btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                    });
+                                    const activeDot = imageDots.querySelector(`[data-index="${nextIndex}"]`);
+                                    if (activeDot) {
+                                        activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                        activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                    }
+                                }
+                            });
+                            
+                            // Ajouter les boutons de navigation directement au slider
+                            sliderContainer.appendChild(prevButton);
+                            sliderContainer.appendChild(nextButton);
+                            sliderContainer.style.position = 'relative';
+                            
+                            // Détecter le changement d'image lors du défilement
+                            imageSlider.addEventListener('scroll', () => {
+                                // Calculer l'index de l'image actuellement visible
+                                const scrollPosition = imageSlider.scrollLeft;
+                                const imgWidth = imageSlider.offsetWidth;
+                                const currentIndex = Math.round(scrollPosition / imgWidth);
+                                
+                                // Mettre à jour les indicateurs
+                                imageDots.querySelectorAll('button').forEach(btn => {
+                                    btn.classList.remove('bg-forest', 'dark:bg-meadow');
+                                    btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
+                                });
+                                const activeDot = imageDots.querySelector(`[data-index="${currentIndex}"]`);
+                                if (activeDot) {
+                                    activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
+                                    activeDot.classList.add('bg-forest', 'dark:bg-meadow');
+                                }
+                            });
+                        } else {
+                            // Add placeholder if no images
+                            const placeholderDiv = document.createElement('div');
+                            placeholderDiv.className = 'w-full h-64 bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center';
+                            placeholderDiv.innerHTML = '<i class="fas fa-campground text-5xl text-gray-400 dark:text-gray-500"></i>';
+                            imageSlider.appendChild(placeholderDiv);
+                        }
+                        
+                        // Lien pour créer une annonce
+                        const createAnnonceLink = document.getElementById('detail-create-annonce-link');
+                        createAnnonceLink.href = `${contextPath}/partner/annonces/create?equipment_id=${equipment.id}`;
+                        
+                        // Avis
+                        const reviewsContainer = document.getElementById('detail-reviews-container');
+                        const noReviewsMessage = document.getElementById('no-reviews-message');
+                        
+                        // Clear previous reviews
+                        reviewsContainer.innerHTML = '';
+                        
+                        if (!equipment.reviews || equipment.reviews.length === 0) {
+                            reviewsContainer.appendChild(noReviewsMessage);
+                        } else {
+                            equipment.reviews.forEach(review => {
+                                const reviewDiv = document.createElement('div');
+                                reviewDiv.className = 'bg-gray-50 dark:bg-gray-700 p-4 rounded-lg';
+                                
+                                // Create stars
+                                let stars = '';
+                                for (let i = 0; i < 5; i++) {
+                                    if (i < review.rating) {
+                                        stars += '<i class="fas fa-star text-amber-400"></i>';
+                                    } else {
+                                        stars += '<i class="far fa-star text-amber-400"></i>';
+                                    }
+                                }
+                                
+                                const reviewerName = review.reviewer ? review.reviewer.username || 'Utilisateur' : 'Utilisateur';
+
+                                const reviewerAvatar = review.reviewer.avatar_url || `${contextPath}/assets/images/default-avatar.png`;
+                                
+                                const reviewDate = new Date(review.created_at).toLocaleDateString('fr-FR');
+                                
+                                reviewDiv.innerHTML = `
+                                    <div class="flex items-center mb-2">
+                                        <img src="${reviewerAvatar}" alt="${reviewerName}" class="w-8 h-8 rounded-full mr-2">
+                                        <div>
+                                            <div class="font-medium text-gray-900 dark:text-white">${reviewerName}</div>
+                                            <div class="text-xs text-gray-500 dark:text-gray-400">${reviewDate}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex mb-2">
+                                        ${stars}
+                                    </div>
+                                    <p class="text-gray-700 dark:text-gray-300">${review.comment || 'Aucun commentaire'}</p>
+                                `;
+                                
+                                reviewsContainer.appendChild(reviewDiv);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur détaillée:', error);
+                        console.error('Message d\'erreur:', error.message);
+                        // Afficher un message d'erreur
+                        document.getElementById('detail-title').textContent = 'Erreur de chargement';
+                        document.getElementById('detail-description').textContent = `Erreur: ${error.message}`;
+                        
+                        // Vider le conteneur d'images et afficher une icône d'erreur
+                        imageSlider.innerHTML = `
+                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
+                                <i class="fas fa-exclamation-triangle text-5xl text-red-500"></i>
+                            </div>
+                        `;
+                    });
+            });
+        });
+        
+
+        // Modal event handlers
+        const closeAddModal = document.getElementById('close-add-modal');
+        const closeEditModal = document.getElementById('close-edit-modal');
+        const closeDeleteModal = document.getElementById('close-delete-modal');
+        const closeDeleteAllModal = document.getElementById('close-delete-all-modal');
+        const closeDetailsModal = document.getElementById('close-details-modal');
+        const cancelAdd = document.getElementById('cancel-add');
+        const cancelEdit = document.getElementById('cancel-edit');
+        const cancelDelete = document.getElementById('cancel-delete');
+        const cancelDeleteAll = document.getElementById('cancel-delete-all');
+
+        // Close modals
+        if (closeAddModal) {
+            closeAddModal.addEventListener('click', () => {
+                document.getElementById('add-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (closeEditModal) {
+            closeEditModal.addEventListener('click', () => {
+                document.getElementById('edit-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (closeDeleteModal) {
+            closeDeleteModal.addEventListener('click', () => {
+                document.getElementById('delete-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (closeDeleteAllModal) {
+            closeDeleteAllModal.addEventListener('click', () => {
+                document.getElementById('delete-all-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (closeDetailsModal) {
+            closeDetailsModal.addEventListener('click', () => {
+                document.getElementById('equipment-details-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        // Cancel buttons
+        if (cancelAdd) {
+            cancelAdd.addEventListener('click', () => {
+                document.getElementById('add-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (cancelEdit) {
+            cancelEdit.addEventListener('click', () => {
+                document.getElementById('edit-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (cancelDelete) {
+            cancelDelete.addEventListener('click', () => {
+                document.getElementById('delete-equipment-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        if (cancelDeleteAll) {
+            cancelDeleteAll.addEventListener('click', () => {
+                document.getElementById('delete-all-modal').classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            });
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('fixed')) {
+                e.target.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        });
+
+
+
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search');
+            const categorySelect = document.getElementById('category');
+            const sortBySelect = document.getElementById('sort_by');
+            const container = document.getElementById('equipment-container');
+            const cards = Array.from(container.getElementsByClassName('equipment-card'));
+
+            // Filter + Sort function
+            function applyFilters() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                const selectedCategory = categorySelect.value;
+                const sortBy = sortBySelect.value;
+
+                // Filter
+                let filtered = cards.filter(card => {
+                    const title = card.dataset.title.toLowerCase();
+                    const description = card.dataset.description.toLowerCase();
+                    const category = card.dataset.category;
+
+                    const matchesSearch = !searchTerm || title.includes(searchTerm) || description.includes(searchTerm);
+                    const matchesCategory = !selectedCategory || category === selectedCategory;
+                    
+                    return matchesSearch && matchesCategory;
+                });
+
+                // Sort
+                filtered.sort((a, b) => {
+                    const priceA = parseFloat(a.dataset.price);
+                    const priceB = parseFloat(b.dataset.price);
+                    const titleA = a.dataset.title.toLowerCase();
+                    const titleB = b.dataset.title.toLowerCase();
+
+                    switch (sortBy) {
+                        case 'price-asc': return priceA - priceB;
+                        case 'price-desc': return priceB - priceA;
+                        case 'title-asc': return titleA.localeCompare(titleB);
+                        case 'title-desc': return titleB.localeCompare(titleA);
+                        default: return 0; // newest → keep original order
+                    }
+                });
+
+                // Clear and re-render
+                container.innerHTML = '';
+                filtered.forEach(card => container.appendChild(card));
+            }
+
+            // Event listeners
+            searchInput.addEventListener('input', debounce(applyFilters, 300));
+            categorySelect.addEventListener('change', applyFilters);
+            sortBySelect.addEventListener('change', applyFilters);
+
+            // Debounce helper (for smoother search)
+            function debounce(fn, delay) {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => fn(...args), delay);
+                };
+            }
+        });
+    </script>
 </body>
 
 

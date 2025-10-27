@@ -9,26 +9,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.campshare.model.Category;
+import com.campshare.model.Review;
 import com.campshare.model.User;
 import com.campshare.model.Item;
+import com.campshare.model.Listing;
+
 
 import com.campshare.service.ItemService;
 import com.campshare.service.PartnerService;
-
-import com.campshare.service.CategoryService;
-
+import com.campshare.service.ReservationService;
 
 
-@WebServlet("/partner/MesEquipements")
-public class PartenerEquipementsServlet extends HttpServlet {
+@WebServlet("/partner/MesAnnonces")
+public class PartnerMesAnnonceServlet extends HttpServlet {
 
     
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
         PartnerService partnerService = new PartnerService();
-        CategoryService categoryService = new CategoryService();
 
         ItemService itemService = new ItemService();
 
@@ -37,16 +36,13 @@ public class PartenerEquipementsServlet extends HttpServlet {
         User user = partnerService.getClientByEmail(email);
         request.setAttribute("user", user);
 
-        List<Item> PartenerEquipment = itemService.getPartnerEquipment(email);
-        request.setAttribute("PartenerEquipment", PartenerEquipment);
-
-        List<Category> categories = categoryService.getAllCategories();
-        request.setAttribute("categories", categories);
+        List<Listing> PartenerListings = partnerService.getPartnerListings(email);
+        request.setAttribute("PartenerListings", PartenerListings);
 
 
 
         // On redirige vers la JSP du dashboard
-        request.getRequestDispatcher("/jsp/partner/MesEquipements.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/partner/MesAnnonces.jsp").forward(request, response);
     }
     
 }
