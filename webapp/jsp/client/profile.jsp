@@ -14,12 +14,12 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     
 
-    <link rel="icon" href="{{ asset('images/favicon_io/favicon.ico') }}" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/favicon_io/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('images/favicon_io/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('images/favicon_io/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ asset('images/favicon_io/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ asset('images/favicon_io/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="icon" href="${pageContext.request.contextPath}/images/favicon_io/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="${pageContext.request.contextPath}/images/favicon_io/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="${pageContext.request.contextPath}/images/favicon_io/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="${pageContext.request.contextPath}/images/favicon_io/favicon-16x16.png">
+    <link rel="manifest" href="${pageContext.request.contextPath}/images/favicon_io/site.webmanifest">
+    <link rel="mask-icon" href="${pageContext.request.contextPath}/images/favicon_io/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="CampShare - Louez facilement le matériel de camping dont vous avez besoin
@@ -161,7 +161,7 @@
                     </div>
 
                     <div class="flex items-center justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-right gap-4">
-                        <a href="{{ route('client.profile.index', $user->id) }}"
+                        <a href=""
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                             <i class="fa-solid fa-address-card mr-2"></i> Mon profil Public
                         </a>
@@ -172,9 +172,114 @@
                     </div>
                 </div>
 
+
+                <div id="profileEdit" class="hidden">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <form id="profileForm" action="${pageContext.request.contextPath}/client/profile" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="action" value="update">
+                            <div class="flex flex-col md:flex-row items-start md:items-center mb-8">
+                                <div class="relative mb-6 md:mb-0 md:mr-8">
+                                    <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
+                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}" 
+                                            alt="${userProfile.username}" 
+                                            class="w-full h-full object-cover" />
+                                    </div>
+                                    <label for="avatarUpload" class="absolute -bottom-2 -right-2 bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center border-2 border-white dark:border-gray-700 cursor-pointer hover:bg-green-600 transition-colors">
+                                        <i class="fas fa-camera"></i>
+                                        <input type="file" id="avatarUpload" name="avatar" accept="image/*" class="hidden">
+                                    </label>
+                                </div>
+
+                                <div class="flex-1 space-y-4">
+                                    <div>
+                                        <label for="firstName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Prénom</label>
+                                        <input type="text" id="firstName" name="firstName" value="${userProfile.firstName}"
+                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+
+                                    <div>
+                                        <label for="lastName" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom</label>
+                                        <input type="text" id="lastName" name="lastName" value="${userProfile.lastName}"
+                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+
+                                    <div>
+                                        <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nom d'utilisateur</label>
+                                        <input type="text" id="username" name="username" value="${userProfile.username}"
+                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+
+                                    <div>
+                                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                                        <input type="email" id="email" name="email" value="${userProfile.email}"
+                                            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div>
+                                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mot de passe</label>
+                                    <input type="password" id="password" name="password" 
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+
+                                <div>
+                                    <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmer mot de passe</label>
+                                    <input type="password" id="confirm_password" name="confirm_password" 
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                                
+                                <div>
+                                    <label for="phoneNumber" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Téléphone</label>
+                                    <input type="text" id="phoneNumber" name="phoneNumber" value="${userProfile.phoneNumber}"
+                                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                                </div>
+                            </div>
+
+                            <div class="flex justify-end space-x-4">
+                                <button type="button" onclick="toggleEditMode(false)" 
+                                    class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                    Annuler
+                                </button>
+                                <button type="submit" 
+                                        class="px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
+                                    Enregistrer les modifications
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
             </section>
         </div>
     </div>
-</main>     
+</main>  
+
+<script>
+    function toggleEditMode(showEdit) {
+        const viewMode = document.getElementById('profileView');
+        const editMode = document.getElementById('profileEdit');
+        
+        if (showEdit) {
+            viewMode.classList.add('hidden');
+            editMode.classList.remove('hidden');
+        } else {
+            viewMode.classList.remove('hidden');
+            editMode.classList.add('hidden');
+        }
+    }
+
+    document.getElementById('avatarUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.getElementById('avatarPreview').src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 </body>
 </html>

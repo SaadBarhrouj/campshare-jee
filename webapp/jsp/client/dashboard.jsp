@@ -234,9 +234,10 @@
                                     </div>
 
                                     <c:if test="${res.status eq 'pending'}">
-                                        <button class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 
-                                                    dark:text-red-400 text-sm rounded-md hover:bg-red-50 
-                                                    dark:hover:bg-red-900/20 transition-colors flex-1">
+                                        <button onclick="cancelReservation(${res.id})" 
+                                                class="px-3 py-1.5 border border-red-300 dark:border-red-800 text-red-700 
+                                                       dark:text-red-400 text-sm rounded-md hover:bg-red-50 
+                                                       dark:hover:bg-red-900/20 transition-colors flex-1">
                                             <i class="fas fa-times mr-2"></i> Annuler
                                         </button>
                                     </c:if>
@@ -529,30 +530,28 @@
 </script>
 <script>
     function cancelReservation(reservationId) {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-        fetch(`/client/reservations/cancel/${reservationId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                //alert(data.message);
-                // Recharger les réservations
-                document.getElementById('statusFilter').dispatchEvent(new Event('change'));
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Une erreur est survenue');
-        });
+        if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+            fetch('${pageContext.request.contextPath}/client/reservations/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'reservationId=' + reservationId
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Réservation annulée avec succès');
+                    location.reload(); // Recharger la page pour voir les changements
+                } else {
+                    alert('Erreur lors de l\'annulation de la réservation');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur est survenue');
+            });
+        }
     }
-}
 </script>
 <div id="message-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col">

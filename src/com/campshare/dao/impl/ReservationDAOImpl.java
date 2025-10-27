@@ -1292,4 +1292,73 @@ public class ReservationDAOImpl implements ReservationDAO{
         return 0.0;
     }
 
+    @Override
+    public boolean cancelReservation(int reservationId) {
+        String sql = "UPDATE reservations SET status = 'canceled' WHERE id = ? AND status = 'pending'";
+        
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, reservationId);
+            int rowsAffected = stmt.executeUpdate();
+            
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+
+    public boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            conn = DatabaseManager.getConnection();
+            
+            if (password != null && !password.trim().isEmpty()) {
+                // Update with password
+                String sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, " +
+                            "phone_number = ?, avatar_url = ?, password = ? WHERE email = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, firstName);
+                pstmt.setString(2, lastName);
+                pstmt.setString(3, username);
+                pstmt.setString(4, phoneNumber);
+                pstmt.setString(5, avatarFileName);
+                pstmt.setString(6, password); // You should hash the password first!
+                pstmt.setString(7, email);
+            } else {
+                // Update without password
+                String sql = "UPDATE users SET first_name = ?, last_name = ?, username = ?, " +
+                            "phone_number = ?, avatar_url = ? WHERE email = ?";
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, firstName);
+                pstmt.setString(2, lastName);
+                pstmt.setString(3, username);
+                pstmt.setString(4, phoneNumber);
+                pstmt.setString(5, avatarFileName);
+                pstmt.setString(6, email);
+            }
+            
+            int rowsAffected = pstmt.executeUpdate();
+            return rowsAffected > 0;
+            
+        } catch (SQLException e) {
+            System.out.println("Error updating user profile: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            // Close resources
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

@@ -298,13 +298,13 @@
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
                             <div class="flex items-center px-5">
                                 <div class="flex-shrink-0">
-                                    <img src="{{ asset($user->avatar_url) ?? asset('images/default-avatar.png') }}"
-                                        alt="Avatar de {{ $user->username }}"
+                                    <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
+                                        alt="Avatar de ${user.username}"
                                         class="h-8 w-8 rounded-full" />
                                 </div>
                                 <div class="ml-3">
-                                    <div class="text-base font-medium text-gray-800 dark:text-white">{{ $user->first_name }} {{ $user->last_name }} - {{ $user->username }}</div>
-                                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $user->email }}</div>
+                                    <div class="text-base font-medium text-gray-800 dark:text-white">${user.firstName} ${user.lastName} - ${user.username}</div>
+                                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">${user.email}</div>
                                 </div>
                                 <div class="ml-auto flex items-center space-x-4">
                                     <button class="flex-shrink-0 p-1 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
