@@ -36,7 +36,23 @@
 
                                     <div class="relative">
                                         <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                            <img src="" alt="Avatar de " class="h-8 w-8 rounded-full object-cover" />
+                                            <c:choose>
+                                            <c:when test="${not empty authenticatedUser.avatarUrl}">
+                                                <img
+                                                src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                                alt="Avatar User"
+                                                class="h-8 w-8 rounded-full object-cover"
+                                                />
+                                            </c:when>
+
+                                            <c:otherwise>
+                                                <img
+                                                src="${pageContext.request.contextPath}/images/avatars/default-avatar.png"
+                                                alt="Avatar User"
+                                                class="h-8 w-8 rounded-full object-cover"
+                                                />
+                                            </c:otherwise>
+                                            </c:choose>
                                             <span class="font-medium text-gray-800 dark:text-gray-200">${authenticatedUser.username}</span>
                                             <i class="fas fa-chevron-down text-sm text-gray-500"></i>
                                         </button>
@@ -135,7 +151,23 @@
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
                             <div class="flex items-center px-5">
                                 <div class="flex-shrink-0">
-                                    <img src="" alt="Avatar de " class="h-8 w-8 rounded-full object-cover" />
+                                    <c:choose>
+                                        <c:when test="${not empty authenticatedUser.avatarUrl}">
+                                        <img
+                                        src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                        alt="Avatar User"
+                                        class="h-8 w-8 rounded-full object-cover"
+                                        />
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <img
+                                        src="${pageContext.request.contextPath}/images/avatars/default-avatar.png"
+                                        alt="Avatar User"
+                                        class="h-8 w-8 rounded-full object-cover"
+                                        />
+                                    </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div class="ml-3">
                                     <div class="text-base font-medium text-gray-800 dark:text-white"></div>
