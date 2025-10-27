@@ -26,10 +26,14 @@ public interface ReservationDAO {
     List<Reservation> getPendingReservationsWithMontantTotal(String email);
     List<Reservation> getReservationsWithMontantTotal(String email);
     User getClientProfile(String email);
+    boolean cancelReservation(int reservationId);
 
 
     List<DailyStatsDTO> getDailyBookingCountStats(int days);
     long countAllConfirmed();
     double getTotalRevenueAllTime();
+    boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) ;
+
+
 }
 

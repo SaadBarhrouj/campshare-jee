@@ -18,6 +18,8 @@ public class ClientService {
     public User getClientByEmail(String email) {
         return userDAO.findByEmail(email);
     }
+
+    
     
     
 }

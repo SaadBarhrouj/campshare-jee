@@ -78,5 +78,12 @@ public class ReservationService {
         return reservationDAO.getReservationsWithMontantTotal(email);
     }
 
+    public boolean cancelReservation(int reservationId) {
+        return reservationDAO.cancelReservation(reservationId);
+    }
+
+    public boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) {
+        return reservationDAO.updateUserProfile(email, firstName, lastName, username, phoneNumber, password, avatarFileName);
+    }
 }
 

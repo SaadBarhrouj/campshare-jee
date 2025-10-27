@@ -92,33 +92,31 @@
         <div id="reservations-container">
             <jsp:include page="components/reservations-grid.jsp" />
         </div>
-<script>
-    function cancelReservation(reservationId) {
-    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
-        fetch(`/client/reservations/cancel/${reservationId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                //alert(data.message);
-                // Recharger les réservations
-                document.getElementById('statusFilter').dispatchEvent(new Event('change'));
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Une erreur est survenue');
-        });
-    }
-}
-</script>
+            <script>
+                function cancelReservation(reservationId) {
+                    if (confirm('Êtes-vous sûr de vouloir annuler cette réservation ?')) {
+                        fetch('${pageContext.request.contextPath}/client/reservations/cancel', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'reservationId=' + reservationId
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                alert('Réservation annulée avec succès');
+                                location.reload(); // Recharger la page pour voir les changements
+                            } else {
+                                alert('Erreur lors de l\'annulation de la réservation');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('Une erreur est survenue');
+                        });
+                    }
+                }
+            </script>
         </div>
     </div>
 </main>
