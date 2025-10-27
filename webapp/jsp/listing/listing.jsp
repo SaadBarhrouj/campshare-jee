@@ -518,13 +518,21 @@
                                     <span class="text-gray-600 dark:text-gray-300 ml-2 text-sm">/ jour</span>
                                 </div>
                                 <div class="flex flex-wrap gap-3 mt-3">
-                                    <c:if test="${reviewCount > 0}">
-                                    <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
-                                        <i class="fas fa-star text-sunlight mr-1.5"></i>
-                                        <span class="font-medium mr-1"><fmt:formatNumber value="${averageRating}" maxFractionDigits="1" /></span>
-                                        <span>(${reviewCount} avis)</span>
-                                    </span>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${reviewCount > 0}">
+                                            <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
+                                                <i class="fas fa-star text-sunlight mr-1.5"></i>
+                                                <span class="font-medium mr-1"><fmt:formatNumber value="${averageRating}" maxFractionDigits="1" /></span>
+                                                <span>(${reviewCount} avis)</span>
+                                            </span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
+                                                <i class="far fa-star mr-1.5"></i>
+                                                <span>Non noté</span>
+                                            </span>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <span class="inline-flex items-center badge bg-forest/10 text-forest dark:bg-meadow/10 dark:text-meadow py-1.5 px-2.5">
                                         <i class="fas fa-map-marker-alt fa-fw mr-1.5"></i>
                                         <span>${not empty city.name ? city.name : 'Non spécifié'}</span>
@@ -964,7 +972,7 @@
             const FIXED_DELIVERY_COST = 50.00; // Définir le coût fixe ici
 
              // Dates indisponibles 
-             const unavailableDatesData = <c:out value='${unavailableDates}' default='[]' />;
+             const unavailableDatesData = ${not empty unavailableDates ? unavailableDates : '[]'};
 
             // Variables globales JS
             let flatpickrInstance = null;

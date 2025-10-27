@@ -1,12 +1,19 @@
 package com.campshare.servlet;
 
+import com.campshare.model.Reservation;
 import com.campshare.service.ListingService;
+import com.campshare.service.ReservationService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class ListingServlet extends HttpServlet {
 
@@ -51,7 +58,41 @@ public class ListingServlet extends HttpServlet {
     req.setAttribute("reviewCount", vm.reviewCount);
     req.setAttribute("averageRating", vm.averageRating);
     req.setAttribute("ratingPercentages", vm.ratingPercentages != null ? vm.ratingPercentages : new java.util.LinkedHashMap<Integer, Integer>());
-    req.setAttribute("unavailableDates", "[]");
+    
+    // Get unavailable dates from confirmed reservations
+    ReservationService reservationService = new ReservationService();
+    List<Reservation> reservations = reservationService.getConfirmedReservationsByListingId(listingId);
+    
+    // Generate list of individual dates that are unavailable
+    List<String> unavailableDatesList = new ArrayList<>();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    
+    Calendar cal = Calendar.getInstance();
+    
+    for (Reservation reservation : reservations) {
+      if (reservation.getStartDate() != null && reservation.getEndDate() != null) {
+        cal.setTime(reservation.getStartDate());
+        Date currentDate = cal.getTime();
+        Date endDate = reservation.getEndDate();
+        
+        // Add all dates in the range
+        while (!currentDate.after(endDate)) {
+          unavailableDatesList.add(sdf.format(currentDate));
+          cal.add(Calendar.DAY_OF_MONTH, 1);
+          currentDate = cal.getTime();
+        }
+      }
+    }
+    
+    // Convert list to JSON array string
+    StringBuilder jsonArray = new StringBuilder("[");
+    for (int i = 0; i < unavailableDatesList.size(); i++) {
+      if (i > 0) jsonArray.append(",");
+      jsonArray.append("\"").append(unavailableDatesList.get(i)).append("\"");
+    }
+    jsonArray.append("]");
+    
+    req.setAttribute("unavailableDates", jsonArray.toString());
 
     req.getRequestDispatcher("/jsp/listing/listing.jsp").forward(req, resp);
   }

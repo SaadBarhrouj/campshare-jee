@@ -85,5 +85,9 @@ public class ReservationService {
     public boolean updateUserProfile(String email, String firstName, String lastName, String username, String phoneNumber, String password, String avatarFileName) {
         return reservationDAO.updateUserProfile(email, firstName, lastName, username, phoneNumber, password, avatarFileName);
     }
+
+    public List<Reservation> getConfirmedReservationsByListingId(long listingId) {
+        return reservationDAO.getConfirmedReservationsByListingId(listingId);
+    }
 }
 

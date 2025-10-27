@@ -414,6 +414,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             const toggleBtn = document.getElementById('toggleMapBtn');
             const mapContainer = document.getElementById('listing-map-container');
+            console.log("Initializing map...");
             const locations = [
                 <c:forEach var="listingData" items="${listings}" varStatus="loop">
                     {
@@ -427,6 +428,7 @@
                     }<c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
             ];
+            console.log("Locations loaded:", locations);
             let map = null;
             let mapInitialized = false;
     
