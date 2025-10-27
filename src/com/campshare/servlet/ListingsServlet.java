@@ -249,6 +249,10 @@ public class ListingsServlet extends HttpServlet {
             User partner = item != null ? userService.getUserById(item.getPartnerId()) : null;
             Image firstImage = item != null ? imageService.getFirstImageByItemId(item.getId()) : null;
             
+            ListingService service = new ListingService();
+            ListingService.ListingViewModel vm = service.getListingDetails(listing.getId());
+            
+
             // Build enhanced listing
             enhancedListing.put("listing", listing);
             enhancedListing.put("item", item);
@@ -256,6 +260,11 @@ public class ListingsServlet extends HttpServlet {
             enhancedListing.put("city", city);
             enhancedListing.put("partner", partner);
             enhancedListing.put("firstImage", firstImage);
+
+
+            
+            enhancedListing.put("reviewCount", vm.reviewCount);
+            enhancedListing.put("averageRating", vm.averageRating);
             
             enhancedListings.add(enhancedListing);
         }

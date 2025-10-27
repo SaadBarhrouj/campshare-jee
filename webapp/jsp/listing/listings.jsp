@@ -310,6 +310,8 @@
                             <c:set var="city" value="${listingData.city}" />
                             <c:set var="partner" value="${listingData.partner}" />
                             <c:set var="firstImage" value="${listingData.firstImage}" />
+                            <c:set var="reviewCount" value="${listingData.reviewCount}" />
+                            <c:set var="averageRating" value="${listingData.averageRating}" />
                             
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transform transition duration-300 hover:shadow-md hover:-translate-y-1 relative">
                                 <div class="absolute top-4 left-4 z-10 bg-forest text-white rounded-full px-3 py-1 font-medium text-xs flex items-center">
@@ -338,8 +340,21 @@
                                             </div>
                                             <div class="flex items-center text-sm flex-nowrap mt-1">
                                                 <span class="flex items-center whitespace-nowrap">
-                                                    <i class="far fa-star text-amber-400 mr-1"></i>
-                                                    <span class="text-gray-500 dark:text-gray-400">Non noté</span>
+                                                    <c:choose>
+                                                        <c:when test="${reviewCount > 0}">
+                                                            <i class="fa-solid fa-star text-amber-400 mr-1 ml-3"></i>
+                                                            <span class="text-gray-900 dark:text-white font-medium">
+                                                                ${averageRating}
+                                                            </span>
+                                                            <span class="text-gray-500 dark:text-gray-400 ml-1">
+                                                                (${reviewCount} <c:choose><c:when test="${reviewCount == 1}">avis</c:when><c:otherwise>avis</c:otherwise></c:choose>)
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <i class="far fa-star text-amber-400 mr-1 ml-3"></i>
+                                                            <span class="text-gray-500 dark:text-gray-400">Non noté</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </span>
                                             </div>
                                         </div>
@@ -399,7 +414,19 @@
         document.addEventListener('DOMContentLoaded', function () {
             const toggleBtn = document.getElementById('toggleMapBtn');
             const mapContainer = document.getElementById('listing-map-container');
-            const locations = []; // Will be populated with listing locations
+            const locations = [
+                <c:forEach var="listingData" items="${listings}" varStatus="loop">
+                    {
+                        lat: ${listingData.listing.latitude},
+                        lng: ${listingData.listing.longitude},
+                        title: "<c:out value='${listingData.item.title}' />",
+                        url: "${pageContext.request.contextPath}/listing?id=${listingData.listing.id}",
+                        category: "<c:out value='${listingData.category.name}' />",
+                        username: "<c:out value='${listingData.partner.username}' />",
+                        image: "rrr"
+                    }<c:if test="${!loop.last}">,</c:if>
+                </c:forEach>
+            ];
             let map = null;
             let mapInitialized = false;
     
