@@ -2,12 +2,14 @@ package com.campshare.dao.impl;
 
 import com.campshare.dao.interfaces.ReservationDAO;
 import com.campshare.dto.DailyStatsDTO;
+import com.campshare.model.Reservation;
 import com.campshare.util.DatabaseManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ReservationDAOImpl implements ReservationDAO {
@@ -74,5 +76,37 @@ public class ReservationDAOImpl implements ReservationDAO {
       e.printStackTrace();
     }
     return 0.0;
+  }
+
+  @Override
+  public List<Reservation> findReservationsEndedOn(Date date) {
+    List<Reservation> reservations = new ArrayList<>();
+    String sql = "SELECT * FROM reservations WHERE end_date = ? AND status = 'completed'";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setDate(1, new java.sql.Date(date.getTime()));
+      ResultSet rs = pstmt.executeQuery();
+
+      while (rs.next()) {
+        Reservation r = mapResultSetToReservation(rs);
+        reservations.add(r);
+      }
+    } catch (SQLException e) {
+      System.err.println("Erreur lors de la recherche des réservations terminées : " + e.getMessage());
+      e.printStackTrace();
+    }
+    return reservations;
+  }
+
+  private Reservation mapResultSetToReservation(ResultSet rs) throws SQLException {
+    Reservation reservation = new Reservation();
+    reservation.setId(rs.getLong("id"));
+    reservation.setListingId(rs.getLong("listing_id"));
+    reservation.setClientId(rs.getLong("client_id"));
+    reservation.setStartDate(rs.getDate("start_date"));
+    reservation.setEndDate(rs.getDate("end_date"));
+    reservation.setStatus(rs.getString("status"));
+    return reservation;
   }
 }

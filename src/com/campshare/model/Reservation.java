@@ -89,4 +89,36 @@ public class Reservation {
   public void setStatus(String status) {
     this.status = status;
   }
+
+  public long getClientId() {
+    return clientId;
+  }
+
+  public void setClientId(long clientId) {
+    this.clientId = clientId;
+  }
+
+  public long getPartnerId() {
+    return partnerId;
+  }
+
+  public void setPartnerId(long partnerId) {
+    this.partnerId = partnerId;
+  }
+
+  public long getListingId() {
+    return listingId;
+  }
+
+  public void setListingId(long listingId) {
+    this.listingId = listingId;
+  }
+
+  public boolean isDeliveryOption() {
+    return deliveryOption;
+  }
+
+  public void setDeliveryOption(boolean deliveryOption) {
+    this.deliveryOption = deliveryOption;
+  }
 }

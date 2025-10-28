@@ -21,7 +21,7 @@ public class ListingDAOImpl implements ListingDAO {
       "l.id as listing_id, l.status, l.start_date, l.end_date, l.created_at as listing_created_at, " +
       "l.longitude, l.latitude, l.delivery_option, " +
       "i.id as item_id, i.title, i.description, i.price_per_day, i.category_id, " +
-      "u.id as partner_id, u.username, u.first_name, u.last_name, u.avatar_url as partner_avatar, " +
+      "u.id as partner_id, u.username, u.first_name, u.last_name,u.email, u.avatar_url as partner_avatar, " +
       "c.id as city_id, c.name as city_name, " +
       "cat.id as category_id_ref, cat.name as category_name " +
       "FROM listings l " +
@@ -170,6 +170,7 @@ public class ListingDAOImpl implements ListingDAO {
       partner.setFirstName(rs.getString("first_name"));
       partner.setLastName(rs.getString("last_name"));
       partner.setAvatarUrl(rs.getString("partner_avatar"));
+      partner.setEmail(rs.getString("email"));
 
       Category category = new Category();
       category.setId(rs.getLong("category_id_ref"));
@@ -313,7 +314,7 @@ public class ListingDAOImpl implements ListingDAO {
       pstmt.setDate(2, listing.getEndDate());
       pstmt.setLong(3, listing.getCityId());
       pstmt.setBoolean(4, listing.isDeliveryOption());
-      pstmt.setLong(5, listing.getId()); 
+      pstmt.setLong(5, listing.getId());
 
       return pstmt.executeUpdate() > 0;
     } catch (SQLException e) {
