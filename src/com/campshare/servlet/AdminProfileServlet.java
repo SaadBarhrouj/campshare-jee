@@ -39,8 +39,6 @@ public class AdminProfileServlet extends HttpServlet {
     request.getRequestDispatcher("/jsp/admin/admin_profile.jsp").forward(request, response);
   }
 
-
-
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
@@ -62,7 +60,6 @@ public class AdminProfileServlet extends HttpServlet {
         String newPassword = request.getParameter("newPassword");
         String confirmPassword = request.getParameter("confirmPassword");
 
-
         success = userService.changeAdminPassword(currentUser.getId(), currentPassword, newPassword, confirmPassword);
 
         if (success) {
@@ -71,25 +68,52 @@ public class AdminProfileServlet extends HttpServlet {
           errorMsg = "Échec du changement de mot de passe. Vérifiez votre mot de passe actuel et assurez-vous que les nouveaux mots de passe correspondent (minimum 8 caractères).";
         }
       } catch (Exception e) {
-        e.printStackTrace(); 
+        e.printStackTrace();
         errorMsg = "Une erreur serveur s'est produite lors de la tentative de changement de mot de passe.";
         success = false;
       }
-    } else {
-      errorMsg = "Action non valide demandée.";
-      success = false;
     }
 
+    else if ("updateInfo".equals(action)) {
+      try {
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String email = request.getParameter("email");
+
+        success = userService.updateAdminInfo(currentUser.getId(), firstName, lastName, email);
+
+        if (success) {
+          successMsg = "Informations du profil mises à jour avec succès.";
+          currentUser.setFirstName(firstName);
+          currentUser.setLastName(lastName);
+          currentUser.setEmail(email);
+          session.setAttribute("authenticatedUser", currentUser);
+
+        } else {
+
+          errorMsg = "Échec de la mise à jour des informations. Un autre utilisateur utilise peut-être déjà cet email.";
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+        errorMsg = "Une erreur serveur s'est produite lors de la mise à jour des informations.";
+        success = false;
+      }
+    } else {
+      errorMsg = "Action non valide demandée: [" + action + "]";
+      success = false;
+    }
 
     User adminProfile = userService.getUserById(currentUser.getId());
     request.setAttribute("adminProfile", adminProfile);
 
     if (success) {
-      request.setAttribute("successMessage", successMsg);
+      session.setAttribute("successMessage", successMsg);
+      response.sendRedirect(request.getContextPath() + "/admin/profile");
+      return;
     } else {
       request.setAttribute("errorMessage", errorMsg);
+      request.getRequestDispatcher("/jsp/admin/admin_profile.jsp").forward(request, response);
     }
-
-    request.getRequestDispatcher("/jsp/admin/admin_profile.jsp").forward(request, response);
   }
+
 }
