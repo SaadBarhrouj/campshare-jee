@@ -187,5 +187,27 @@
             </servlet-mapping>
 
 
+            <servlet>
+                <servlet-name>PartnerProfileServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.PartnerProfileServlet</servlet-class>
+            </servlet>
+
+            <servlet-mapping>
+                <servlet-name>PartnerProfileServlet</servlet-name>
+                <url-pattern>/partner-profile</url-pattern>
+            </servlet-mapping>
+
+
+            <servlet>
+                <servlet-name>ClientProfileServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ClientProfileServlet</servlet-class>
+            </servlet>
+
+            <servlet-mapping>
+                <servlet-name>ClientProfileServlet</servlet-name>
+                <url-pattern>/client-profile</url-pattern>
+            </servlet-mapping>
+
+
             
 </web-app>

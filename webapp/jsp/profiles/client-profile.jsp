@@ -126,14 +126,14 @@
                     <div class="relative mb-6 md:mb-0 md:mr-8">
                         <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
                             <c:choose>
-                                <c:when test="${not empty partner.avatarUrl}">
-                                    <img src="${pageContext.request.contextPath}/${partner.avatarUrl}"
-                                         alt="${partner.username}"
+                                <c:when test="${not empty client.avatarUrl}">
+                                    <img src="${pageContext.request.contextPath}/${client.avatarUrl}"
+                                         alt="${client.username}"
                                          class="w-full h-full object-cover" />
                                 </c:when>
                                 <c:otherwise>
                                     <img src="${pageContext.request.contextPath}/assets/images/items/test1.jpg"
-                                         alt="${partner.username}"
+                                         alt="${client.username}"
                                          class="w-full h-full object-cover" />
                                 </c:otherwise>
                             </c:choose>
@@ -148,9 +148,9 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4">
                             <div>
                                 <h1 class="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                                    ${partner.username}
+                                    ${client.username}
                                     <span class="ml-3 text-sm font-medium px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-md">
-                                        Partenaire depuis <fmt:formatDate value="${partner.createdAt}" pattern="yyyy"/>
+                                        Client depuis <fmt:formatDate value="${client.createdAt}" pattern="yyyy"/>
                                     </span>
                                 </h1>
                                 <div class="mt-2 flex items-center text-gray-600 dark:text-gray-300">
@@ -164,12 +164,12 @@
                         <div class="flex gap-6 flex-nowrap">
                             <div class="flex flex-col items-center">
                                 <c:choose>
-                                    <c:when test="${partnerReviewCount > 0}">
-                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${partnerAvgRating}</div>
+                                    <c:when test="${clientReviewCount > 0}">
+                                        <div class="text-2xl font-bold text-gray-900 dark:text-white">${clientAvgRating}</div>
                                         <div class="flex text-amber-400 mt-1">
                                             <i class="fas fa-star"></i>
                                         </div>
-                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">(${partnerReviewCount} avis)</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">(${clientReviewCount} avis)</div>
                                     </c:when>
                                     <c:otherwise>
                                         <div class="text-2xl font-bold text-gray-900 dark:text-white">Non noté</div>
@@ -196,10 +196,7 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex overflow-x-auto scrollbar-hide">
                     <button id="tab-equipment1" class="tab-active px-4 py-4 font-medium text-lg whitespace-nowrap">
-                        Équipements disponibles (${listingsCount})
-                    </button>
-                    <button id="tab-reviews1" class="px-4 py-4 font-medium text-lg text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                        Avis (${partnerReviewCount})
+                        Avis (${clientReviewCount})
                     </button>
                 </div>
             </div>
@@ -208,37 +205,20 @@
         <!-- Equipment Section -->
         <section id="equipment-section1" class="py-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Équipements proposés par ${partner.username}</h2>
-                </div>
-                
-                <!-- Equipment Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                    
-                    
-                </div>
-            </div>
-        </section>
-        
-        
-        <!-- Reviews Section -->
-        <section id="reviews-section1" class="py-10 hidden">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Avis des utilisateurs sur ce partenaire</h2>
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Avis des utilisateurs sur ce Client</h2>
                 </div>
                 
                 <!-- Review Stats -->
-                <c:if test="${partnerReviewCount > 0}">
+                <c:if test="${clientReviewCount > 0}">
                     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-8">
                         <div class="flex flex-col md:flex-row md:items-center">
                             <div class="flex flex-col items-center mr-8 mb-6 md:mb-0">
-                                <div class="text-5xl font-bold text-gray-900 dark:text-white">${partnerAvgRating}</div>
+                                <div class="text-5xl font-bold text-gray-900 dark:text-white">${clientAvgRating}</div>
                                 <div class="flex text-amber-400 text-xl mt-2">
                                     <i class="fas fa-star"></i>
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">${partnerReviewCount} avis</div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">${clientReviewCount} avis</div>
                             </div>
                             
                             <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -246,23 +226,23 @@
                                     <div class="flex items-center mb-2">
                                         <div class="w-24 font-medium text-gray-700 dark:text-gray-300">5 étoiles</div>
                                         <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${partnerRatingPercentages[5]}%"></div>
+                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[5]}%"></div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${partnerRatingPercentages[5]}%</div>
+                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[5]}%</div>
                                     </div>
                                     <div class="flex items-center mb-2">
                                         <div class="w-24 font-medium text-gray-700 dark:text-gray-300">4 étoiles</div>
                                         <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${partnerRatingPercentages[4]}%"></div>
+                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[4]}%"></div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${partnerRatingPercentages[4]}%</div>
+                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[4]}%</div>
                                     </div>
                                     <div class="flex items-center mb-2">
                                         <div class="w-24 font-medium text-gray-700 dark:text-gray-300">3 étoiles</div>
                                         <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${partnerRatingPercentages[3]}%"></div>
+                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[3]}%"></div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${partnerRatingPercentages[3]}%</div>
+                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[3]}%</div>
                                     </div>
                                 </div>
                                 
@@ -270,16 +250,16 @@
                                     <div class="flex items-center mb-2">
                                         <div class="w-24 font-medium text-gray-700 dark:text-gray-300">2 étoiles</div>
                                         <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${partnerRatingPercentages[2]}%"></div>
+                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[2]}%"></div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${partnerRatingPercentages[2]}%</div>
+                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[2]}%</div>
                                     </div>
                                     <div class="flex items-center mb-2">
                                         <div class="w-24 font-medium text-gray-700 dark:text-gray-300">1 étoile</div>
                                         <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${partnerRatingPercentages[1]}%"></div>
+                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[1]}%"></div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${partnerRatingPercentages[1]}%</div>
+                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[1]}%</div>
                                     </div>
                                 </div>
                             </div>
@@ -292,21 +272,21 @@
                 <div class="space-y-6">
 
                     <c:choose>
-                    <c:when test="${not empty partnerReviews}">
-                    <c:forEach var="review" items="${partnerReviews}" varStatus="vs">
+                    <c:when test="${not empty clientReviews}">
+                    <c:forEach var="review" items="${clientReviews}" varStatus="vs">
                         <div class="review-item ${vs.index >= 3 ? 'hidden' : ''}">
                             <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                                 <div class="flex justify-between items-start">
                                     <div class="flex">
                                         <div class="mr-4">
-                                            <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}">
+                                            <a href="${pageContext.request.contextPath}/partner-profile?id=${review.reviewer.id}">
                                                 <img src="${review.reviewer != null && review.reviewer.avatarUrl != null ? pageContext.request.contextPath.concat('/').concat(review.reviewer.avatarUrl) : pageContext.request.contextPath.concat('/assets/images/users/image4.png')}" 
                                                      alt="${review.reviewer != null ? review.reviewer.username : ''}" 
                                                      class="w-12 h-12 rounded-full object-cover" />
                                             </a>
                                         </div>
                                         <div>
-                                            <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="font-bold text-gray-900 dark:text-white hover:text-forest dark:hover:text-meadow">${review.reviewer != null ? review.reviewer.username : ''}</a>
+                                            <a href="${pageContext.request.contextPath}/partner-profile?id=${review.reviewer.id}" class="font-bold text-gray-900 dark:text-white hover:text-forest dark:hover:text-meadow">${review.reviewer != null ? review.reviewer.username : ''}</a>
                                             <div class="flex items-center space-x-2 mt-1">
                                                 <div class="flex text-amber-400">
                                                     <c:forEach var="i" begin="1" end="5">
@@ -329,7 +309,7 @@
                     </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <p class="text-gray-500">Ce partenaire n'a pas encore reçu d'avis.</p>
+                        <p class="text-gray-500">Ce Client n'a pas encore reçu d'avis.</p>
                     </c:otherwise>
                     </c:choose>
                     
@@ -337,6 +317,8 @@
                 </div>
             </div>
         </section>
+        
+    
     </main>
     
     <!-- Footer -->

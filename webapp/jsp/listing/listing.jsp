@@ -440,14 +440,14 @@
                                          <c:forEach var="review" items="${reviews}" varStatus="loop">
                                          <div class="review-item review-card bg-white dark:bg-gray-800/50 p-4 border-b dark:border-gray-700 last:border-b-0 ${loop.index >= 3 ? 'hidden' : ''}">
                                               <div class="flex items-start space-x-4">
-                                                <a href="#" class="flex-shrink-0">
+                                                <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="flex-shrink-0">
                                                     <img src="${pageContext.request.contextPath}/${not empty review.reviewer.avatarUrl ? review.reviewer.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                                         alt="Avatar de ${not empty review.reviewer.username ? review.reviewer.username : 'Utilisateur'}"
                                                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 mt-1 border-2 border-white dark:border-gray-600 shadow-sm">
                                                 </a>
                                                 <div class="flex-1">
                                                     <div class="flex justify-between items-center mb-2">
-                                                        <a href="#" class="hover:underline">
+                                                        <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="hover:underline">
                                                             <span class="font-semibold text-gray-800 dark:text-white">${not empty review.reviewer.username ? review.reviewer.username : 'Utilisateur anonyme'}</span>
                                                         </a>
                                                         <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 py-1 px-2 rounded-full" title="<fmt:formatDate value="${review.createdAt}" pattern="EEEE dd MMMM yyyy 'à' HH:mm" />">
@@ -661,13 +661,13 @@
                                  <!-- Infos Partenaire -->
                                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Proposé par :</p>
                                  <div class="flex items-center bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg hover-lift">
-                                    <a href="#" class="flex-shrink-0">
+                                    <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="flex-shrink-0">
                                         <img src="${pageContext.request.contextPath}/${not empty partner.avatarUrl ? partner.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                             alt="Avatar de ${not empty partner.username ? partner.username : 'Partenaire'}"
                                             class="w-12 h-12 rounded-full object-cover mr-3 border-2 border-white dark:border-gray-600 shadow-sm">
                                     </a>
                                     <div class="leading-tight">
-                                        <a href="#" class="hover:underline">
+                                        <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="hover:underline">
                                             <span class="font-medium text-gray-800 dark:text-gray-100 text-base">${not empty partner.username ? partner.username : 'Partenaire CampShare'}</span>
                                         </a>
                                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
