@@ -33,6 +33,13 @@
                                         </a>
                                     </div>
 
+                                    <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                        <!-- Sun shown in light mode -->
+                                        <i class="fas fa-sun inline-block dark:hidden"></i>
+                                        <!-- Moon shown in dark mode -->
+                                        <i class="fas fa-moon hidden dark:inline-block"></i>
+                                    </button>
+
 
                                     <div class="relative">
                                         <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
@@ -71,7 +78,7 @@
                                                 </a>
                                                 </c:if>
                                                 <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                                                <a href="${contextPage.request.contextPath}/logout" class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700" >
                                                     <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
                                                 </a>
                                                 <form id="logout-form" action="" method="POST" class="hidden">
@@ -128,9 +135,16 @@
                         </c:when>
                         <c:otherwise>
                         <div class="flex items-center space-x-4 ml-4">
+                            
                             <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
                             <a href="${pageContext.request.contextPath}/login" class="px-4 py-2 font-medium rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Connexion</a>
                             <a href="${pageContext.request.contextPath}/register" class="px-4 py-2 font-medium rounded-md bg-sunlight hover:bg-amber-600 text-white shadow-md transition duration-300">Inscription</a>
+                            <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                <!-- Sun shown in light mode -->
+                                <i class="fas fa-sun inline-block dark:hidden"></i>
+                                <!-- Moon shown in dark mode -->
+                                <i class="fas fa-moon hidden dark:inline-block"></i>
+                            </button>
                         </div>
                         </c:otherwise>
                          </c:choose>
@@ -149,6 +163,12 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 pb-4 shadow-lg">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <!-- Sun shown in light mode -->
+                    <i class="fas fa-sun inline-block dark:hidden"></i>
+                    <!-- Moon shown in dark mode -->
+                    <i class="fas fa-moon hidden dark:inline-block"></i>
+                </button>
                 <a href="{" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Explorer le matériel</a>
 
                             <button type="button" id="openPartnerModalBtnMobile" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Devenir Partenaire</button>
@@ -193,7 +213,7 @@
                                 <a href="${pageContext.request.contextPath}/partner/dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-briefcase mr-2 opacity-70"></i> Espace Partenaire
                                 </a>
-                                <a href="${contextPage.request.contextPath}/logout" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                                <a href="${pageContext.request.contextPath}/logout" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
                                 </a>
                                 <form id="logout-form-mobile" action="" method="POST" class="hidden"></form>
@@ -296,4 +316,40 @@
         }
 
     });
+
+
+    // Theme Button Toggle 
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const html = document.documentElement;
+
+    // Set initial theme (same logic as before)
+    if (
+        localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+        html.classList.add('dark');
+    } else {
+        html.classList.remove('dark');
+    }
+
+    // Toggle on button click
+    themeToggleBtn.addEventListener('click', () => {
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+
+    // Optional: update automatically if system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) { // only auto-change if user hasn't chosen manually
+            if (e.matches) html.classList.add('dark');
+            else html.classList.remove('dark');
+        }
+    });
+
+    
 </script>
