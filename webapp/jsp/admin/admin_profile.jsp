@@ -79,6 +79,8 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
+                <c:remove var="successMessage" scope="session"/>
+
             </c:if>
 
             <c:if test="${not empty errorMessage}">
@@ -299,11 +301,7 @@
                                          src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
                                 </c:otherwise>
                             </c:choose>
-                            
-                            <button type="button" disabled
-                                    class="w-full flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-100 dark:bg-gray-700 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed">
-                                <i class="fas fa-upload mr-2"></i> Changer (Bientôt)
-                            </button>
+                        
                         </div>
                     </div>
                 </div>
