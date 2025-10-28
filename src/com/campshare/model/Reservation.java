@@ -1,6 +1,7 @@
 package com.campshare.model;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class Reservation {
   private long id;
@@ -120,5 +121,14 @@ public class Reservation {
 
   public void setDeliveryOption(boolean deliveryOption) {
     this.deliveryOption = deliveryOption;
+  }
+
+  public long getDays() {
+      if (startDate == null || endDate == null) {
+          return 0;
+      }
+      long diffInMillis = Math.abs(endDate.getTime() - startDate.getTime());
+      long days = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+      return days + 1;
   }
 }

@@ -5,6 +5,7 @@ import com.campshare.model.Reservation;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface ReservationDAO {
   List<DailyStatsDTO> getDailyBookingCountStats(int days);
@@ -14,4 +15,8 @@ public interface ReservationDAO {
   double getTotalRevenueAllTime();
 
   List<Reservation> findReservationsEndedOn(Date date);
+
+  List<Reservation> findAllWithDetails();
+
+  Map<String, Long> countByStatus();
 }
