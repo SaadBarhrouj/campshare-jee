@@ -158,7 +158,7 @@ public class ReservationDAOImpl implements ReservationDAO {
 
   @Override
   public long countAllConfirmed() {
-    String sql = "SELECT COUNT(*) FROM reservations WHERE status = 'confirmed'";
+    String sql = "SELECT COUNT(*) FROM reservations";
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql);
         ResultSet rs = pstmt.executeQuery()) {
