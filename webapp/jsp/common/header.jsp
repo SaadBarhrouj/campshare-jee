@@ -113,10 +113,14 @@
                                         <button type="button" id="cancelPartnerModalBtn" class="cursor-pointer mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 transition duration-150 ease-in-out">
                                             Annuler
                                         </button>
-                                        <form method="POST" action="{{ route('devenir_partenaire') }}" style="display: inline;">
+                                        <form method="POST" action="${pageContext.request.contextPath}/become-partner" style="display: inline;">
+
                                             <button type="submit" id="confirmPartnerBtn" class="cursor-pointer px-4 py-2 bg-forest text-white rounded-md hover:bg-opacity-90 dark:bg-sunlight dark:text-gray-900 dark:hover:bg-opacity-90 transition duration-150 ease-in-out shadow-sm">
+                                                
                                                 Accepter et Continuer
+                                                
                                             </button>
+                                            
                                         </form>
                                     </div>
                                 </div>

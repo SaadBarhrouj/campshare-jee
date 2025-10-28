@@ -176,6 +176,16 @@
             </servlet-mapping>
 
 
+            <servlet>
+                <servlet-name>BecomePartnerServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.BecomePartnerServlet</servlet-class>
+            </servlet>
+
+            <servlet-mapping>
+                <servlet-name>BecomePartnerServlet</servlet-name>
+                <url-pattern>/become-partner</url-pattern>
+            </servlet-mapping>
+
 
             
 </web-app>

@@ -127,4 +127,19 @@ public class UserService {
         return userDAO.findRecentByRole("client", limit);
     }
 
+    public void updateRole(long userId, String newRole) {
+        if (userId <= 0) {
+            throw new IllegalArgumentException("Invalid user ID");
+        }
+        if (newRole == null || newRole.trim().isEmpty()) {
+            throw new IllegalArgumentException("Role cannot be empty");
+        }
+        
+        try {
+            userDAO.updateRole(userId, newRole.trim());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Error updating user role: " + e.getMessage());
+        }
+    }
+
 }
