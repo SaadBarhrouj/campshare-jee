@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import com.campshare.service.AdminDashboardService;
+import com.campshare.dto.AdminDashboardStatsDTO;
 
 public class AdminReservationsServlet extends HttpServlet {
 
   private ReservationService reservationService = new ReservationService();
+  private AdminDashboardService dashboardService = new AdminDashboardService();
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -66,17 +69,15 @@ public class AdminReservationsServlet extends HttpServlet {
       }
 
       request.setAttribute("reservations", reservations);
+      AdminDashboardStatsDTO dashboardStats = dashboardService.getDashboardStats();
+      request.setAttribute("dashboardStats", dashboardStats);
 
-      System.out.println("[SERVLET DEBUG] Transfert de la requête vers reservations.jsp.");
       RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/admin/reservations.jsp");
       dispatcher.forward(request, response);
 
     } catch (Exception e) {
 
-      System.err.println("\n--- [SERVLET DEBUG] ERREUR CRITIQUE ATTRAPÉE DANS LA SERVLET ---");
-      System.err.println("Une exception a été levée durant l'exécution de la méthode doGet. L'erreur est :");
       e.printStackTrace();
-      System.err.println("--- FIN DE LA TRACE DE L'ERREUR ---\n");
 
       request.setAttribute("errorMessage", "Erreur critique lors du chargement des réservations: " + e.getMessage());
       RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/admin/reservations.jsp");
