@@ -361,7 +361,7 @@
                                         
                                         <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
                                             <i class="fas fa-user mr-1 text-gray-400"></i>
-                                            <a href="${pageContext.request.contextPath}/partner/${partner.id}" class="hover:text-forest dark:hover:text-sunlight"><c:out value="${partner.username}" /></a>
+                                            <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="hover:text-forest dark:hover:text-sunlight"><c:out value="${partner.username}" /></a>
                                         </div>
                                         
                                         <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">

@@ -14,7 +14,7 @@
               </a>
             </div>
             <p class="text-gray-300 mb-4 max-w-md">
-              CampShare est un service de ParentCo qui permet aux particuliers
+              CampShare est un service qui permet aux particuliers
               de louer du matériel de camping entre eux, pour des aventures plus
               accessibles et éco-responsables.
             </p>
@@ -139,7 +139,7 @@
                 <a
                   href="#"
                   class="text-gray-300 hover:text-white transition duration-150"
-                  >À propos de ParentCo</a
+                  >À propos de CampShare</a
                 >
               </li>
               <li>
@@ -180,8 +180,7 @@
           >
             <div class="mb-4 md:mb-0">
               <p class="text-gray-400">
-                © 2025 ParentCo. Tous droits réservés. CampShare est un service
-                de ParentCo.
+                © 2025 CampShare. Tous droits réservés.
               </p>
             </div>
           </div>
