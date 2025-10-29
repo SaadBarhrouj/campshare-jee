@@ -48,6 +48,18 @@ public class ListingService {
     public long reviewCount;
     public double averageRating;
     public Map<Integer, Integer> ratingPercentages;
+
+    // Expose getters for JSP EL property access
+    public Listing getListing() { return listing; }
+    public Item getItem() { return item; }
+    public Category getCategory() { return category; }
+    public City getCity() { return city; }
+    public User getPartner() { return partner; }
+    public Image getFirstImage() { return firstImage; }
+    public List<Review> getReviews() { return reviews; }
+    public long getReviewCount() { return reviewCount; }
+    public double getAverageRating() { return averageRating; }
+    public Map<Integer, Integer> getRatingPercentages() { return ratingPercentages; }
   }
 
   public List<ListingViewModel> getAllListingsWithRelations() {

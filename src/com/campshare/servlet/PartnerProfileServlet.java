@@ -27,6 +27,10 @@ public class PartnerProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
+            // Ensure UTF-8 for request/response
+            req.setCharacterEncoding("UTF-8");
+            resp.setCharacterEncoding("UTF-8");
+            resp.setContentType("text/html; charset=UTF-8");
             // Get partner ID from request parameter
             String partnerIdParam = req.getParameter("id");
             if (partnerIdParam == null || partnerIdParam.trim().isEmpty()) {
@@ -66,14 +70,63 @@ public class PartnerProfileServlet extends HttpServlet {
             long listingsCount = listings.size();
 
 
-            System.out.println("partner = " + partner);
-            System.out.println("city = " + city);
-            System.out.println("partnerReviews = " + partnerReviews);
-            System.out.println("partnerReviewCount = " + partnerReviewCount);
-            System.out.println("partnerAvgRating = " + partnerAvgRating);
-            System.out.println("partnerRatingPercentages = " + partnerRatingPercentages);
             System.out.println("listings = " + listings);
             System.out.println("listingsCount = " + listingsCount);
+
+            System.out.println("================= DEBUG: ListingViewModels =================");
+            if (listings != null && !listings.isEmpty()) {
+                for (var vm : listings) {
+                    System.out.println("---- ListingViewModel ----");
+
+                    // Listing info
+                    if (vm.listing != null) {
+                        System.out.println("Listing ID: " + vm.listing.getId());
+                        System.out.println("Listing Start Date: " + vm.listing.getStartDate());
+                        System.out.println("Listing End Date: " + vm.listing.getEndDate());
+                    } else {
+                        System.out.println("Listing is NULL!");
+                    }
+
+                    // Item info
+                    if (vm.item != null) {
+                        System.out.println("Item ID: " + vm.item.getId());
+                        System.out.println("Item Title: " + vm.item.getTitle());
+                        System.out.println("Item Price/Day: " + vm.item.getPricePerDay());
+                    } else {
+                        System.out.println("Item is NULL!");
+                    }
+
+                    // Category info
+                    if (vm.category != null) {
+                        System.out.println("Category ID: " + vm.category.getId());
+                        System.out.println("Category Name: " + vm.category.getName());
+                    } else {
+                        System.out.println("Category is NULL!");
+                    }
+
+                    // Partner info
+                    if (vm.partner != null) {
+                        System.out.println("Partner ID: " + vm.partner.getId());
+                        System.out.println("Partner Username: " + vm.partner.getUsername());
+                    } else {
+                        System.out.println("Partner is NULL!");
+                    }
+
+                    // City info
+                    if (vm.city != null) {
+                        System.out.println("City ID: " + vm.city.getId());
+                        System.out.println("City Name: " + vm.city.getName());
+                    } else {
+                        System.out.println("City is NULL!");
+                    }
+
+                    System.out.println("----------------------------------------------");
+                }
+            } else {
+                System.out.println("No listings found (listings is null or empty)");
+            }
+            System.out.println("=============================================================");
+
 
             
             // Set attributes for JSP

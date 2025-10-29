@@ -154,7 +154,9 @@ public class ListingServlet extends HttpServlet {
 
         // Forward back to the same listing page (you can also redirect)
         req.setAttribute("listing", listing);
-        req.getRequestDispatcher("/jsp/listing/listing.jsp").forward(req, resp);
+
+        // Redirect to same listing page
+        resp.sendRedirect(req.getContextPath() + "/listing?id=" + listingId); 
 
     } catch (Exception e) {
         e.printStackTrace();

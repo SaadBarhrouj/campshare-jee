@@ -31,7 +31,8 @@ public class BecomePartnerServlet extends HttpServlet {
             req.getSession().setAttribute("authenticatedUser", authenticatedUser);
 
             // Redirect to partner dashboard or show confirmation
-            resp.sendRedirect(req.getContextPath() + "/jsp/partner/home.jsp");
+            resp.sendRedirect(req.getContextPath() + "/partner/dashboard");
+
 
         } catch (Exception e) {
             e.printStackTrace();

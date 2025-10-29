@@ -215,7 +215,63 @@
                 <!-- Equipment Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                    
+                    <c:choose>
+                    <c:when test="${not empty listings}">
+                    <c:forEach var="vm" items="${listings}">
+                        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden transform transition duration-300 hover:shadow-md hover:-translate-y-1 relative">
+                            <div class="absolute top-4 left-4 z-10 bg-forest text-white rounded-full px-3 py-1 font-medium text-xs flex items-center">
+                                ${vm.category != null ? vm.category.name : ''}
+                            </div>
+                            <a href="${pageContext.request.contextPath}/listing?id=${vm.listing.id}">
+                                <div class="relative h-48">
+                                    <img src="${vm.firstImage != null ? pageContext.request.contextPath.concat('/').concat(vm.firstImage.url) : pageContext.request.contextPath.concat('/assets/images/items/test1.jpg')}" alt="image" class="w-full h-full object-cover" />
+                                </div>
+                                <div class="p-4">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <h3 class="font-bold text-gray-900 dark:text-white">${vm.item.title}</h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">Catégorie - ${vm.category != null ? vm.category.name : ''}</p>
+                                        </div>
+                                        <div class="flex items-center text-sm flex-nowrap">
+                                            <i class="fas fa-star text-amber-400 mr-1"></i>
+                                            <span class="flex flex-nowrap">${vm.averageRating} <span class="text-gray-500 dark:text-gray-400">(${vm.reviewCount})</span></span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
+                                        <i class="fas fa-user mr-1 text-gray-400"></i>
+                                        <a href="${pageContext.request.contextPath}/partner-profile?id=${vm.partner.id}" class="hover:text-forest dark:hover:text-sunlight">${vm.partner.username}</a>
+                                    </div>
+                                    
+                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-2">
+                                        <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
+                                        <span>${vm.city != null ? vm.city.name : ''}, Maroc</span>
+                                    </div>
+                                    
+                                    <div class="text-sm mb-3">
+                                        <span class="text-gray-600 dark:text-gray-300">Disponible du <fmt:formatDate value="${vm.listing.startDate}" pattern="yyyy-MM-dd"/> au <fmt:formatDate value="${vm.listing.endDate}" pattern="yyyy-MM-dd"/></span>
+                                    </div>
+                                    
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span class="font-bold text-lg text-gray-900 dark:text-white">${vm.item.pricePerDay} MAD</span>
+                                            <span class="text-gray-600 dark:text-gray-300 text-sm">/jour</span>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/listing?id=${vm.listing.id}" class="inline-block">
+                                            <button class="px-4 py-2 bg-forest hover:bg-green-700 text-white rounded-md transition-colors shadow-sm">
+                                                Voir détails
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <p class="text-gray-500">Aucun annonce publiée encore.</p>
+                    </c:otherwise>
+                    </c:choose>
                     
                 </div>
             </div>
