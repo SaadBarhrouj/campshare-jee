@@ -208,7 +208,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des Avis Reçus</h2>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                        {{$LesAvis->count()}} Total Avis Reçus
+                        2 Total Avis Reçus
                     </span>
                 </div>
                 <%-- ${ParteneReviews} --%>

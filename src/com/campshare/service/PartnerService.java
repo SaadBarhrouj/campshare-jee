@@ -56,6 +56,9 @@ public class PartnerService {
     public Optional<Item> findItemWithImages(int itemId) {
         return itemDAO.findItemWithImages(itemId);
     }
+    public boolean addListing(Listing listing) {
+        return listingDAO.insertAnnonce(listing);
+    }
 
 
 
