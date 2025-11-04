@@ -600,7 +600,7 @@ public class ListingDAOImpl implements ListingDAO {
         }
         return listings;
     }
-      public List<Listing> getPartnerListings(String email) {
+public List<Listing> getPartnerListings(String email) {
     List<Listing> listings = new ArrayList<>();
 
     String sql = """
@@ -667,6 +667,32 @@ public class ListingDAOImpl implements ListingDAO {
 
     return listings;
 }
+ @Override
+    public boolean insertAnnonce(Listing listing) {
+      String INSERT_SQL =
+            "INSERT INTO listings (start_date, end_date, city_id, longitude, latitude, delivery_option, item_id) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(INSERT_SQL)) {
+              System.out.println("hahahhhhahahha");
+              System.out.println(listing);
+
+
+            stmt.setDate(1, listing.getStartDate());
+            stmt.setDate(2, listing.getEndDate());
+            stmt.setDouble(3, listing.getCityId());
+            stmt.setDouble(4, listing.getLongitude());
+            stmt.setDouble(5, listing.getLatitude());
+            stmt.setBoolean(6, listing.isDeliveryOption());
+            stmt.setDouble(7, listing.getItemId());
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+           System.err.println("❌ SQL Error inserting annonce: " + e.getMessage());
+          e.printStackTrace();
+      }
+      return false;
+    }
 
   @Override
   public boolean deleteAnnonce(long id) {

@@ -144,7 +144,7 @@
         
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden mb-10">
             <form id="listing-form" action="${pageContext.request.contextPath}/partner/AddAnnonceForm" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="item_id" value="${item.id}">
+                <input type="hidden" name="itemId" value="${item.id}">
                 
                 <!-- Step 1: Informations de base -->
                 <div class="form-step active" id="step-1">

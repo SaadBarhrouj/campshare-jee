@@ -29,6 +29,8 @@ import com.campshare.model.Image;
 import com.campshare.service.ItemService;
 import com.campshare.service.PartnerService;
 import com.campshare.service.ReservationService;
+import com.campshare.service.ListingService;
+
 
 
 @WebServlet("/partner/AddAnnonceForm")
@@ -39,10 +41,11 @@ public class PartnerAddAnnonceFormServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         PartnerService partnerService = new PartnerService();
+        ListingService listingService = new ListingService();
 
         try {
             // Retrieve parameters from form
-            int itemId = Integer.parseInt(request.getParameter("item_id"));
+            int itemId = Integer.parseInt(request.getParameter("itemId"));
             String startDateStr  = request.getParameter("start_date");
             String endDateStr = request.getParameter("end_date");
             boolean deliveryOption = "on".equals(request.getParameter("delivery_option"));
@@ -53,13 +56,7 @@ public class PartnerAddAnnonceFormServlet extends HttpServlet {
             // Get the partner (you can replace this with actual logged user)
             int partnerId =1;
 
-            // // Verify that the item belongs to this partner
-            // Item item = itemService.getItemById(itemId);
-            // if (item == null || item.getPartnerId() != partnerId) {
-            //     request.setAttribute("error", "Vous n'êtes pas autorisé à publier une annonce pour cet équipement.");
-            //     request.getRequestDispatcher("/WEB-INF/views/partner/equipements.jsp").forward(request, response);
-            //     return;
-            // }
+
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Date utilStartDate = formatter.parse(startDateStr);
             Date utilEndDate = formatter.parse(endDateStr);
@@ -81,7 +78,7 @@ public class PartnerAddAnnonceFormServlet extends HttpServlet {
             listing.setStatus("active");
 
             // Insert into database
-            //boolean success = listingService.addListing(listing);
+            boolean success = partnerService.addListing(listing);
             System.out.println("bbbbbbbbbbbbbb");
 
             System.out.println(listing);

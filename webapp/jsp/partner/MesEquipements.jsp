@@ -242,8 +242,8 @@
 
 
                         <div class="flex items-center justify-between mt-6">
-                            
-                                <a href="${pageContext.request.contextPath}/partner/annonces/create?equipment_id=${equipment.id}" 
+
+                                <a href="${pageContext.request.contextPath}/partner/AddAnnonce?equipment_id=${equipment.id}" 
                                    class="px-3 py-2 bg-forest hover:bg-meadow text-white rounded-md shadow-sm flex items-center justify-center text-sm ">
                                     <i class="fas fa-bullhorn mr-2"></i> Publier
                                 </a>

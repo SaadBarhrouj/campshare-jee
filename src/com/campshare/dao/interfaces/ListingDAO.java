@@ -1,5 +1,6 @@
 package com.campshare.dao.interfaces;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.campshare.model.Listing;
@@ -40,6 +41,8 @@ public interface ListingDAO {
   boolean updateListing(long listingId, long cityId, String startDate, String endDate,
                                  String deliveryOption, Double latitude, Double longitude
                                 );
+
+  boolean insertAnnonce(Listing listing);
   
 
 
