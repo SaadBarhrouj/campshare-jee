@@ -48,6 +48,18 @@ public class ListingService {
     public long reviewCount;
     public double averageRating;
     public Map<Integer, Integer> ratingPercentages;
+
+    // Expose getters for JSP EL property access
+    public Listing getListing() { return listing; }
+    public Item getItem() { return item; }
+    public Category getCategory() { return category; }
+    public City getCity() { return city; }
+    public User getPartner() { return partner; }
+    public Image getFirstImage() { return firstImage; }
+    public List<Review> getReviews() { return reviews; }
+    public long getReviewCount() { return reviewCount; }
+    public double getAverageRating() { return averageRating; }
+    public Map<Integer, Integer> getRatingPercentages() { return ratingPercentages; }
   }
 
   public List<ListingViewModel> getAllListingsWithRelations() {
@@ -292,5 +304,62 @@ public class ListingService {
   }
   public boolean updateListing(long listingId, long cityId, String startDate, String endDate, String deliveryOption, Double latitude, Double longitude) {
     return listingDAO.updateListing(listingId, cityId, startDate, endDate,deliveryOption, latitude, longitude);
+  }
+
+
+  public List<ListingViewModel> getPartnerListingsWithRelations(long partnerId) {
+    System.out.println("ListingService: Starting getPartnerListingsWithRelations for partner " + partnerId);
+    
+    List<Listing> listings = listingDAO.findByPartnerId(partnerId);
+    System.out.println("ListingService: Found " + (listings != null ? listings.size() : 0) + " raw listings for partner");
+    
+    List<ListingViewModel> result = new ArrayList<>();
+
+    // Preload cities for quick map
+    Map<Long, City> cityCache = new HashMap<>();
+    try {
+      for (City c : cityDAO.findAll()) {
+        cityCache.put(c.getId(), c);
+      }
+      System.out.println("ListingService: Loaded " + cityCache.size() + " cities into cache");
+    } catch (Exception e) {
+      System.err.println("ListingService: Error loading cities: " + e.getMessage());
+    }
+
+    for (Listing l : listings) {
+      System.out.println("ListingService: Processing listing ID " + l.getId());
+      ListingViewModel vm = new ListingViewModel();
+      vm.listing = l;
+
+      // Item + relationships
+      Item item = fetchItemById(l.getItemId());
+      vm.item = item;
+      if (item != null) {
+        System.out.println("ListingService: Found item " + item.getId() + " for listing " + l.getId());
+        // Get category
+        vm.category = categoryDAO.findById(item.getCategoryId());
+        
+        // Get partner
+        vm.partner = fetchPartnerById(item.getPartnerId());
+        
+        // Get first image
+        vm.firstImage = imageDAO.findFirstByItemId(item.getId());
+        
+        // Get review data
+        vm.reviews = reviewDAO.findByItemId(item.getId());
+        vm.reviewCount = reviewDAO.countByItemId(item.getId());
+        vm.averageRating = reviewDAO.getAverageRatingByItemId(item.getId());
+        vm.ratingPercentages = calculateRatingPercentages(vm.reviews);
+      } else {
+        System.out.println("ListingService: No item found for listing " + l.getId());
+      }
+
+      // City
+      vm.city = cityCache.get(l.getCityId());
+
+      result.add(vm);
+    }
+    System.out.println("ListingService: Returning " + result.size() + " processed listings for partner");
+    return result;
   }
 }

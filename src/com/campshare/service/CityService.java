@@ -12,4 +12,8 @@ public class CityService {
   public List<City> getAllCities() {
     return cityDAO.findAll();
   }
+
+  public City getCityById(long id) {
+    return cityDAO.findById(id);
+  }
 }

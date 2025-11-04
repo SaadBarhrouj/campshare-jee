@@ -265,4 +265,17 @@ public class UserDAOImpl implements UserDAO {
         user.setCreatedAt(rs.getTimestamp("created_at"));
         return user;
     }
+
+    @Override
+    public void updateRole(long userId, String newRole) {
+        String sql = "UPDATE users SET role = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, newRole);
+            pstmt.setLong(2, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la mise à jour du rôle de l'utilisateur.", e);
+        }
+    }
 }

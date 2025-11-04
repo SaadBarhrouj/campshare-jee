@@ -20,4 +20,9 @@ public class ItemService {
     
 
 
+    public Item findByListingId(long id) {
+        return itemDAO.findByListingId(id);
+    }
+
+
 }

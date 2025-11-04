@@ -14,8 +14,8 @@
                 <!-- Desktop Navigation -->
                  <c:choose>
                   <c:when test="${not empty authenticatedUser}">
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
+                <div class="hidden md:flex items-center">
+                    <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 mr-8">Explorer le matériel</a>
                             <c:if test="${authenticatedUser.role == 'client'}">
                                 <button type="button" id="openPartnerModalBtn" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 cursor-pointer">
                                     Devenir Partenaire
@@ -33,29 +33,52 @@
                                         </a>
                                     </div>
 
+                                    <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                        <!-- Sun shown in light mode -->
+                                        <i class="fas fa-sun inline-block dark:hidden"></i>
+                                        <!-- Moon shown in dark mode -->
+                                        <i class="fas fa-moon hidden dark:inline-block"></i>
+                                    </button>
+
 
                                     <div class="relative">
                                         <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                            <img src="" alt="Avatar de " class="h-8 w-8 rounded-full object-cover" />
+                                            <c:choose>
+                                            <c:when test="${not empty authenticatedUser.avatarUrl}">
+                                                <img
+                                                src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                                alt="Avatar User"
+                                                class="h-8 w-8 rounded-full object-cover"
+                                                />
+                                            </c:when>
+
+                                            <c:otherwise>
+                                                <img
+                                                src="${pageContext.request.contextPath}/images/avatars/default-avatar.png"
+                                                alt="Avatar User"
+                                                class="h-8 w-8 rounded-full object-cover"
+                                                />
+                                            </c:otherwise>
+                                            </c:choose>
                                             <span class="font-medium text-gray-800 dark:text-gray-200">${authenticatedUser.username}</span>
                                             <i class="fas fa-chevron-down text-sm text-gray-500"></i>
                                         </button>
                                         <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-[51] border border-gray-200 dark:border-gray-600">
                                             <div class="py-1">
-                                                <a href="" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <a href="${pageContext.request.contextPath}/client/profile" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                                     <i class="fas fa-user-circle mr-2 opacity-70"></i> Mon profil
                                                 </a>
-                                                <a href="" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <a href="${pageContext.request.contextPath}/client/dashboard" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                                     <i class="fas fa-tachometer-alt mr-2 opacity-70"></i> Espace Client
                                                 </a>
                                                 <c:if test="${authenticatedUser.role == 'partner'}">
                                     
-                                                <a href="" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                                <a href="${pageContext.request.contextPath}/partner/dashboard" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                                     <i class="fas fa-briefcase mr-2 opacity-70"></i> Espace Partenaire
                                                 </a>
                                                 </c:if>
                                                 <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                                                <a href="${contextPage.request.contextPath}/logout" class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                                <a href="${pageContext.request.contextPath}/logout" class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700" >
                                                     <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
                                                 </a>
                                                 <form id="logout-form" action="" method="POST" class="hidden">
@@ -97,10 +120,14 @@
                                         <button type="button" id="cancelPartnerModalBtn" class="cursor-pointer mr-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 dark:bg-gray-600 dark:text-gray-200 dark:hover:bg-gray-500 transition duration-150 ease-in-out">
                                             Annuler
                                         </button>
-                                        <form method="POST" action="{{ route('devenir_partenaire') }}" style="display: inline;">
+                                        <form method="POST" action="${pageContext.request.contextPath}/become-partner" style="display: inline;">
+
                                             <button type="submit" id="confirmPartnerBtn" class="cursor-pointer px-4 py-2 bg-forest text-white rounded-md hover:bg-opacity-90 dark:bg-sunlight dark:text-gray-900 dark:hover:bg-opacity-90 transition duration-150 ease-in-out shadow-sm">
+                                                
                                                 Accepter et Continuer
+                                                
                                             </button>
+                                            
                                         </form>
                                     </div>
                                 </div>
@@ -108,9 +135,16 @@
                         </c:when>
                         <c:otherwise>
                         <div class="flex items-center space-x-4 ml-4">
+                            
                             <a href="${pageContext.request.contextPath}/listings" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le matériel</a>
                             <a href="${pageContext.request.contextPath}/login" class="px-4 py-2 font-medium rounded-md text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Connexion</a>
                             <a href="${pageContext.request.contextPath}/register" class="px-4 py-2 font-medium rounded-md bg-sunlight hover:bg-amber-600 text-white shadow-md transition duration-300">Inscription</a>
+                            <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                                <!-- Sun shown in light mode -->
+                                <i class="fas fa-sun inline-block dark:hidden"></i>
+                                <!-- Moon shown in dark mode -->
+                                <i class="fas fa-moon hidden dark:inline-block"></i>
+                            </button>
                         </div>
                         </c:otherwise>
                          </c:choose>
@@ -129,13 +163,35 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 pb-4 shadow-lg">
             <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button id="themeToggleBtn" aria-label="Toggle theme" class="mr-4 relative p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <!-- Sun shown in light mode -->
+                    <i class="fas fa-sun inline-block dark:hidden"></i>
+                    <!-- Moon shown in dark mode -->
+                    <i class="fas fa-moon hidden dark:inline-block"></i>
+                </button>
                 <a href="{" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Explorer le matériel</a>
 
                             <button type="button" id="openPartnerModalBtnMobile" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Devenir Partenaire</button>
                         <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
                             <div class="flex items-center px-5">
                                 <div class="flex-shrink-0">
-                                    <img src="" alt="Avatar de " class="h-8 w-8 rounded-full object-cover" />
+                                    <c:choose>
+                                        <c:when test="${not empty authenticatedUser.avatarUrl}">
+                                        <img
+                                        src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                        alt="Avatar User"
+                                        class="h-8 w-8 rounded-full object-cover"
+                                        />
+                                    </c:when>
+
+                                    <c:otherwise>
+                                        <img
+                                        src="${pageContext.request.contextPath}/images/avatars/default-avatar.png"
+                                        alt="Avatar User"
+                                        class="h-8 w-8 rounded-full object-cover"
+                                        />
+                                    </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div class="ml-3">
                                     <div class="text-base font-medium text-gray-800 dark:text-white"></div>
@@ -148,16 +204,16 @@
                                 </div>
                             </div>
                             <div class="mt-3 space-y-1 px-2">
-                                <a href="" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                                <a href="${pageContext.request.contextPath}/client/profile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-user-circle mr-2 opacity-70"></i> Mon profil
                                 </a>
-                                <a href="" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                                <a href="${pageContext.request.contextPath}/client/dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-tachometer-alt mr-2 opacity-70"></i> Espace Client
                                 </a>
-                                <a href="" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                                <a href="${pageContext.request.contextPath}/partner/dashboard" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-briefcase mr-2 opacity-70"></i> Espace Partenaire
                                 </a>
-                                <a href="" onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
+                                <a href="${pageContext.request.contextPath}/logout" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
                                     <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se déconnecter
                                 </a>
                                 <form id="logout-form-mobile" action="" method="POST" class="hidden"></form>
@@ -172,3 +228,128 @@
         </div>
     </nav>
     <!-- End Header -->
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // User dropdown toggle (Desktop)
+        const userMenuButton = document.getElementById('user-menu-button');
+        const userDropdown = document.getElementById('user-dropdown');
+        if (userMenuButton && userDropdown) {
+            userMenuButton.addEventListener('click', (event) => {
+                event.stopPropagation(); // Empêche le clic de se propager au document immédiatement
+                userDropdown.classList.toggle('hidden');
+            });
+        }
+
+        // Hide user dropdown when clicking outside (Desktop)
+        document.addEventListener('click', (e) => {
+            if (userMenuButton && userDropdown) {
+                if (!userMenuButton.contains(e.target) && !userDropdown.contains(e.target) && !userDropdown.classList.contains('hidden')) {
+                    userDropdown.classList.add('hidden');
+                }
+            }
+        });
+
+        // Partner Modal Logic (Desktop and Mobile)
+        const openModalBtn = document.getElementById('openPartnerModalBtn');
+        const openModalBtnMobile = document.getElementById('openPartnerModalBtnMobile'); // Pour le bouton mobile
+        const partnerModal = document.getElementById('partnerAcceptModal');
+
+        if (partnerModal) { // Vérifie seulement si le modal existe
+            const closeModalBtn = document.getElementById('closePartnerModalBtn');
+            const cancelModalBtn = document.getElementById('cancelPartnerModalBtn');
+
+            const openModal = () => {
+                partnerModal.classList.remove('hidden');
+                partnerModal.classList.add('flex'); // Assurez-vous que 'flex' est la bonne classe pour afficher
+                document.body.style.overflow = 'hidden';
+            };
+            const closeModal = () => {
+                partnerModal.classList.add('hidden');
+                partnerModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            };
+
+            if(openModalBtn) {
+                openModalBtn.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openModal();
+                });
+            }
+            if(openModalBtnMobile) { // Attache l'événement au bouton mobile
+                openModalBtnMobile.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    openModal();
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', closeModal);
+            }
+            if (cancelModalBtn) {
+                cancelModalBtn.addEventListener('click', (event) => {
+                    event.preventDefault(); // Important pour le bouton Annuler qui est un <a>
+                    closeModal();
+                });
+            }
+            partnerModal.addEventListener('click', (event) => {
+                if (event.target === partnerModal) {
+                    closeModal();
+                }
+            });
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !partnerModal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
+
+    });
+
+
+    // Theme Button Toggle 
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const html = document.documentElement;
+
+    // Set initial theme (same logic as before)
+    if (
+        localStorage.getItem('theme') === 'dark' ||
+        (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)
+    ) {
+        html.classList.add('dark');
+    } else {
+        html.classList.remove('dark');
+    }
+
+    // Toggle on button click
+    themeToggleBtn.addEventListener('click', () => {
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        } else {
+            html.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+
+    // Optional: update automatically if system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('theme')) { // only auto-change if user hasn't chosen manually
+            if (e.matches) html.classList.add('dark');
+            else html.classList.remove('dark');
+        }
+    });
+
+    
+</script>

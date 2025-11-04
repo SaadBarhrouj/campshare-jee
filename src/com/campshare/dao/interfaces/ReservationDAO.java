@@ -37,6 +37,9 @@ public interface ReservationDAO {
 
     List<Reservation> getLocationsEncours(String email);
 
+    List<Reservation> getConfirmedReservationsByListingId(long listingId);
+
+    boolean store(Reservation reservation);
 
 }
 

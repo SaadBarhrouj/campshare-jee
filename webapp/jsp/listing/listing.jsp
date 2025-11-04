@@ -440,14 +440,14 @@
                                          <c:forEach var="review" items="${reviews}" varStatus="loop">
                                          <div class="review-item review-card bg-white dark:bg-gray-800/50 p-4 border-b dark:border-gray-700 last:border-b-0 ${loop.index >= 3 ? 'hidden' : ''}">
                                               <div class="flex items-start space-x-4">
-                                                <a href="#" class="flex-shrink-0">
-                                                    <img src="${pageContext.request.contextPath}/uploads/${not empty review.reviewer.avatarUrl ? review.reviewer.avatarUrl : 'default-avatar.jpg'}"
+                                                <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="flex-shrink-0">
+                                                    <img src="${pageContext.request.contextPath}/${not empty review.reviewer.avatarUrl ? review.reviewer.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                                         alt="Avatar de ${not empty review.reviewer.username ? review.reviewer.username : 'Utilisateur'}"
                                                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 mt-1 border-2 border-white dark:border-gray-600 shadow-sm">
                                                 </a>
                                                 <div class="flex-1">
                                                     <div class="flex justify-between items-center mb-2">
-                                                        <a href="#" class="hover:underline">
+                                                        <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="hover:underline">
                                                             <span class="font-semibold text-gray-800 dark:text-white">${not empty review.reviewer.username ? review.reviewer.username : 'Utilisateur anonyme'}</span>
                                                         </a>
                                                         <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 py-1 px-2 rounded-full" title="<fmt:formatDate value="${review.createdAt}" pattern="EEEE dd MMMM yyyy 'à' HH:mm" />">
@@ -518,13 +518,21 @@
                                     <span class="text-gray-600 dark:text-gray-300 ml-2 text-sm">/ jour</span>
                                 </div>
                                 <div class="flex flex-wrap gap-3 mt-3">
-                                    <c:if test="${reviewCount > 0}">
-                                    <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
-                                        <i class="fas fa-star text-sunlight mr-1.5"></i>
-                                        <span class="font-medium mr-1"><fmt:formatNumber value="${averageRating}" maxFractionDigits="1" /></span>
-                                        <span>(${reviewCount} avis)</span>
-                                    </span>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${reviewCount > 0}">
+                                            <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
+                                                <i class="fas fa-star text-sunlight mr-1.5"></i>
+                                                <span class="font-medium mr-1"><fmt:formatNumber value="${averageRating}" maxFractionDigits="1" /></span>
+                                                <span>(${reviewCount} avis)</span>
+                                            </span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="inline-flex items-center badge bg-amber-50 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 py-1.5 px-2.5">
+                                                <i class="far fa-star mr-1.5"></i>
+                                                <span>Non noté</span>
+                                            </span>
+                                        </c:otherwise>
+                                    </c:choose>
                                     <span class="inline-flex items-center badge bg-forest/10 text-forest dark:bg-meadow/10 dark:text-meadow py-1.5 px-2.5">
                                         <i class="fas fa-map-marker-alt fa-fw mr-1.5"></i>
                                         <span>${not empty city.name ? city.name : 'Non spécifié'}</span>
@@ -535,7 +543,7 @@
 
                             <c:choose>
                                 <c:when test="${not empty sessionScope.authenticatedUser}">
-                            <form id="reservation-form" method="POST" action="#">
+                            <form id="reservation-form" method="POST" action="${pageContext.request.contextPath}/listing">
                                 <input type="hidden" name="listing_id" value="${listing.id}">
                                 <input type="hidden" name="start_date" id="start_date">
                                 <input type="hidden" name="end_date" id="end_date">
@@ -653,13 +661,13 @@
                                  <!-- Infos Partenaire -->
                                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Proposé par :</p>
                                  <div class="flex items-center bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg hover-lift">
-                                    <a href="#" class="flex-shrink-0">
-                                        <img src="${pageContext.request.contextPath}/uploads/${not empty partner.avatarUrl ? partner.avatarUrl : 'avatar-default.jpg'}"
+                                    <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="flex-shrink-0">
+                                        <img src="${pageContext.request.contextPath}/${not empty partner.avatarUrl ? partner.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                             alt="Avatar de ${not empty partner.username ? partner.username : 'Partenaire'}"
                                             class="w-12 h-12 rounded-full object-cover mr-3 border-2 border-white dark:border-gray-600 shadow-sm">
                                     </a>
                                     <div class="leading-tight">
-                                        <a href="#" class="hover:underline">
+                                        <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="hover:underline">
                                             <span class="font-medium text-gray-800 dark:text-gray-100 text-base">${not empty partner.username ? partner.username : 'Partenaire CampShare'}</span>
                                         </a>
                                          <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center">
@@ -964,7 +972,7 @@
             const FIXED_DELIVERY_COST = 50.00; // Définir le coût fixe ici
 
              // Dates indisponibles 
-             const unavailableDatesData = <c:out value='${unavailableDates}' default='[]' />;
+             const unavailableDatesData = ${not empty unavailableDates ? unavailableDates : '[]'};
 
             // Variables globales JS
             let flatpickrInstance = null;

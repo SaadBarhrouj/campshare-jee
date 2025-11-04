@@ -9,12 +9,12 @@
           <!-- Column 1: Company Info -->
           <div class="lg:col-span-2">
             <div class="flex items-center mb-6">
-              <span class="text-white text-2xl font-extrabold"
-                >Camp<span class="text-sunlight">Share</span></span
-              >
+              <a href="${pageContext.request.contextPath}" class="flex items-center">
+                  <span class="text-meadow text-2xl font-extrabold">Camp<span class="text-sunlight">Share</span></span>
+              </a>
             </div>
             <p class="text-gray-300 mb-4 max-w-md">
-              CampShare est un service de ParentCo qui permet aux particuliers
+              CampShare est un service qui permet aux particuliers
               de louer du matériel de camping entre eux, pour des aventures plus
               accessibles et éco-responsables.
             </p>
@@ -139,7 +139,7 @@
                 <a
                   href="#"
                   class="text-gray-300 hover:text-white transition duration-150"
-                  >À propos de ParentCo</a
+                  >À propos de CampShare</a
                 >
               </li>
               <li>
@@ -174,65 +174,14 @@
           </div>
         </div>
 
-        <div
-          id="reclamation"
-          class="my-8 p-5 bg-gray-700 dark:bg-gray-800 rounded-lg border-l-4 border-sunlight"
-        >
-          <div class="flex flex-col md:flex-row items-center justify-between">
-            <div class="mb-4 md:mb-0 md:mr-6">
-              <h3 class="font-bold text-xl mb-2 flex items-center">
-                <i class="fas fa-headset text-sunlight mr-2"></i>
-                Service Réclamations
-              </h3>
-              <p class="text-gray-300">
-                Un problème avec votre location ou votre compte ? Notre équipe
-                est à votre disposition pour traiter votre réclamation dans les
-                meilleurs délais.
-              </p>
-            </div>
-            <a
-              href="/reclamations"
-              class="pulse-button inline-flex items-center justify-center px-6 py-3 bg-sunlight hover:bg-amber-600 text-white font-medium rounded-md shadow-md transition duration-300 whitespace-nowrap"
-            >
-              <i class="fas fa-paper-plane mr-2"></i>
-              Déposer une réclamation
-            </a>
-          </div>
-        </div>
-
         <div class="border-t border-gray-600 pt-8 mt-8">
           <div
             class="flex flex-col md:flex-row md:justify-between md:items-center"
           >
             <div class="mb-4 md:mb-0">
               <p class="text-gray-400">
-                © 2023 ParentCo. Tous droits réservés. CampShare est un service
-                de ParentCo.
+                © 2025 CampShare. Tous droits réservés.
               </p>
-            </div>
-            <div class="flex flex-wrap gap-4">
-              <img
-                src="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.11.0/flags/4x3/ma.svg"
-                alt="Drapeau marocain"
-                class="h-5 w-auto"
-              />
-              <a
-                href="#"
-                class="text-gray-400 hover:text-white transition-colors"
-                >Français</a
-              >
-              <span class="text-gray-600">|</span>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-white transition-colors"
-                >العربية</a
-              >
-              <span class="text-gray-600">|</span>
-              <a
-                href="#"
-                class="text-gray-400 hover:text-white transition-colors"
-                >English</a
-              >
             </div>
           </div>
         </div>

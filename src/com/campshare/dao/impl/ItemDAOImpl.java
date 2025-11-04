@@ -438,5 +438,67 @@ public class ItemDAOImpl implements ItemDAO {
     }
 
 
+    @Override
+    public Item findByListingId(long id) {
+        String sql = "SELECT i.id AS item_id, i.partner_id, i.title, i.description, i.price_per_day, i.category_id, i.created_at, "
+                   + "c.id AS category_id, c.name AS category_name, img.id AS img_id, img.url AS img_url "
+                   + "FROM listings l "
+                   + "JOIN items i ON l.item_id = i.id "
+                   + "LEFT JOIN categories c ON c.id = i.category_id "
+                   + "LEFT JOIN images img ON img.item_id = i.id "
+                   + "WHERE l.id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            Item item = null;
+            List<Image> images = new ArrayList<>();
+
+            while (rs.next()) {
+                if (item == null) {
+                    item = new Item();
+                    item.setId(rs.getLong("item_id"));
+                    item.setPartnerId(rs.getLong("partner_id"));
+                    item.setTitle(rs.getString("title"));
+                    item.setDescription(rs.getString("description"));
+                    item.setPricePerDay(rs.getDouble("price_per_day"));
+                    item.setCategoryId(rs.getLong("category_id"));
+                    item.setCreatedAt(rs.getTimestamp("created_at"));
+
+                    long catId = rs.getLong("category_id");
+                    if (!rs.wasNull()) {
+                        Category category = new Category();
+                        category.setId(catId);
+                        category.setName(rs.getString("category_name"));
+                        item.setCategory(category);
+                    }
+                }
+
+                int imgId = rs.getInt("img_id");
+                if (!rs.wasNull()) {
+                    Image img = new Image();
+                    img.setId(imgId);
+                    img.setUrl(rs.getString("img_url"));
+                    images.add(img);
+                }
+            }
+
+            if (item != null) {
+                item.setImages(images);
+                // load reviews for this item
+                List<Review> reviews = getItemReviews(item.getId(), conn);
+                item.setReviews(reviews);
+                return item;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
 }

@@ -11,7 +11,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ReviewDAOImpl implements ReviewDAO {
     
@@ -19,10 +22,33 @@ public class ReviewDAOImpl implements ReviewDAO {
     public List<Review> findByRevieweeId(long revieweeId) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT r.*, u.username as reviewer_username, u.avatar_url as reviewer_avatar " +
-                    "FROM reviews r " +
-                    "LEFT JOIN users u ON r.reviewer_id = u.id " +
-                    "WHERE r.reviewee_id = ? AND r.is_visible = true " +
-                    "ORDER BY r.created_at DESC";
+                "FROM reviews r " +
+                "LEFT JOIN users u ON r.reviewer_id = u.id " +
+                "WHERE r.reviewee_id = ? AND r.is_visible = true AND r.type = 'forPartner' " +
+                "ORDER BY r.created_at DESC";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Review review = mapResultSetToReview(rs);
+                    reviews.add(review);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération des avis pour l'utilisateur " + revieweeId, e);
+        }
+        return reviews;
+    }
+
+    @Override
+    public List<Review> findByRevieweeCId(long revieweeId) {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT r.*, u.username as reviewer_username, u.avatar_url as reviewer_avatar " +
+                "FROM reviews r " +
+                "LEFT JOIN users u ON r.reviewer_id = u.id " +
+                "WHERE r.reviewee_id = ? AND r.is_visible = true AND r.type = 'forClient' " +
+                "ORDER BY r.created_at DESC";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setLong(1, revieweeId);
@@ -160,5 +186,151 @@ public class ReviewDAOImpl implements ReviewDAO {
         return avisList;
     }
 
+    @Override
+    public long countByRevieweeId(long revieweeId) {
+        String sql = "SELECT COUNT(*) FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forPartner'";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du comptage des avis pour l'utilisateur " + revieweeId, e);
+        }
+        return 0;
+    }
+
+    @Override
+    public double getAverageRatingByRevieweeId(long revieweeId) {
+        String sql = "SELECT AVG(rating) FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forPartner'";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    double avg = rs.getDouble(1);
+                    return rs.wasNull() ? 0.0 : avg;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du calcul de la note moyenne pour l'utilisateur " + revieweeId, e);
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Map<Integer, Integer> getRatingPercentagesByRevieweeId(long revieweeId) {
+        Map<Integer, Integer> percentages = new LinkedHashMap<>();
+        
+        // Initialize all ratings to 0
+        for (int i = 1; i <= 5; i++) {
+            percentages.put(i, 0);
+        }
+        
+        String sql = "SELECT rating, COUNT(*) as count FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forPartner' GROUP BY rating";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                Map<Integer, Integer> ratingCounts = new HashMap<>();
+                int totalReviews = 0;
+                
+                while (rs.next()) {
+                    int rating = rs.getInt("rating");
+                    int count = rs.getInt("count");
+                    ratingCounts.put(rating, count);
+                    totalReviews += count;
+                }
+                
+                // Calculate percentages
+                for (int i = 1; i <= 5; i++) {
+                    int count = ratingCounts.getOrDefault(i, 0);
+                    int percentage = totalReviews > 0 ? Math.round((count * 100.0f) / totalReviews) : 0;
+                    percentages.put(i, percentage);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du calcul des pourcentages de notes pour l'utilisateur " + revieweeId, e);
+        }
+        
+        return percentages;
+    }
+
+
+    @Override
+    public long countByRevieweeCId(long revieweeId) {
+        String sql = "SELECT COUNT(*) FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forClient'";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du comptage des avis pour l'utilisateur " + revieweeId, e);
+        }
+        return 0;
+    }
+
+    @Override
+    public double getAverageRatingByRevieweeCId(long revieweeId) {
+        String sql = "SELECT AVG(rating) FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forClient'";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    double avg = rs.getDouble(1);
+                    return rs.wasNull() ? 0.0 : avg;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du calcul de la note moyenne pour l'utilisateur " + revieweeId, e);
+        }
+        return 0.0;
+    }
+
+    @Override
+    public Map<Integer, Integer> getRatingPercentagesByRevieweeCId(long revieweeId) {
+        Map<Integer, Integer> percentages = new LinkedHashMap<>();
+        
+        // Initialize all ratings to 0
+        for (int i = 1; i <= 5; i++) {
+            percentages.put(i, 0);
+        }
+        
+        String sql = "SELECT rating, COUNT(*) as count FROM reviews WHERE reviewee_id = ? AND is_visible = true AND type = 'forClient' GROUP BY rating";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setLong(1, revieweeId);
+            try (ResultSet rs = ps.executeQuery()) {
+                Map<Integer, Integer> ratingCounts = new HashMap<>();
+                int totalReviews = 0;
+                
+                while (rs.next()) {
+                    int rating = rs.getInt("rating");
+                    int count = rs.getInt("count");
+                    ratingCounts.put(rating, count);
+                    totalReviews += count;
+                }
+                
+                // Calculate percentages
+                for (int i = 1; i <= 5; i++) {
+                    int count = ratingCounts.getOrDefault(i, 0);
+                    int percentage = totalReviews > 0 ? Math.round((count * 100.0f) / totalReviews) : 0;
+                    percentages.put(i, percentage);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors du calcul des pourcentages de notes pour l'utilisateur " + revieweeId, e);
+        }
+        
+        return percentages;
+    }
 
 }

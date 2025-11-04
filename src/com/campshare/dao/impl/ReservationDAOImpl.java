@@ -1414,5 +1414,73 @@ public class ReservationDAOImpl implements ReservationDAO{
     return locations;
 }
 
+@Override
+public List<Reservation> getConfirmedReservationsByListingId(long listingId) {
+    List<Reservation> reservations = new ArrayList<>();
+    
+    String sql = """
+        SELECT id, listing_id, client_id, partner_id, start_date, end_date, status, delivery_option, created_at
+        FROM reservations
+        WHERE listing_id = ? AND status IN ('confirmed', 'ongoing', 'completed')
+        ORDER BY start_date ASC
+    """;
+    
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        
+        stmt.setLong(1, listingId);
+        ResultSet rs = stmt.executeQuery();
+        
+        while (rs.next()) {
+            Reservation reservation = new Reservation();
+            reservation.setId(rs.getLong("id"));
+            reservation.setListingId(rs.getLong("listing_id"));
+            reservation.setClientId(rs.getLong("client_id"));
+            reservation.setPartnerId(rs.getLong("partner_id"));
+            reservation.setStartDate(rs.getDate("start_date"));
+            reservation.setEndDate(rs.getDate("end_date"));
+            reservation.setStatus(rs.getString("status"));
+            reservation.setDeliveryOption(rs.getBoolean("delivery_option"));
+            reservation.setCreatedAt(rs.getDate("created_at"));
+            
+            reservations.add(reservation);
+        }
+    } catch (SQLException e) {
+        System.err.println("Error fetching confirmed reservations for listing " + listingId + ": " + e.getMessage());
+        e.printStackTrace();
+    }
+    
+    return reservations;
+}
+
+@Override
+public boolean store(Reservation reservation) {
+    String sql = """
+        INSERT INTO reservations (
+            start_date, end_date, status, delivery_option,
+            client_id, partner_id, listing_id, created_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+    """;
+
+    try (Connection conn = DatabaseManager.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setDate(1, new java.sql.Date(reservation.getStartDate().getTime()));
+        stmt.setDate(2, new java.sql.Date(reservation.getEndDate().getTime()));
+        stmt.setString(3, reservation.getStatus());
+        stmt.setBoolean(4, reservation.getDeliveryOption());
+        stmt.setLong(5, reservation.getClientId());
+        stmt.setLong(6, reservation.getPartnerId());
+        stmt.setLong(7, reservation.getListingId());
+
+        int rowsAffected = stmt.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error storing reservation: " + e.getMessage());
+        e.printStackTrace();
+        return false;
+    }
+}
 
 }

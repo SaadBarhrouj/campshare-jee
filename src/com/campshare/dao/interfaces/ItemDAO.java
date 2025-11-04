@@ -23,5 +23,7 @@ public interface  ItemDAO {
     
     Optional<Item> findItemWithImages(int equipmentId);
 
+    Item findByListingId(long id);
+
     
 }
