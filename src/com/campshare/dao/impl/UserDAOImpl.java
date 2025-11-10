@@ -274,14 +274,15 @@ public class UserDAOImpl implements UserDAO {
             return false;
         }
 
-        String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ? WHERE id = ?";
+        String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ? , avatar_url = ? WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getEmail());
-            pstmt.setLong(4, user.getId());
+            pstmt.setString(4, user.getAvatarUrl());
+            pstmt.setLong(5, user.getId());
 
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;

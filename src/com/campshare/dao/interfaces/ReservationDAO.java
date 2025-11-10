@@ -19,4 +19,7 @@ public interface ReservationDAO {
   List<Reservation> findAllWithDetails();
 
   Map<String, Long> countByStatus();
+
+  Reservation findById(long id);
+
 }

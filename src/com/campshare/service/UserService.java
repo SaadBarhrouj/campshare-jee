@@ -187,12 +187,13 @@ public class UserService {
         return errors;
     }
 
-    public boolean updateAdminInfo(long userId, String firstName, String lastName, String email) {
+    public boolean updateAdminInfo(long userId, String firstName, String lastName, String email, String avatarUrl) {
         User user = new User();
         user.setId(userId);
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
+        user.setAvatarUrl(avatarUrl);
 
         return userDAO.updateUserProfile(user);
     }

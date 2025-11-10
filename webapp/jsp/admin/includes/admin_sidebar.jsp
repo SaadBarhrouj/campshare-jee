@@ -100,19 +100,6 @@ prefix="c" %>
             </span>
           </a>
 
-          <a
-            href=""
-            class="sidebar-link flex items-center px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          >
-            <i
-              class="fas fa-star w-5 mr-3 text-gray-500 dark:text-gray-400"
-            ></i>
-            Avis
-            <span
-              class="ml-auto bg-admin-light dark:bg-admin-dark text-admin-primary dark:text-admin-secondary text-xs rounded-full h-5 px-1.5 flex items-center justify-center"
-              ><c:out value="${dashboardStats.totalClients}" />
-            </span>
-          </a>
         </nav>
       </div>
     </div>

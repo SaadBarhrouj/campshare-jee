@@ -194,7 +194,7 @@
                         </div>
 
                         <div id="info-edit-mode" class="hidden">
-                            <form action="${pageContext.request.contextPath}/admin/profile" method="POST">
+                            <form action="${pageContext.request.contextPath}/admin/profile" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="updateInfo">
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -244,6 +244,21 @@
                                                 <input type="text" id="edit-username" class="form-input w-full text-base bg-gray-100 dark:bg-gray-700 cursor-not-allowed" value="<c:out value='${adminProfile.username}'/>" readonly disabled>
                                                 <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Non modifiable</p>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label for="edit-avatar" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        Changer l'avatar (Facultatif)
+                                    </label>
+                                    <div class="flex items-start">
+                                        <div class="flex-shrink-0 p-2 bg-gray-100 dark:bg-gray-900/30 rounded-lg mr-3">
+                                            <i class="fas fa-image fa-fw text-gray-600 dark:text-gray-400"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <input type="file" id="edit-avatar" name="avatar" class="form-input w-full text-base" accept="image/png, image/jpeg">
+                                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Laissez vide pour conserver l'avatar actuel.</p>
                                         </div>
                                     </div>
                                 </div>

@@ -181,4 +181,12 @@
                 <servlet-name>AdminProfileServlet</servlet-name>
                 <url-pattern>/admin/profile</url-pattern>
             </servlet-mapping>
+            <servlet>
+                <servlet-name>ReservationReviewsServlet</servlet-name>
+                <servlet-class>com.campshare.servlet.ReservationReviewsServlet</servlet-class>
+            </servlet>
+            <servlet-mapping>
+                <servlet-name>ReservationReviewsServlet</servlet-name>
+                <url-pattern>/admin/reservation-reviews</url-pattern>
+            </servlet-mapping>
 </web-app>
