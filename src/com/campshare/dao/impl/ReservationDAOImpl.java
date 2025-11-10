@@ -240,4 +240,22 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
     return counts;
   }
+
+  @Override
+  public Reservation findById(long reservationId) {
+    Reservation reservation = null;
+    String sql = "SELECT * FROM reservations WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setLong(1, reservationId);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          reservation = mapResultSetToReservationBasic(rs);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return reservation;
+  }
 }

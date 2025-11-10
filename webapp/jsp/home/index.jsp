@@ -2,6 +2,7 @@
 pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
 prefix="c" %>
 
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
   <head>
@@ -60,6 +61,8 @@ prefix="c" %>
 
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
+    <meta charset="UTF-8">
+
     <meta
       name="description"
       content="CampShare - Louez facilement le matériel de camping dont vous avez besoin directement entre particuliers."
@@ -108,6 +111,7 @@ prefix="c" %>
     class="font-sans antialiased text-gray-800 dark:text-gray-200 dark:bg-gray-900"
   >
     <jsp:include page="/jsp/common/header.jsp" />
+    
     <!-- Hero Section -->
     <header class="relative pt-16 overflow-hidden">
       <div class="absolute inset-0 z-0">
@@ -139,38 +143,24 @@ prefix="c" %>
           <div
             class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-4 md:p-6 mb-8 transition-all duration-300"
           >
-            <form
-              action=""
-              method="GET"
-              class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4"
-            >
+            <form action="${pageContext.request.contextPath}/listings" method="GET" class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
               <div class="flex-1">
-                <div class="relative">
-                  <div
-                    class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-                  >
-                    <i class="fas fa-search text-gray-400"></i>
+                  <div class="relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <i class="fas fa-search text-gray-400"></i>
+                      </div>
+                      <input type="text" id="search" name="search" placeholder="Rechercher des tentes, lampes, boussoles ..." 
+                              value="${search}" class="pl-10 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-forest focus:ring-forest dark:bg-gray-700 dark:text-white text-base py-3">
                   </div>
-                  <input
-                    type="text"
-                    id="search"
-                    name="search"
-                    placeholder="Rechercher des tentes, lampes, boussoles ..."
-                    class="pl-10 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-forest focus:ring-forest dark:bg-gray-700 dark:text-white text-base py-3"
-                  />
-                </div>
               </div>
-
+          
               <div class="flex items-end">
-                <button
-                  type="submit"
-                  class="w-full md:w-auto px-6 py-3 bg-sunlight hover:bg-amber-600 text-white font-medium rounded-md shadow-md transition duration-300 flex items-center justify-center"
-                >
-                  <i class="fas fa-search mr-2"></i>
-                  Rechercher
-                </button>
+                  <button type="submit" class="w-full md:w-auto px-6 py-3 bg-sunlight hover:bg-amber-600 text-white font-medium rounded-md shadow-sm transition duration-300 flex items-center justify-center">
+                      <i class="fas fa-search mr-2"></i>
+                      Rechercher
+                  </button>
               </div>
-            </form>
+          </form> 
           </div>
         </div>
       </div>
@@ -203,7 +193,7 @@ prefix="c" %>
               class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 text-center transform transition duration-300 hover:scale-105"
             >
               <div
-                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-meadow bg-opacity-10 text-white mb-4"
+                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-meadow text-white mb-4"
               >
                 <i class="fas fa-search text-2xl"></i>
               </div>
@@ -223,7 +213,7 @@ prefix="c" %>
               class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 text-center transform transition duration-300 hover:scale-105"
             >
               <div
-                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-forest bg-opacity-10 text-white mb-4"
+                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-forest text-white mb-4"
               >
                 <i class="fas fa-calendar-check text-2xl"></i>
               </div>
@@ -243,7 +233,7 @@ prefix="c" %>
               class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 text-center transform transition duration-300 hover:scale-105"
             >
               <div
-                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-water bg-opacity-10 text-white mb-4"
+                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-water text-white mb-4"
               >
                 <i class="fas fa-mountain text-2xl"></i>
               </div>
@@ -263,7 +253,7 @@ prefix="c" %>
               class="bg-white dark:bg-gray-700 rounded-lg shadow-md p-6 text-center transform transition duration-300 hover:scale-105"
             >
               <div
-                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sunlight bg-opacity-10 text-white mb-4"
+                class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-sunlight text-white mb-4"
               >
                 <i class="fas fa-star text-2xl"></i>
               </div>
@@ -591,7 +581,7 @@ prefix="c" %>
               >
                 <div class="text-center mb-6">
                   <span
-                    class="inline-block p-3 rounded-full bg-sunlight bg-opacity-10 text-white"
+                    class="inline-block p-3 rounded-full bg-sunlight text-white"
                   >
                     <i class="fas fa-calculator text-2xl"></i>
                   </span>

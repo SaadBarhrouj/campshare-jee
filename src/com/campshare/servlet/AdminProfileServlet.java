@@ -5,13 +5,19 @@ import com.campshare.model.Listing;
 import com.campshare.model.User;
 import com.campshare.service.AdminDashboardService;
 import com.campshare.service.UserService;
-
+import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
+import com.campshare.util.FileUploadUtil;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import java.io.File;
 import java.io.IOException;
+
+@MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 15)
 
 public class AdminProfileServlet extends HttpServlet {
 
@@ -80,16 +86,31 @@ public class AdminProfileServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String email = request.getParameter("email");
 
-        success = userService.updateAdminInfo(currentUser.getId(), firstName, lastName, email);
+        Part avatarPart = request.getPart("avatar");
+                String avatarUrl = currentUser.getAvatarUrl(); 
 
-        if (success) {
-          successMsg = "Informations du profil mises à jour avec succès.";
-          currentUser.setFirstName(firstName);
-          currentUser.setLastName(lastName);
-          currentUser.setEmail(email);
-          session.setAttribute("authenticatedUser", currentUser);
+                if (avatarPart != null && avatarPart.getSize() > 0) {
+                    String userHome = System.getProperty("user.home");
+                    String uploadDirectory = userHome + File.separator + "campshare_uploads";
+                    
+                    String newAvatarPath = FileUploadUtil.uploadFile(avatarPart, uploadDirectory, "avatars");
+                    
+                    if (newAvatarPath != null) {
+                        avatarUrl = newAvatarPath; 
+                    }
+                }
 
-        } else {
+                success = userService.updateAdminInfo(currentUser.getId(), firstName, lastName, email, avatarUrl);
+
+                if (success) {
+                  successMsg = "Informations du profil mises à jour avec succès.";
+                  currentUser.setFirstName(firstName);
+                  currentUser.setLastName(lastName);
+                  currentUser.setEmail(email);
+                  currentUser.setAvatarUrl(avatarUrl);
+                  session.setAttribute("authenticatedUser", currentUser);
+
+                } else {
 
           errorMsg = "Échec de la mise à jour des informations. Un autre utilisateur utilise peut-être déjà cet email.";
         }

@@ -1,3 +1,6 @@
+   <%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c" %>
     <!-- Footer -->
     <footer
       class="bg-gray-800 dark:bg-gray-900 text-white py-12 transition-all duration-300"
@@ -12,9 +15,7 @@
               >
             </div>
             <p class="text-gray-300 mb-4 max-w-md">
-              CampShare est un service de ParentCo qui permet aux particuliers
-              de louer du matériel de camping entre eux, pour des aventures plus
-              accessibles et éco-responsables.
+             CampShare est une plateforme qui permet aux particuliers de louer du matériel de camping entre eux, rendant les aventures en plein air plus accessibles, économiques et respectueuses de l’environnement.
             </p>
             <div class="flex space-x-4 mt-4">
               <a
@@ -137,7 +138,7 @@
                 <a
                   href="#"
                   class="text-gray-300 hover:text-white transition duration-150"
-                  >À propos de ParentCo</a
+                  >À propos de Camoshare</a
                 >
               </li>
               <li>
@@ -204,8 +205,8 @@
           >
             <div class="mb-4 md:mb-0">
               <p class="text-gray-400">
-                © 2023 ParentCo. Tous droits réservés. CampShare est un service
-                de ParentCo.
+                © 2025 CampShare. Tous droits réservés.
+                Plateforme de location de matériel de camping entre particuliers.
               </p>
             </div>
             <div class="flex flex-wrap gap-4">

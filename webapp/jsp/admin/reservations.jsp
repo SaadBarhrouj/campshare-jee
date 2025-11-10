@@ -341,8 +341,8 @@
                                 <button 
                                     onclick="showReservationDetails(${reservation.id})"
                                     class="flex-1 flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md text-white bg-admin-primary hover:bg-admin-dark dark:bg-admin-secondary dark:hover:bg-admin-accent transition-colors">
-                                    <i class="fas fa-info-circle mr-1"></i> Détails
-                                </button>
+                                    <i class="fas fa-star mr-1"></i> Avis                 
+                                    </button>
                             </div>
                         </div>
                     </c:forEach>

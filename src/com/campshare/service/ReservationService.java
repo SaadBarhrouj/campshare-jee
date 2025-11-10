@@ -19,4 +19,8 @@ public class ReservationService {
     return reservationDAO.countByStatus();
   }
 
+  public Reservation findReservationById(long reservationId) {
+    return reservationDAO.findById(reservationId);
+  }
+
 }
