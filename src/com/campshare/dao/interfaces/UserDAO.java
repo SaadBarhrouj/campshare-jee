@@ -33,4 +33,9 @@ public interface UserDAO {
     boolean updateUserPassword(long userId, String newHashedPassword);
 
     boolean updateUserAvatar(long userId, String avatarUrl);
+
+    List<User> findAndPaginateUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset);
+
+    int countUsers(String role, String searchQuery, String status);
 }

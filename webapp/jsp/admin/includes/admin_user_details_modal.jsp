@@ -1,4 +1,10 @@
 <%@ page pageEncoding="UTF-8" %>
+<div id="fullscreen-image-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60] hidden" onclick="hideFullScreenImage()">
+    <div class="relative p-4" onclick="event.stopPropagation()">
+        <button onclick="hideFullScreenImage()" class="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-white text-black text-2xl flex items-center justify-center shadow-lg">&times;</button>
+        <img id="fullscreen-image-content" src="" alt="Image CIN" class="max-w-screen-lg max-h-[80vh] rounded-lg">
+    </div>
+</div>
 
 <div id="user-detail-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden transition-opacity duration-300">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] flex flex-col transform transition-all duration-300 scale-95">
@@ -52,7 +58,14 @@
                 </li>
 
             </ul>
+            <div class="mt-2 border-t dark:border-gray-700 pt-6">
+                <h4 class="font-semibold text-lg  text-gray-800 dark:text-gray-200">Documents d'Identité</h4>
+                
+                <div id="modal-cin-container" class=" flex space-x-2">
+                </div>
+            </div>
         </div>
+
 
         <div class="p-5 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 rounded-b-lg">
             <h4 class="font-semibold text-gray-900 dark:text-white text-lg mb-4 flex items-center">
@@ -74,3 +87,19 @@
         </div>
     </div>
 </div>
+
+<script>
+    function showFullScreenImage(src) {
+        document.getElementById('fullscreen-image-content').src = src;
+        document.getElementById('fullscreen-image-modal').classList.remove('hidden');
+    }
+    function hideFullScreenImage() {
+        document.getElementById('fullscreen-image-modal').classList.add('hidden');
+        document.getElementById('fullscreen-image-content').src = ""; 
+    }
+    document.addEventListener('keydown', function(event) {
+        if (event.key === "Escape") {
+            hideFullScreenImage();
+        }
+    });
+</script>

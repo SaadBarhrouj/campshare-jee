@@ -198,4 +198,12 @@ public class UserService {
         return userDAO.updateUserProfile(user);
     }
 
+    public List<User> getPaginatedUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset) {
+        return userDAO.findAndPaginateUsers(role, searchQuery, status, sortBy, limit, offset);
+    }
+
+    public int countTotalUsers(String role, String searchQuery, String status) {
+        return userDAO.countUsers(role, searchQuery, status);
+    }
 }
