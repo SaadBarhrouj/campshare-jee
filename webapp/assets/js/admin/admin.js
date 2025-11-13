@@ -42,6 +42,7 @@ function fillModalWithData(data) {
   const user = data.user;
   const fullName = `${user.firstName || ""} ${user.lastName || ""}`;
   const contextPath = "/webapp";
+
   document.getElementById("modal-user-avatar").src = user.avatarUrl
     ? `${contextPath}/uploads/${user.avatarUrl}`
     : `${contextPath}/assets/images/default-avatar.png`;
@@ -77,6 +78,46 @@ function fillModalWithData(data) {
 
   document.getElementById("modal-user-id-hidden").textContent = user.id;
   document.getElementById("modal-user-active-toggle").checked = user.isActive;
+
+  const cinContainer = document.getElementById("modal-cin-container");
+  cinContainer.innerHTML = "";
+
+  const cinRectoSrc =
+    user.cinRecto && user.cinRecto !== "null" && user.cinRecto.trim() !== ""
+      ? `${contextPath}/uploads/${user.cinRecto}`
+      : null;
+
+  const cinVersoSrc =
+    user.cinVerso && user.cinVerso !== "null" && user.cinVerso.trim() !== ""
+      ? `${contextPath}/uploads/${user.cinVerso}`
+      : null;
+
+  if (cinRectoSrc) {
+    cinContainer.innerHTML += `
+        <div class="text-center">
+            <img src="${cinRectoSrc}" 
+                class="w-12 h-12 object-cover rounded-md cursor-pointer border-2 dark:border-gray-600 hover:scale-110 transition-transform" 
+                onclick="showFullScreenImage(this.src)">
+            <span class="text-xs text-gray-500">Recto</span>
+        </div>
+    `;
+  }
+
+  if (cinVersoSrc) {
+    cinContainer.innerHTML += `
+        <div class="text-center">
+            <img src="${cinVersoSrc}" 
+                class="w-12 h-12 object-cover rounded-md cursor-pointer border-2 dark:border-gray-600 hover:scale-110 transition-transform" 
+                onclick="showFullScreenImage(this.src)">
+            <span class="text-xs text-gray-500">Verso</span>
+        </div>
+    `;
+  }
+
+  if (!cinRectoSrc && !cinVersoSrc) {
+    cinContainer.innerHTML =
+      '<span class="text-sm text-gray-500">Non fourni</span>';
+  }
 }
 
 document.addEventListener("DOMContentLoaded", function () {

@@ -344,4 +344,102 @@ public class UserDAOImpl implements UserDAO {
             return false;
         }
     }
+
+    @Override
+    public List<User> findAndPaginateUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset) {
+        List<User> users = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM users WHERE role = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(role);
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ");
+            String searchLike = "%" + searchQuery + "%";
+            params.add(searchLike);
+            params.add(searchLike);
+            params.add(searchLike);
+        }
+
+        if (status != null && !status.equals("all")) {
+            sql.append("AND is_active = ? ");
+            params.add(status.equals("active") ? 1 : 0);
+        }
+
+        switch (sortBy) {
+            case "name_asc":
+                sql.append("ORDER BY first_name ASC, last_name ASC ");
+                break;
+            case "name_desc":
+                sql.append("ORDER BY first_name DESC, last_name DESC ");
+                break;
+            case "oldest":
+                sql.append("ORDER BY created_at ASC ");
+                break;
+            default: 
+                sql.append("ORDER BY created_at DESC ");
+                break;
+        }
+
+        sql.append("LIMIT ? OFFSET ?");
+        params.add(limit);
+        params.add(offset);
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            for (Object param : params) {
+                ps.setObject(i++, param);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs)); 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    @Override
+    public int countUsers(String role, String searchQuery, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM users WHERE role = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(role);
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ");
+            String searchLike = "%" + searchQuery + "%";
+            params.add(searchLike);
+            params.add(searchLike);
+            params.add(searchLike);
+        }
+
+        if (status != null && !status.equals("all")) {
+            sql.append("AND is_active = ? ");
+            params.add(status.equals("active") ? 1 : 0);
+        }
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            for (Object param : params) {
+                ps.setObject(i++, param);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
