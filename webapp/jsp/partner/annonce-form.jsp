@@ -22,7 +22,6 @@
     <link rel="manifest" href="{{ asset('images/favicon_io/site.webmanifest') }}">
     <link rel="mask-icon" href="{{ asset('images/favicon_io/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
     <meta name="description" content="CampShare - Louez facilement le matériel de camping dont vous avez besoin
     directement entre particuliers.">
     <meta name="keywords" content="camping, location, matériel, aventure, plein air, partage, communauté">

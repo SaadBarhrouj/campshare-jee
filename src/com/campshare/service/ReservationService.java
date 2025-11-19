@@ -53,6 +53,9 @@ public class ReservationService {
     public User getClientProfile(String email) {
         return reservationDAO.getClientProfile(email);
     }
+       public User getPartnerProfile(String email) {
+        return reservationDAO.getPartnerProfile(email);
+    }
 
     private UserDAO userDAO = new UserDAOImpl();
 
@@ -76,6 +79,14 @@ public class ReservationService {
     }
     public List<Reservation> getReservationsWithMontantTotal(String email) {
         return reservationDAO.getReservationsWithMontantTotal(email);
+    }
+
+    public double getAverageRatingForPartner(long partnerId) {
+        return reservationDAO.getAverageRatingForPartner(partnerId);
+    }
+
+    public double getTotalRevenueByPartner(long partnerId) {
+        return reservationDAO.getTotalRevenueByPartner(partnerId);
     }
 
     public boolean cancelReservation(int reservationId) {

@@ -22,10 +22,13 @@ public interface ReservationDAO {
     int countActiveListeningByPartnerId(long partnerId);
     int countListeningByPartnerId(long partnerId);
     double sumPaymentThisMonth(long partnerId);
+    double getAverageRatingForPartner(long partnerId);
+    double getTotalRevenueByPartner(long partnerId);
     List<Review> getLastAvisPartnerForObject(String email);
     List<Reservation> getPendingReservationsWithMontantTotal(String email);
     List<Reservation> getReservationsWithMontantTotal(String email);
     User getClientProfile(String email);
+    User getPartnerProfile(String email);
     boolean cancelReservation(int reservationId);
 
 

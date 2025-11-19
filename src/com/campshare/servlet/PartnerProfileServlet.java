@@ -1,31 +1,30 @@
 package com.campshare.servlet;
 
+import com.campshare.model.User;
+import com.campshare.service.ClientService;
+import com.campshare.service.PartnerService;
+import com.campshare.service.ReservationService;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.campshare.model.User;
-import com.campshare.service.ClientService;
-import com.campshare.service.ReservationService;
-
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.Part;
-
+@WebServlet("/partner/profile")
 @MultipartConfig(
-    maxFileSize = 1024 * 1024 * 5, 
-    maxRequestSize = 1024 * 1024 * 10 
+        maxFileSize = 1024 * 1024 * 5,
+        maxRequestSize = 1024 * 1024 * 10
 )
-@WebServlet("/client/profile")
+public class PartnerProfileServlet extends HttpServlet {
 
-public class profileServlet extends HttpServlet {
-    @Override
+       @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ClientService clientService = new ClientService();
         String email = "maronakram@gmail.com";
@@ -33,7 +32,7 @@ public class profileServlet extends HttpServlet {
         request.setAttribute("user", user);
 
         ReservationService reservationService = new ReservationService();
-        User userProfile = reservationService.getClientProfile(email);
+        User userProfile = reservationService.getPartnerProfile(email);
         request.setAttribute("userProfile", userProfile);
         int totalReservations = reservationService.getTotalReservationsByEmail(email);
         request.setAttribute("totalReservations", totalReservations);
@@ -54,12 +53,11 @@ public class profileServlet extends HttpServlet {
         request.setAttribute("fullStars", fullStars);
         request.setAttribute("hasHalfStar", hasHalfStar);
         request.setAttribute("emptyStars", emptyStars);
-        request.getRequestDispatcher("/jsp/client/profile.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/partner/profile.jsp").forward(request, response);
 
     }
 
-
-        @Override
+     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("=== doPost method called ===");
         
@@ -83,9 +81,8 @@ public class profileServlet extends HttpServlet {
             System.out.println("Email: " + email);
             System.out.println("Phone: " + phoneNumber);
             
-            // Handle file upload
             ReservationService reservationService = new ReservationService();
-            User existingUser = reservationService.getClientProfile(email);
+            User existingUser = reservationService.getPartnerProfile(email);
             String avatarFileName = existingUser != null ? existingUser.getAvatarUrl() : null;
 
             try {
@@ -118,7 +115,7 @@ public class profileServlet extends HttpServlet {
                     avatarFileName // can be null if not changing avatar
                 );
                 
-             
+               
                 
             } catch (Exception e) {
                 System.out.println("❌ Error updating user: " + e.getMessage());
@@ -126,11 +123,10 @@ public class profileServlet extends HttpServlet {
                 request.getSession().setAttribute("errorMessage", "Erreur: " + e.getMessage());
             }
             
-            // Redirect back to profile
-            response.sendRedirect(request.getContextPath() + "/client/profile");
+            response.sendRedirect(request.getContextPath() + "/partner/profile");
         } else {
             System.out.println("Action is not 'update'");
-            response.sendRedirect(request.getContextPath() + "/client/profile");
+            response.sendRedirect(request.getContextPath() + "/partner/profile");
         }
     }
     private String getFileName(Part part) {
@@ -143,5 +139,6 @@ public class profileServlet extends HttpServlet {
         }
         return "";
     }
-
+    
 }
+
