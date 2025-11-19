@@ -27,4 +27,8 @@ public interface ListingDAO {
 
   boolean updateListing(Listing listing);
 
+  List<Listing> findAndPaginateListings(String searchQuery, String status, String sortBy, int limit, int offset);
+
+  int countListings(String searchQuery, String status);
+
 }

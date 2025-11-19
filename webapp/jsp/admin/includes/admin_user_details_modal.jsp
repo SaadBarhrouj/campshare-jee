@@ -1,9 +1,9 @@
 <%@ page pageEncoding="UTF-8" %>
 <div id="fullscreen-image-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[60] hidden" onclick="hideFullScreenImage()">
-    <div class="relative p-4" onclick="event.stopPropagation()">
-        <button onclick="hideFullScreenImage()" class="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-white text-black text-2xl flex items-center justify-center shadow-lg">&times;</button>
-        <img id="fullscreen-image-content" src="" alt="Image CIN" class="max-w-screen-lg max-h-[80vh] rounded-lg">
-    </div>
+    <div class="relative p-4" onclick="event.stopPropagation()">
+        <button onclick="hideFullScreenImage()" class="absolute -top-2 -right-2 w-10 h-10 rounded-full bg-white text-black text-2xl flex items-center justify-center shadow-lg">&times;</button>
+        <img id="fullscreen-image-content" src="" alt="Image CIN" class="max-w-screen-lg max-h-[80vh] rounded-lg">
+    </div>
 </div>
 
 <div id="user-detail-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 hidden transition-opacity duration-300">

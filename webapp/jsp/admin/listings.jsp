@@ -152,74 +152,43 @@ pageEncoding="UTF-8"%>
                     
                 </div>
                 
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 p-5">
-                    <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
-                        <div class="flex-1">
-                        <form action="" method="GET">
-                            <div class="relative">
-                                <input 
-                                    type="text" 
-                                    name="search" 
-                                    placeholder="Rechercher par nom, email ou ville..." 
-                                    class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-admin-primary dark:focus:ring-admin-secondary text-sm"
-                                    value=""
-                                >
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
+                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 p-5">
+                        <form action="${pageContext.request.contextPath}/admin/listings" method="GET">
+                            <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
+                                
+                                <%-- Recherche --%>
+                                <div class="flex-1">
+                                    <div class="relative">
+                                        <input type="text" name="search" placeholder="Rechercher une annonce (titre, partenaire)..." 
+                                            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-admin-primary"
+                                            value="<c:out value='${searchQuery}'/>">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
+                                        </div>
                                     </div>
-                                    </div>
-                        </form>
-                            </div>
-                        
-                        <div class="relative inline-block text-left" id="status-filter-container">
-                            <button id="status-filter-button" class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                                <span>Statut: Tous</span>
-                                <i class="fas fa-chevron-down ml-2"></i>
-                            </button>
-                            <div id="status-filter-dropdown" class="filter-dropdown right-0 hidden">
-                                <div class="option active" data-value="all">Tous les statuts</div>
-                                <div class="option" data-value="active">Actifs</div>
-                                <div class="option" data-value="inactive">Inactifs</div>
-                         
-                            </div>
-                        </div>
-                        
-
-                        <div class="relative inline-block text-left" id="sort-filter-container">
-                            <button id="sort-filter-button" class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                                <span>Trier par 
-                                    
-                                </span>
-                                <i class="fas fa-chevron-down ml-2"></i>
-                            </button>
-                            <div id="sort-filter-dropdown" class="filter-dropdown right-0 hidden w-full">
-                                <div class="flex flex-col">
-                                    <a href="" 
-                                    class="option block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Plus récents
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Plus anciens
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nom (A-Z)
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nom (Z-A)
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nombre de réservations
-                                    </a>
                                 </div>
+                                
+                                <%-- Filtre Statut --%>
+                                <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                                    <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Statut: Tous</option>
+                                    <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Actives</option>
+                                    <option value="archived" ${statusFilter == 'archived' ? 'selected' : ''}>Archivées</option>
+                                </select>
+                                
+                                <%-- Filtre Tri --%>
+                                <select name="sort" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                                    <option value="newest" ${sortBy == 'newest' ? 'selected' : ''}>Trier par: Plus récentes</option>
+                                    <option value="oldest" ${sortBy == 'oldest' ? 'selected' : ''}>Trier par: Plus anciennes</option>
+                                    <option value="price_asc" ${sortBy == 'price_asc' ? 'selected' : ''}>Prix croissant</option>
+                                    <option value="price_desc" ${sortBy == 'price_desc' ? 'selected' : ''}>Prix décroissant</option>
+                                </select>
+                                
+                                <button type="submit" class="w-full md:w-auto px-4 py-2 bg-admin-primary text-white rounded-md text-sm font-medium hover:bg-admin-dark">
+                                    Filtrer
+                                </button>
                             </div>
-                        </div>
-                          
+                        </form>
                     </div>
-                </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     
@@ -227,9 +196,18 @@ pageEncoding="UTF-8"%>
                         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col">
                             
                         <div class="h-48 overflow-hidden">
-                            <img src="${pageContext.request.contextPath}/assets/images/hero-image.jpg"
-                                alt="Image de l'annonce" 
-                                class="w-full h-full object-cover object-center"> 
+                            <c:choose>
+                                <c:when test="${not empty listing.item.images}">
+                                    <img src="${pageContext.request.contextPath}/uploads/${listing.item.images[0].url}"
+                                        alt="Image de <c:out value="${listing.item.title}"/>" 
+                                        class="w-full h-full object-contain object-center">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/assets/images/placeholder-listing.png"
+                                        alt="Image par défaut" 
+                                        class="w-full h-full object-contain object-center">
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                             
                             <div class="p-5 flex flex-col flex-grow">
@@ -330,6 +308,39 @@ pageEncoding="UTF-8"%>
                         <p>Il n'y a actuellement aucune annonce à afficher.</p>
                     </div>
                 </c:if>
+
+
+                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm my-8 p-4 flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700 dark:text-gray-400">
+                            Page <span class="font-medium">${currentPage}</span> sur <span class="font-medium">${totalPages}</span>
+                        </p>
+                    </div>
+
+                    <c:if test="${totalPages > 1}">
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                            <c:if test="${currentPage > 1}">
+                                <a href="${pageContext.request.contextPath}/admin/listings?page=${currentPage - 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                                class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <i class="fas fa-chevron-left h-5 w-5"></i>
+                                </a>
+                            </c:if>
+                            <c:forEach var="i" begin="1" end="${totalPages}">
+                                <a href="${pageContext.request.contextPath}/admin/listings?page=${i}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                                class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium 
+                                        ${i == currentPage ? 'z-10 bg-admin-light dark:bg-admin-dark text-admin-primary dark:text-admin-accent' : 'bg-white dark:bg-gray-800 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'}">
+                                    ${i}
+                                </a>
+                            </c:forEach>
+                            <c:if test="${currentPage < totalPages}">
+                                <a href="${pageContext.request.contextPath}/admin/listings?page=${currentPage + 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                                class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <i class="fas fa-chevron-right h-5 w-5"></i>
+                                </a>
+                            </c:if>
+                        </nav>
+                    </c:if>
+                </div>
       </main>
     </div>
 
