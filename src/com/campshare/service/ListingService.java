@@ -66,4 +66,12 @@ public class ListingService {
 
     return itemUpdated && listingUpdated;
   }
+
+  public List<Listing> getPaginatedListings(String searchQuery, String status, String sortBy, int limit, int offset) {
+    return listingDAO.findAndPaginateListings(searchQuery, status, sortBy, limit, offset);
+  }
+
+  public int countTotalListings(String searchQuery, String status) {
+    return listingDAO.countListings(searchQuery, status);
+  }
 }
