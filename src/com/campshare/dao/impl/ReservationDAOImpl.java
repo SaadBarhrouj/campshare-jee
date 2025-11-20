@@ -368,4 +368,63 @@ public class ReservationDAOImpl implements ReservationDAO {
     }
     return 0;
   }
+
+    @Override
+    public boolean updateStatus(long reservationId, String newStatus) {
+        String sql = "UPDATE reservations SET status = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, newStatus);
+            ps.setLong(2, reservationId);
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Erreur updateStatus: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+ 
+    @Override
+    public List<Reservation> findExpiredConfirmedReservations() {
+        List<Reservation> reservations = new ArrayList<>();
+        String sql = "SELECT * FROM reservations WHERE status = 'confirmed' AND end_date < CURDATE()";
+        
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+             
+            while (rs.next()) {
+                reservations.add(mapResultSetToReservationBasic(rs)); 
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reservations;
+    }
+
+    
+    @Override
+    public List<Reservation> findReservationsWithPassedEndDate(String status) {
+        List<Reservation> reservations = new ArrayList<>();
+        String sql = "SELECT * FROM reservations WHERE status = ? AND end_date < CURDATE()";
+        
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            
+            ps.setString(1, status);
+            
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    reservations.add(mapResultSetToReservationBasic(rs));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur findReservationsWithPassedEndDate: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return reservations;
+    }
 }
