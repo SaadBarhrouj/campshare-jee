@@ -16,30 +16,14 @@ import com.campshare.dto.AdminDashboardStatsDTO;
 
 public class AdminReservationsServlet extends HttpServlet {
 
-  private ReservationService reservationService = new ReservationService();
-  private AdminDashboardService dashboardService = new AdminDashboardService();
+  private final ReservationService reservationService = new ReservationService();
+  private final AdminDashboardService dashboardService = new AdminDashboardService();
+  private static final int RESERVATIONS_PER_PAGE = 6;
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    System.out
-        .println("\n--- [SERVLET DEBUG] Début du traitement de la requête doGet pour AdminReservationsServlet ---");
-
     try {
-      System.out.println("[SERVLET DEBUG] Appel de reservationService.countReservationsByStatus()...");
       Map<String, Long> statusCounts = reservationService.countReservationsByStatus();
-      System.out.println("[SERVLET DEBUG] Résultat de countReservationsByStatus : " + statusCounts.toString());
-
-      System.out.println("[SERVLET DEBUG] Appel de reservationService.getAllReservationsWithDetails()...");
-      List<Reservation> reservations = reservationService.getAllReservationsWithDetails();
-
-      if (reservations == null) {
-        System.err.println("[SERVLET DEBUG] ERREUR FATALE : Le service a retourné une liste NULL !");
-      } else {
-        System.out
-            .println("[SERVLET DEBUG] Le service a retourné une liste avec " + reservations.size() + " élément(s).");
-      }
-
       long totalReservations = statusCounts.values().stream().mapToLong(Long::longValue).sum();
       long confirmedCount = statusCounts.getOrDefault("confirmed", 0L);
       long pendingCount = statusCounts.getOrDefault("pending", 0L);
@@ -68,7 +52,38 @@ public class AdminReservationsServlet extends HttpServlet {
         request.setAttribute("rejectedPercentage", 0.0);
       }
 
+      String searchQuery = request.getParameter("search");
+      String status = request.getParameter("status") != null ? request.getParameter("status") : "all";
+      String sortBy = request.getParameter("sort") != null ? request.getParameter("sort") : "date_desc";
+      int currentPage = 1;
+
+      if (request.getParameter("page") != null && !request.getParameter("page").isEmpty()) {
+        try {
+          currentPage = Integer.parseInt(request.getParameter("page"));
+          if (currentPage < 1)
+            currentPage = 1;
+        } catch (NumberFormatException e) {
+          currentPage = 1;
+        }
+      }
+
+      int offset = (currentPage - 1) * RESERVATIONS_PER_PAGE;
+
+      List<Reservation> reservations = reservationService.getFilteredAndPaginatedReservations(searchQuery, status,
+          sortBy, RESERVATIONS_PER_PAGE, offset);
+      int totalFilteredReservations = reservationService.countFilteredReservations(searchQuery, status);
+
+      int totalPages = (int) Math.ceil((double) totalFilteredReservations / RESERVATIONS_PER_PAGE);
+      if (totalPages == 0)
+        totalPages = 1;
+
       request.setAttribute("reservations", reservations);
+      request.setAttribute("totalPages", totalPages);
+      request.setAttribute("currentPage", currentPage);
+      request.setAttribute("searchQuery", searchQuery);
+      request.setAttribute("statusFilter", status);
+      request.setAttribute("sortBy", sortBy);
+
       AdminDashboardStatsDTO dashboardStats = dashboardService.getDashboardStats();
       request.setAttribute("dashboardStats", dashboardStats);
 
@@ -76,17 +91,10 @@ public class AdminReservationsServlet extends HttpServlet {
       dispatcher.forward(request, response);
 
     } catch (Exception e) {
-
       e.printStackTrace();
-
       request.setAttribute("errorMessage", "Erreur critique lors du chargement des réservations: " + e.getMessage());
       RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/admin/reservations.jsp");
       dispatcher.forward(request, response);
     }
-  }
-
-  @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    response.sendRedirect(request.getContextPath() + "/admin/reservations");
   }
 }

@@ -2,12 +2,10 @@ package com.campshare.servlet;
 
 import com.campshare.dao.impl.ReviewDAOImpl;
 import com.campshare.dao.interfaces.ReviewDAO;
-import com.campshare.dto.ReviewsDTO;
-import com.campshare.model.Reservation;
 import com.campshare.model.Review;
-import com.campshare.service.ReservationService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,44 +16,44 @@ import java.util.List;
 
 public class ReservationReviewsServlet extends HttpServlet {
 
-  private ReviewDAO reviewDAO = new ReviewDAOImpl();
-  private ReservationService reservationService = new ReservationService();
-  private Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private ReviewDAO reviewDAO = new ReviewDAOImpl();
+    private Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
 
-  @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    try {
-      long reservationId = Long.parseLong(request.getParameter("id"));
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
 
+        try {
+            String idParam = request.getParameter("id");
 
-      Reservation reservation = reservationService.findReservationById(reservationId);
-      if (reservation == null) {
-        response.sendError(HttpServletResponse.SC_NOT_FOUND, "Réservation non trouvée");
-        return;
-      }
+            if (idParam == null || idParam.trim().isEmpty()) {
+                response.getWriter().write("{}");
+                return;
+            }
 
-      List<Review> reviews = reviewDAO.findByReservationId(reservationId);
+            long reservationId = Long.parseLong(idParam);
+            
+            List<Review> reviews = reviewDAO.findByReservationIdWithUser(reservationId);
 
-      ReviewsDTO reviewsDTO = new ReviewsDTO();
-      for (Review review : reviews) {
-        if (review.getReviewerId() == reservation.getClientId()) {
-          reviewsDTO.setReviewFromClient(review);
+            JsonObject reviewsJson = new JsonObject();
+
+            for (Review review : reviews) {
+                if ("forPartner".equalsIgnoreCase(review.getType())) {
+                    reviewsJson.add("reviewFromClient", gson.toJsonTree(review));
+                } 
+                else if ("forClient".equalsIgnoreCase(review.getType())) {
+                    reviewsJson.add("reviewFromPartner", gson.toJsonTree(review));
+                }
+            }
+
+            response.getWriter().write(gson.toJson(reviewsJson));
+
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID invalide");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur serveur");
         }
-        else if (review.getReviewerId() == reservation.getPartnerId()) {
-          reviewsDTO.setReviewFromPartner(review);
-        }
-      }
-
-      String jsonResponse = this.gson.toJson(reviewsDTO);
-      response.setContentType("application/json");
-      response.setCharacterEncoding("UTF-8");
-      response.getWriter().write(jsonResponse);
-
-    } catch (NumberFormatException e) {
-      response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID de réservation invalide.");
-    } catch (Exception e) {
-      e.printStackTrace();
-      response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur interne du serveur.");
     }
-  }
 }

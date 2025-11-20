@@ -244,18 +244,128 @@ public class ReservationDAOImpl implements ReservationDAO {
   @Override
   public Reservation findById(long reservationId) {
     Reservation reservation = null;
-    String sql = "SELECT * FROM reservations WHERE id = ?";
+    String sql = "SELECT " +
+        "r.*, " +
+        "c.id as client_id_alias, c.username as client_username, c.email as client_email, c.first_name as client_first_name, c.last_name as client_last_name, c.avatar_url as client_avatar_url, "
+        +
+        "p.id as partner_id_alias, p.username as partner_username, p.email as partner_email, p.first_name as partner_first_name, p.last_name as partner_last_name, p.avatar_url as partner_avatar_url, "
+        +
+        "l.id as listing_id_alias, " +
+        "i.id as item_id, i.title as item_title, i.price_per_day as item_price, i.description as item_description " +
+        "FROM reservations r " +
+        "LEFT JOIN users c ON r.client_id = c.id " +
+        "LEFT JOIN users p ON r.partner_id = p.id " +
+        "LEFT JOIN listings l ON r.listing_id = l.id " +
+        "LEFT JOIN items i ON l.item_id = i.id " +
+        "WHERE r.id = ?";
+
     try (Connection conn = DatabaseManager.getConnection();
         PreparedStatement pstmt = conn.prepareStatement(sql)) {
       pstmt.setLong(1, reservationId);
       try (ResultSet rs = pstmt.executeQuery()) {
         if (rs.next()) {
-          reservation = mapResultSetToReservationBasic(rs);
+          reservation = mapResultSetToReservationWithDetails(rs);
         }
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return reservation;
+  }
+
+  @Override
+  public List<Reservation> findAndFilter(String searchQuery, String status, String sortBy, int limit, int offset) {
+    List<Reservation> reservations = new ArrayList<>();
+    List<Object> params = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT r.*, c.id as client_id_alias, c.username as client_username, c.email as client_email, c.first_name as client_first_name, c.last_name as client_last_name, c.avatar_url as client_avatar_url, p.id as partner_id_alias, p.username as partner_username, p.email as partner_email, p.first_name as partner_first_name, p.last_name as partner_last_name, p.avatar_url as partner_avatar_url, l.id as listing_id_alias, i.id as item_id, i.title as item_title, i.price_per_day as item_price, i.description as item_description FROM reservations r LEFT JOIN users c ON r.client_id = c.id LEFT JOIN users p ON r.partner_id = p.id LEFT JOIN listings l ON r.listing_id = l.id LEFT JOIN items i ON l.item_id = i.id WHERE 1=1");
+
+    if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+      sql.append(
+          " AND (c.first_name LIKE ? OR c.last_name LIKE ? OR p.first_name LIKE ? OR p.last_name LIKE ? OR i.title LIKE ?)");
+      String likeParam = "%" + searchQuery.trim() + "%";
+      for (int i = 0; i < 5; i++) {
+        params.add(likeParam);
+      }
+    }
+
+    if (status != null && !status.equalsIgnoreCase("all") && !status.isEmpty()) {
+      sql.append(" AND r.status = ?");
+      params.add(status);
+    }
+
+    if (sortBy != null && !sortBy.isEmpty()) {
+      switch (sortBy) {
+        case "date_asc":
+          sql.append(" ORDER BY r.created_at ASC");
+          break;
+        case "price_desc":
+          sql.append(" ORDER BY i.price_per_day DESC");
+          break;
+        case "price_asc":
+          sql.append(" ORDER BY i.price_per_day ASC");
+          break;
+        default:
+          sql.append(" ORDER BY r.created_at DESC");
+          break;
+      }
+    } else {
+      sql.append(" ORDER BY r.created_at DESC");
+    }
+
+    sql.append(" LIMIT ? OFFSET ?");
+    params.add(limit);
+    params.add(offset);
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+      for (int i = 0; i < params.size(); i++) {
+        pstmt.setObject(i + 1, params.get(i));
+      }
+      try (ResultSet rs = pstmt.executeQuery()) {
+        while (rs.next()) {
+          reservations.add(mapResultSetToReservationWithDetails(rs));
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return reservations;
+  }
+
+  @Override
+  public int countFiltered(String searchQuery, String status) {
+    List<Object> params = new ArrayList<>();
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(r.id) FROM reservations r LEFT JOIN users c ON r.client_id = c.id LEFT JOIN users p ON r.partner_id = p.id LEFT JOIN listings l ON r.listing_id = l.id LEFT JOIN items i ON l.item_id = i.id WHERE 1=1");
+
+    if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+      sql.append(
+          " AND (c.first_name LIKE ? OR c.last_name LIKE ? OR p.first_name LIKE ? OR p.last_name LIKE ? OR i.title LIKE ?)");
+      String likeParam = "%" + searchQuery.trim() + "%";
+      for (int i = 0; i < 5; i++) {
+        params.add(likeParam);
+      }
+    }
+
+    if (status != null && !status.equalsIgnoreCase("all") && !status.isEmpty()) {
+      sql.append(" AND r.status = ?");
+      params.add(status);
+    }
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql.toString())) {
+      for (int i = 0; i < params.size(); i++) {
+        pstmt.setObject(i + 1, params.get(i));
+      }
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0;
   }
 }

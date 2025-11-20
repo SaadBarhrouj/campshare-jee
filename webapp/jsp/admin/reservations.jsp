@@ -189,46 +189,44 @@
         
         <!-- Filters -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 p-5">
-            <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
-                <div class="flex-1">
-                    <form action="${pageContext.request.contextPath}/admin/reservations" method="GET" id="searchForm">
+            <form action="${pageContext.request.contextPath}/admin/reservations" method="GET">
+                <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
+                    
+                    <%-- Recherche --%>
+                    <div class="flex-1">
                         <div class="relative">
-                            <input 
-                                type="text" 
-                                name="search" 
-                                placeholder="Rechercher par client, partenaire ou équipement..." 
-                                class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-admin-primary dark:focus:ring-admin-secondary text-base"
-                                value="${param.search}"
-                            >
+                            <input type="text" name="search" placeholder="Rechercher (client, partenaire, titre)..." 
+                                class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-admin-primary"
+                                value="<c:out value='${searchQuery}'/>">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
                             </div>
                         </div>
-                    </form>
-                </div>
-                
-                <div class="relative inline-block text-left">
-                    <select name="status" onchange="filterByStatus(this.value)" 
-                            class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                        <option value="all" ${param.status == 'all' || empty param.status ? 'selected' : ''}>Tous les statuts</option>
-                        <option value="pending" ${param.status == 'pending' ? 'selected' : ''}>En attente</option>
-                        <option value="confirmed" ${param.status == 'confirmed' ? 'selected' : ''}>Confirmées</option>
-                        <option value="completed" ${param.status == 'completed' ? 'selected' : ''}>Terminées</option>
-                        <option value="cancelled" ${param.status == 'cancelled' ? 'selected' : ''}>Annulées</option>
-                        <option value="rejected" ${param.status == 'rejected' ? 'selected' : ''}>Rejetées</option>
+                    </div>
+                    
+                    <%-- Filtre Statut --%>
+                    <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                        <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Statut: Tous</option>
+                        <option value="pending" ${statusFilter == 'pending' ? 'selected' : ''}>En attente</option>
+                        <option value="confirmed" ${statusFilter == 'confirmed' ? 'selected' : ''}>Confirmées</option>
+                        <option value="completed" ${statusFilter == 'completed' ? 'selected' : ''}>Terminées</option>
+                        <option value="cancelled" ${statusFilter == 'cancelled' ? 'selected' : ''}>Annulées</option>
+                        <option value="rejected" ${statusFilter == 'rejected' ? 'selected' : ''}>Rejetées</option>
                     </select>
-                </div>
-
-                <div class="relative inline-block text-left">
-                    <select name="sort" onchange="sortReservations(this.value)"
-                            class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                        <option value="date_desc" ${param.sort == 'date_desc' || empty param.sort ? 'selected' : ''}>Plus récentes</option>
-                        <option value="date_asc" ${param.sort == 'date_asc' ? 'selected' : ''}>Plus anciennes</option>
-                        <option value="price_desc" ${param.sort == 'price_desc' ? 'selected' : ''}>Prix décroissant</option>
-                        <option value="price_asc" ${param.sort == 'price_asc' ? 'selected' : ''}>Prix croissant</option>
+                    
+                    <%-- Filtre Tri --%>
+                    <select name="sort" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                        <option value="date_desc" ${sortBy == 'date_desc' ? 'selected' : ''}>Trier par: Plus récentes</option>
+                        <option value="date_asc" ${sortBy == 'date_asc' ? 'selected' : ''}>Trier par: Plus anciennes</option>
+                        <option value="price_desc" ${sortBy == 'price_desc' ? 'selected' : ''}>Prix décroissant</option>
+                        <option value="price_asc" ${sortBy == 'price_asc' ? 'selected' : ''}>Prix croissant</option>
                     </select>
+                    
+                    <button type="submit" class="w-full md:w-auto px-4 py-2 bg-admin-primary text-white rounded-md text-sm font-medium hover:bg-admin-dark">
+                        Filtrer
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
 
         <!-- Reservations Cards -->
@@ -236,132 +234,157 @@
             <c:choose>
                 <c:when test="${not empty reservations}">
                     <c:forEach var="reservation" items="${reservations}">
-                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 p-6">
-                            <!-- Header with status -->
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="flex items-center">
-                                    <i class="fas fa-calendar-check text-admin-primary dark:text-admin-secondary mr-2"></i>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">Réservation #${reservation.id}</span>
-                                </div>
-                                <c:set var="status" value="${reservation.status}"/>
-                                <span class="px-2 py-1 text-xs font-medium rounded-full
-                                    ${status == 'confirmed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : ''}
-                                    ${status == 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' : ''}
-                                    ${status == 'completed' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' : ''}
-                                    ${status == 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : ''}
-                                    ${status == 'rejected' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' : ''}">
-                                    <c:choose>
-                                        <c:when test="${status == 'pending'}">En attente</c:when>
-                                        <c:when test="${status == 'confirmed'}">Confirmée</c:when>
-                                        <c:when test="${status == 'completed'}">Terminée</c:when>
-                                        <c:when test="${status == 'cancelled'}">Annulée</c:when>
-                                        <c:when test="${status == 'rejected'}">Rejetée</c:when>
-                                        <c:otherwise><c:out value="${status}"/></c:otherwise>
-                                    </c:choose>
-                                </span>
-                            </div>
-
-                            <!-- Equipment info -->
-                            <div class="mb-4">
-                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2">
-                                    <c:out value="${reservation.listing.item.title}"/>
-                                </h3>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                                    <c:out value="${reservation.listing.item.description}"/>
-                                </p>
-                            </div>
-
-                            <!-- Client and Partner info -->
-                            <div class="grid grid-cols-2 gap-4 mb-4">
-                                <div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Client</p>
-                                    <div class="flex items-center">
+                        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300 flex flex-col">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">Réservation #${reservation.id}</p>
+                                        <h3 class="font-bold text-lg text-gray-900 dark:text-white leading-tight">
+                                            <c:out value="${reservation.listing.item.title}"/>
+                                        </h3>
+                                    </div>
+                                    <c:set var="status" value="${reservation.status}"/>
+                                    <span class="px-2.5 py-1 text-xs font-semibold rounded-full
+                                        ${status == 'confirmed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : ''}
+                                        ${status == 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' : ''}
+                                        ${status == 'completed' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400' : ''}
+                                        ${status == 'cancelled' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' : ''}
+                                        ${status == 'rejected' ? 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-400' : ''}">
                                         <c:choose>
-                                            <c:when test="${not empty fn:trim(reservation.client.avatarUrl)}">
-                                                <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${reservation.client.avatarUrl}" alt="Avatar">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
-                                            </c:otherwise>
+                                            <c:when test="${status == 'pending'}">En attente</c:when>
+                                            <c:when test="${status == 'confirmed'}">Confirmée</c:when>
+                                            <c:when test="${status == 'completed'}">Terminée</c:when>
+                                            <c:when test="${status == 'cancelled'}">Annulée</c:when>
+                                            <c:when test="${status == 'rejected'}">Rejetée</c:when>
+                                            <c:otherwise><c:out value="${status}"/></c:otherwise>
                                         </c:choose>
-                                        <button 
-                                            onclick="showUserDetails(${reservation.client.id})" 
-                                            class="text-sm font-medium text-gray-900 dark:text-white hover:text-admin-secondary dark:hover:text-admin-accent transition-colors truncate">
-                                            <c:out value="${reservation.client.firstName} ${reservation.client.lastName}"/>
-                                        </button>
+                                    </span>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4 mb-5 text-sm">
+                                    <div>
+                                        <p class="text-gray-500 dark:text-gray-400">Client</p>
+                                        <div class="flex items-center mt-2">
+                                            <c:choose>
+                                                <c:when test="${not empty fn:trim(reservation.client.avatarUrl)}">
+                                                    <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${reservation.client.avatarUrl}" alt="Avatar">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <button onclick="showUserDetails(${reservation.client.id})" class="font-medium text-gray-800 dark:text-gray-200 hover:text-admin-secondary dark:hover:text-admin-accent transition-colors truncate">
+                                                <c:out value="${reservation.client.firstName} ${reservation.client.lastName}"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-500 dark:text-gray-400">Partenaire</p>
+                                        <div class="flex items-center mt-2">
+                                            <c:choose>
+                                                <c:when test="${not empty fn:trim(reservation.partner.avatarUrl)}">
+                                                    <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${reservation.partner.avatarUrl}" alt="Avatar">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <button onclick="showUserDetails(${reservation.partner.id})" class="font-medium text-gray-800 dark:text-gray-200 hover:text-admin-secondary dark:hover:text-admin-accent transition-colors truncate">
+                                                <c:out value="${reservation.partner.firstName} ${reservation.partner.lastName}"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border-t border-b border-gray-200 dark:border-gray-700 my-5 py-4">
+                                    <div class="grid grid-cols-3 gap-4 text-sm text-center">
+                                        <div>
+                                            <p class="text-gray-500 dark:text-gray-400">Début</p>
+                                            <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                                <fmt:formatDate value="${reservation.startDate}" pattern="dd MMM yy"/>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-500 dark:text-gray-400">Fin</p>
+                                            <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">
+                                                <fmt:formatDate value="${reservation.endDate}" pattern="dd MMM yy"/>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <p class="text-gray-500 dark:text-gray-400">Durée</p>
+                                            <p class="font-semibold text-gray-800 dark:text-gray-200 mt-2">${reservation.days} jour(s)</p>
+                                        </div>
                                     </div>
                                 </div>
                                 
-
-                                <div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">Partenaire</p>
-                                    <div class="flex items-center">
-                                        <c:choose>
-                                            <c:when test="${not empty fn:trim(reservation.partner.avatarUrl)}">
-                                                <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/uploads/${reservation.partner.avatarUrl}" alt="Avatar">
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img class="w-6 h-6 rounded-full object-cover mr-2" src="${pageContext.request.contextPath}/assets/images/default-avatar.png" alt="Avatar par défaut">
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <button 
-                                            onclick="showUserDetails(${reservation.partner.id})" 
-                                            class="text-sm font-medium text-gray-900 dark:text-white hover:text-admin-secondary dark:hover:text-admin-accent transition-colors truncate">
-                                            <c:out value="${reservation.partner.firstName} ${reservation.partner.lastName}"/>
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Dates and price -->
-                            <div class="space-y-2 mb-4">
-                                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                    <i class="fas fa-calendar mr-2"></i>
-                                    <c:out value="${reservation.startDate}" /> - 
-                                    <c:out value="${reservation.endDate}" />
-                                </div>
-                                <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                    <i class="fas fa-calendar-days mr-2"></i>
-                                    ${reservation.days} jour(s)
-                                </div>
-                                <div class="flex items-center justify-between">
-                                    <span class="text-xs text-gray-500 dark:text-gray-400">
-                                        <c:out value="${reservation.createdAt}" />
-                                    </span>
+                                <div class="flex justify-between items-center text-sm">
+                                    <p class="text-gray-500 dark:text-gray-400">Montant total</p>
+                                    <p class="font-bold text-lg text-gray-900 dark:text-white">
+                                        <fmt:formatNumber value="${reservation.montantTotal}" type="currency" currencySymbol="MAD"/>
+                                    </p>
                                 </div>
                             </div>
 
                             <!-- Actions -->
-                            <div class="flex space-x-2">
+                            <div class="mt-auto p-5 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-700 flex space-x-3">
                                 <a href="${pageContext.request.contextPath}/admin/listings/details?id=${reservation.listing.id}" 
-                                   class="flex-1 flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md text-admin-primary dark:text-admin-secondary border border-admin-primary dark:border-admin-secondary hover:bg-admin-primary hover:text-white dark:hover:bg-admin-secondary dark:hover:text-gray-900 transition-colors">
-                                    <i class="fas fa-eye mr-1"></i> Voir l'annonce
+                                   class="flex-1 flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md text-admin-primary dark:text-admin-accent bg-admin-light hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors">
+                                    <i class="fas fa-eye mr-2"></i> Annonce
                                 </a>
                                 <button 
-                                    onclick="showReservationDetails(${reservation.id})"
-                                    class="flex-1 flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md text-white bg-admin-primary hover:bg-admin-dark dark:bg-admin-secondary dark:hover:bg-admin-accent transition-colors">
-                                    <i class="fas fa-star mr-1"></i> Avis                 
-                                    </button>
+                                    data-reservation-id="${reservation.id}"
+                                    class="flex-1 flex items-center justify-center px-3 py-2 text-xs font-medium rounded-md text-admin-primary dark:text-admin-accent bg-admin-light hover:bg-blue-200 dark:bg-gray-700 dark:hover:bg-gray-600 transition-colors show-reservation-details">
+                                    <i class="fas fa-star mr-2"></i> Avis                 
+                                </button>
                             </div>
                         </div>
                     </c:forEach>
                 </c:when>
                 <c:otherwise>
-                    <div class="col-span-full text-center py-12">
-                        <i class="fas fa-calendar-times text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">Aucune réservation trouvée</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Il n'y a aucune réservation correspondant à vos critères de recherche.</p>
+                    <div class="col-span-full text-center py-16 text-gray-500">
+                        <i class="fas fa-box-open fa-3x mb-4"></i>
+                        <h3 class="text-xl font-semibold">Aucune réservation trouvée</h3>
+                        <p>Il n'y a actuellement aucune réservation à afficher avec les filtres actuels.</p>
                     </div>
                 </c:otherwise>
             </c:choose>
         </div>
+
+        <!-- Pagination -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm my-8 p-4 flex items-center justify-between">
+            <div>
+                <p class="text-sm text-gray-700 dark:text-gray-400">
+                    Page <span class="font-medium">${currentPage}</span> sur <span class="font-medium">${totalPages}</span>
+                </p>
+            </div>
+
+            <c:if test="${totalPages > 1}">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <c:if test="${currentPage > 1}">
+                        <a href="${pageContext.request.contextPath}/admin/reservations?page=${currentPage - 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <i class="fas fa-chevron-left h-5 w-5"></i>
+                        </a>
+                    </c:if>
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <a href="${pageContext.request.contextPath}/admin/reservations?page=${i}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                           class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium 
+                                  ${i == currentPage ? 'z-10 bg-admin-light dark:bg-admin-dark text-admin-primary dark:text-admin-accent' : 'bg-white dark:bg-gray-800 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700'}">
+                            ${i}
+                        </a>
+                    </c:forEach>
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="${pageContext.request.contextPath}/admin/reservations?page=${currentPage + 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                           class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <i class="fas fa-chevron-right h-5 w-5"></i>
+                        </a>
+                    </c:if>
+                </nav>
+            </c:if>
+        </div>
     </div>
-
-
 </main>
 
-<!-- Modal for reservation details -->
 <div id="reservationDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
     <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div class="p-6">
@@ -381,8 +404,16 @@
 
 <script src="${pageContext.request.contextPath}/assets/js/admin/admin.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-
 <script>
+    let searchTimeout;
+    document.querySelector('input[name="search"]').addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            document.getElementById('searchForm').submit(); // Assurez-vous que votre form a l'id="searchForm" ou adaptez
+            // Sinon : document.querySelector('form').submit();
+        }, 500);
+    });
+
     function filterByStatus(status) {
         const urlParams = new URLSearchParams(window.location.search);
         if (status === 'all') {
@@ -399,103 +430,148 @@
         window.location.search = urlParams.toString();
     }
 
+
     function showReservationDetails(reservationId) {
-        document.getElementById('reservationDetailsModal').classList.remove('hidden');
-        document.getElementById('reservationDetailsModal').classList.add('flex');
+        const modal = document.getElementById('reservationDetailsModal');
+        const content = document.getElementById('reservationDetailsContent');
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
         
-        document.getElementById('reservationDetailsContent').innerHTML = `
-            <div class="space-y-6">
-                <!-- Titre principal -->
-                <div class="text-center border-b border-gray-200 dark:border-gray-700 pb-4">
-                    <h4 class="text-xl font-bold text-gray-900 dark:text-white">Détails de la Réservation #${reservationId}</h4>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Évaluations et commentaires</p>
-                </div>
+        content.innerHTML = 
+            '<div class="text-center">' +
+                '<i class="fas fa-spinner fa-spin fa-2x text-admin-primary"></i>' +
+                '<p class="mt-2 text-gray-600 dark:text-gray-400">Chargement des avis...</p>' +
+            '</div>';
 
-                <!-- Reviews Section -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- Review du Partenaire sur le Client -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-user-tie text-admin-primary dark:text-admin-secondary mr-2"></i>
-                            <h5 class="font-semibold text-gray-900 dark:text-white">Évaluation du Partenaire</h5>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center">
-                                <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">Note :</span>
-                                <div class="flex">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-gray-300 dark:text-gray-600"></i>
-                                </div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">4/5</span>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire :</p>
-                                <p class="text-sm text-gray-800 dark:text-gray-200 italic bg-white dark:bg-gray-800 p-3 rounded border-l-4 border-admin-primary dark:border-admin-secondary">
-                                    "Client très respectueux du matériel. A rendu l'équipement en parfait état et dans les temps. Je recommande !"
-                                </p>
-                            </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="fas fa-clock mr-1"></i> Publié le 15/01/2025
-                            </p>
-                        </div>
-                    </div>
+        fetch('${pageContext.request.contextPath}/admin/reservation-reviews?id=' + reservationId)
+            .then(response => {
+                if (!response.ok) throw new Error('Erreur réseau');
+                return response.json();
+            })
+            .then(data => {
+                content.innerHTML = generateReviewsHTML(reservationId, data);
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                content.innerHTML = '<div class="text-center text-red-500">Impossible de charger les avis.</div>';
+            });
+    }
 
-                    <!-- Review du Client sur le Partenaire -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-3">
-                            <i class="fas fa-user text-admin-primary dark:text-admin-secondary mr-2"></i>
-                            <h5 class="font-semibold text-gray-900 dark:text-white">Évaluation du Client</h5>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="flex items-center">
-                                <span class="text-sm text-gray-600 dark:text-gray-400 mr-2">Note :</span>
-                                <div class="flex">
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                    <i class="fas fa-star text-yellow-400"></i>
-                                </div>
-                                <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">5/5</span>
-                            </div>
-                            <div>
-                                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire :</p>
-                                <p class="text-sm text-gray-800 dark:text-gray-200 italic bg-white dark:bg-gray-800 p-3 rounded border-l-4 border-admin-primary dark:border-admin-secondary">
-                                    "Excellent service ! Le matériel était en parfait état et conforme à la description. Le partenaire a été très réactif et professionnel."
-                                </p>
-                            </div>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">
-                                <i class="fas fa-clock mr-1"></i> Publié le 16/01/2025
-                            </p>
-                        </div>
-                    </div>
-                </div>
+    function generateReviewsHTML(reservationId, reviewsDTO) {
+        if (!reviewsDTO || Object.keys(reviewsDTO).length === 0) {
+            return '<div class="text-center pb-4">' +
+                        '<h4 class="text-xl font-bold text-gray-900 dark:text-white">Avis pour la Réservation #' + reservationId + '</h4>' +
+                   '</div>' + 
+                   generateNoReviewHTML('Aucun avis trouvé pour cette réservation.');
+        }
 
-                <!-- Actions -->
-                <div class="flex justify-end pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <button onclick="closeReservationDetails()" 
-                            class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors">
-                        <i class="fas fa-times mr-2"></i> Fermer
-                    </button>
-                </div>
-            </div>
-        `;
+        const clientReviewHTML = reviewsDTO.reviewFromClient 
+            ? generateSingleReviewHTML('Évaluation du Client', reviewsDTO.reviewFromClient)
+            : generateNoReviewHTML('Le client n\'a pas encore laissé d\'avis.');
+
+        const partnerReviewHTML = reviewsDTO.reviewFromPartner
+            ? generateSingleReviewHTML('Évaluation du Partenaire', reviewsDTO.reviewFromPartner)
+            : generateNoReviewHTML('Le partenaire n\'a pas encore laissé d\'avis.');
+
+        return '<div class="space-y-6">' +
+                    '<div class="text-center border-b border-gray-200 dark:border-gray-700 pb-4">' +
+                        '<h4 class="text-xl font-bold text-gray-900 dark:text-white">Avis pour la Réservation #' + reservationId + '</h4>' +
+                        '<p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Évaluations croisées.</p>' +
+                    '</div>' +
+                    '<div class="grid grid-cols-1 md:grid-cols-2 gap-6">' +
+                        clientReviewHTML +
+                        partnerReviewHTML +
+                    '</div>' +
+                    '<div class="flex justify-end pt-4 mt-4 border-t border-gray-200 dark:border-gray-700">' +
+                        '<button onclick="closeReservationDetails()" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition-colors">' +
+                            '<i class="fas fa-times mr-2"></i> Fermer' +
+                        '</button>' +
+                    '</div>' +
+                '</div>';
+    }
+
+    function generateSingleReviewHTML(title, review) {
+        const ratingStars = generateStarRating(review.rating);
+        const date = new Date(review.createdAt).toLocaleDateString('fr-FR');
+        
+        let reviewerName = "Utilisateur inconnu";
+        let reviewerAvatar = "${pageContext.request.contextPath}/assets/images/default-avatar.png";
+        
+        if (review.reviewer) {
+            reviewerName = review.reviewer.username || (review.reviewer.firstName + " " + review.reviewer.lastName);
+            if (review.reviewer.avatarUrl) {
+                reviewerAvatar = "${pageContext.request.contextPath}/uploads/" + review.reviewer.avatarUrl;
+            }
+        }
+
+        return '<div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-5">' +
+                    '<div class="flex items-center mb-4">' +
+                        '<img src="' + reviewerAvatar + '" alt="Avatar" class="w-8 h-8 rounded-full object-cover mr-3">' +
+                        '<div>' +
+                            '<h5 class="font-semibold text-gray-900 dark:text-white">' + title + '</h5>' +
+                            '<p class="text-sm text-gray-600 dark:text-gray-400">par ' + reviewerName + '</p>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="space-y-4">' +
+                        '<div class="flex items-center">' +
+                            '<span class="text-sm text-gray-600 dark:text-gray-400 mr-2">Note :</span>' +
+                            '<div class="flex items-center text-yellow-400">' +
+                                ratingStars +
+                                '<span class="text-sm font-bold text-gray-700 dark:text-gray-300 ml-2 text-black">' + review.rating + '/5</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div>' +
+                            '<p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Commentaire :</p>' +
+                            '<p class="text-sm text-gray-800 dark:text-gray-200 italic bg-white dark:bg-gray-800 p-3 rounded-lg border-l-4 border-admin-secondary">' +
+                                '"' + review.comment + '"' +
+                            '</p>' +
+                        '</div>' +
+                        '<p class="text-xs text-gray-500 dark:text-gray-400 pt-2 border-t border-gray-200">' +
+                            '<i class="fas fa-clock mr-1"></i> Publié le ' + date +
+                        '</p>' +
+                    '</div>' +
+                '</div>';
+    }
+
+    function generateNoReviewHTML(message) {
+        return '<div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-5 flex items-center justify-center text-center">' +
+                    '<div>' +
+                        '<i class="fas fa-comment-slash fa-2x text-gray-400 dark:text-gray-500 mb-3"></i>' +
+                        '<p class="text-sm text-gray-600 dark:text-gray-400">' + message + '</p>' +
+                    '</div>' +
+                '</div>';
+    }
+
+    function generateStarRating(rating) {
+        let stars = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                stars += '<i class="fas fa-star text-yellow-400"></i>';
+            } else {
+                stars += '<i class="fas fa-star text-gray-300 dark:text-gray-600"></i>';
+            }
+        }
+        return stars;
     }
 
     function closeReservationDetails() {
-        document.getElementById('reservationDetailsModal').classList.add('hidden');
-        document.getElementById('reservationDetailsModal').classList.remove('flex');
+        const modal = document.getElementById('reservationDetailsModal');
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.getElementById('reservationDetailsContent').innerHTML = '';
     }
 
-    let searchTimeout;
-    document.querySelector('input[name="search"]').addEventListener('input', function() {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(() => {
-            document.getElementById('searchForm').submit();
-        }, 500);
+    document.querySelectorAll('.show-reservation-details').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const btn = e.currentTarget;
+            const reservationId = btn.getAttribute('data-reservation-id');
+            console.log('Clicked reservationId:', reservationId);
+            
+            if(reservationId) {
+                showReservationDetails(reservationId);
+            }
+        });
     });
 
     document.getElementById('reservationDetailsModal').addEventListener('click', function(e) {

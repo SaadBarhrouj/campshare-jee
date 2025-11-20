@@ -14,41 +14,54 @@ import com.campshare.util.DatabaseManager;
 
 public class ReviewDAOImpl implements ReviewDAO {
 
-  @Override
-  public List<Review> findByReservationId(long reservationId) {
-    List<Review> reviews = new ArrayList<>();
-    String sql = "SELECT * FROM reviews WHERE reservation_id = ?";
-    try (Connection conn = DatabaseManager.getConnection();
-        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+    @Override
+    public List<Review> findByReservationIdWithUser(long reservationId) {
+        List<Review> reviews = new ArrayList<>();
+        
+        String sql = "SELECT r.*, " +
+                     "u.id as u_id, u.username, u.first_name, u.last_name, u.avatar_url " +
+                     "FROM reviews r " +
+                     "LEFT JOIN users u ON r.reviewer_id = u.id " +
+                     "WHERE r.reservation_id = ?";
 
-      pstmt.setLong(1, reservationId);
-      try (ResultSet rs = pstmt.executeQuery()) {
-        while (rs.next()) {
-          Review review = mapResultSetToReview(rs);
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-          User reviewer = new UserDAOImpl().findById(review.getReviewerId());
-          review.setReviewer(reviewer);
-
-          reviews.add(review);
+            pstmt.setLong(1, reservationId);
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Review review = new Review();
+                    review.setId(rs.getLong("id"));
+                    review.setReservationId(rs.getLong("reservation_id"));
+                    review.setRating(rs.getInt("rating"));
+                    review.setComment(rs.getString("comment"));
+                    review.setType(rs.getString("type")); 
+                    review.setCreatedAt(rs.getTimestamp("created_at"));
+                    
+                    if (rs.getLong("u_id") != 0) {
+                        User reviewer = new User();
+                        reviewer.setId(rs.getLong("u_id"));
+                        reviewer.setUsername(rs.getString("username"));
+                        reviewer.setFirstName(rs.getString("first_name"));
+                        reviewer.setLastName(rs.getString("last_name"));
+                        reviewer.setAvatarUrl(rs.getString("avatar_url"));
+                        
+                        review.setReviewer(reviewer);
+                    }
+                    
+                    reviews.add(review);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL dans findByReservationIdWithUser: " + e.getMessage());
+            e.printStackTrace();
         }
-      }
-    } catch (SQLException e) {
-      System.err.println(
-          "Erreur lors de la recherche des avis pour la réservation ID " + reservationId + ": " + e.getMessage());
-      e.printStackTrace();
+        return reviews;
     }
-    return reviews;
-  }
 
-  private Review mapResultSetToReview(ResultSet rs) throws SQLException {
-    Review review = new Review();
-    review.setId(rs.getLong("id"));
-    review.setReservationId(rs.getLong("reservation_id"));
-    review.setRating(rs.getInt("rating"));
-    review.setComment(rs.getString("comment"));
-    review.setReviewerId(rs.getLong("reviewer_id"));
-    review.setRevieweeId(rs.getLong("reviewee_id"));
-    review.setCreatedAt(rs.getTimestamp("created_at"));
-    return review;
-  }
+    @Override
+    public List<Review> findByReservationId(long reservationId) {
+        return findByReservationIdWithUser(reservationId);
+    }
 }
