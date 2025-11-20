@@ -1,4 +1,8 @@
 async function showUserDetails(userId) {
+  if (!userId) {
+    alert("ID de l'utilisateur non valide.");
+    return;
+  }
   try {
     openModal();
 

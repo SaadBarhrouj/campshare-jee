@@ -22,4 +22,8 @@ public interface ReservationDAO {
 
   Reservation findById(long id);
 
+  List<Reservation> findAndFilter(String searchQuery, String status, String sortBy, int limit, int offset);
+
+  int countFiltered(String searchQuery, String status);
+
 }
