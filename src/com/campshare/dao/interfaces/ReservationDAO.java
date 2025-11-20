@@ -26,4 +26,8 @@ public interface ReservationDAO {
 
   int countFiltered(String searchQuery, String status);
 
+  List<Reservation> findReservationsWithPassedEndDate(String status);
+
+  boolean updateStatus(long reservationId, String newStatus);
+  List<Reservation> findExpiredConfirmedReservations();
 }

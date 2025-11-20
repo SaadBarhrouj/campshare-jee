@@ -18,13 +18,13 @@ public class AppContextListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     System.out.println("==================================================");
-    System.out.println("  Application CampShare DÉMARRÉE");
-    System.out.println("  Initialisation du planificateur d'emails...");
+    System.out.println("  Application CampShare DEMARREE");
+    System.out.println("  Initialisation du planificateur de notifications...");
     System.out.println("==================================================");
 
     scheduler = Executors.newSingleThreadScheduledExecutor();
     scheduler.scheduleAtFixedRate(new CheckReservationsTask(), 1, 1440, TimeUnit.MINUTES);
-    System.out.println("Planificateur d'emails de réservation démarré. Prochaine exécution dans ~1 min.");
+    System.out.println("Planificateur de notifications de reservation demarre. Prochaine execution dans ~1 min.");
   }
 
   @Override
@@ -41,8 +41,8 @@ public class AppContextListener implements ServletContextListener {
       }
     }
     System.out.println("==================================================");
-    System.out.println("  Application CampShare ARRÊTÉE");
-    System.out.println("  Planificateur d'emails arrêté.");
+    System.out.println("  Application CampShare ARRETEE");
+    System.out.println("  Planificateur de notifications arrete.");
     System.out.println("==================================================");
   }
 }
