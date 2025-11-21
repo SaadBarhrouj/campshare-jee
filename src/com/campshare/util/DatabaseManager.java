@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseManager {
 
-    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/campshare_db?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3306/campshare_db?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC";
     private static final String DB_USER = "root";
     private static final String DB_PASSWORD = "";
     private static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -20,6 +20,6 @@ public class DatabaseManager {
     }
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(JDBC_URL, DB_USER, DB_PASSWORD);
+        return DriverManager.getConnection(URL, DB_USER, DB_PASSWORD);
     }
 }

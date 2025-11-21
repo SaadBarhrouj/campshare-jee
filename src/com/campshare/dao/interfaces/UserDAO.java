@@ -29,4 +29,14 @@ public interface UserDAO {
     List<User> findRecentByRole(String role, int limit);
 
     void updateRole(long userId, String newRole);
+    boolean updateUserProfile(User user);
+
+    boolean updateUserPassword(long userId, String newHashedPassword);
+
+    boolean updateUserAvatar(long userId, String avatarUrl);
+
+    List<User> findAndPaginateUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset);
+
+    int countUsers(String role, String searchQuery, String status);
 }

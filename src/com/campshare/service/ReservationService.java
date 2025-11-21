@@ -5,6 +5,7 @@ import com.campshare.model.Reservation;
 import com.campshare.model.Review;
 import com.campshare.model.User;
 import java.util.List;
+import java.util.Map;
 
 import com.campshare.dao.impl.ReservationDAOImpl;
 import com.campshare.dao.impl.UserDAOImpl;
@@ -93,5 +94,32 @@ public class ReservationService {
     public boolean store(Reservation reservation) {
         return reservationDAO.store(reservation);
     }
+
+    
+
+
+    // /////////
+
+    public List<Reservation> getAllReservationsWithDetails() {
+        return reservationDAO.findAllWithDetails();
+    }
+
+    public Map<String, Long> countReservationsByStatus() {
+        return reservationDAO.countByStatus();
+    }
+
+    public List<Reservation> getFilteredAndPaginatedReservations(String searchQuery, String status, String sortBy,
+            int pageSize, int offset) {
+        return reservationDAO.findAndFilter(searchQuery, status, sortBy, pageSize, offset);
+    }
+
+    public int countFilteredReservations(String searchQuery, String status) {
+        return reservationDAO.countFiltered(searchQuery, status);
+    }
+
+    public Reservation findReservationById(long reservationId) {
+        return reservationDAO.findById(reservationId);
+    }
+
 }
 

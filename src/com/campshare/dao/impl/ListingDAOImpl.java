@@ -21,7 +21,7 @@ public class ListingDAOImpl implements ListingDAO {
       "l.id as listing_id, l.status, l.start_date, l.end_date, l.created_at as listing_created_at, " +
       "l.longitude, l.latitude, l.delivery_option, " +
       "i.id as item_id, i.title, i.description, i.price_per_day, i.category_id, " +
-      "u.id as partner_id, u.username, u.first_name, u.last_name, u.avatar_url as partner_avatar, " +
+      "u.id as partner_id, u.username, u.first_name, u.last_name,u.email, u.avatar_url as partner_avatar, " +
       "c.id as city_id, c.name as city_name, " +
       "cat.id as category_id_ref, cat.name as category_name " +
       "FROM listings l " +
@@ -170,6 +170,7 @@ public class ListingDAOImpl implements ListingDAO {
       partner.setFirstName(rs.getString("first_name"));
       partner.setLastName(rs.getString("last_name"));
       partner.setAvatarUrl(rs.getString("partner_avatar"));
+      partner.setEmail(rs.getString("email"));
 
       Category category = new Category();
       category.setId(rs.getLong("category_id_ref"));
@@ -184,7 +185,15 @@ public class ListingDAOImpl implements ListingDAO {
       item.setCategoryId(category.getId());
       item.setPartner(partner);
       item.setCategory(category);
-      item.setImages(new ArrayList<>());
+
+      // On charge juste l'image de couverture
+      List<Image> images = new ArrayList<>();
+      Image coverImage = findCoverImageForItem(item.getId());
+      if (coverImage != null) {
+        images.add(coverImage);
+      }
+      item.setImages(images);
+
       item.setReviews(new ArrayList<>());
 
       City city = new City();
@@ -737,4 +746,164 @@ public List<Listing> getPartnerListings(String email) {
     }
 
 
+
+    // ////////////
+  @Override
+  public boolean updateListingContent(long itemId, String title, String description, long categoryId) {
+    String sql = "UPDATE items SET title = ?, description = ?, category_id = ? WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setString(1, title);
+      pstmt.setString(2, description);
+      pstmt.setLong(3, categoryId);
+      pstmt.setLong(4, itemId);
+
+      return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public boolean updateListing(Listing listing) {
+    String sql = "UPDATE listings SET start_date = ?, end_date = ?, city_id = ?, delivery_option = ? WHERE id = ?";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+      pstmt.setDate(1, listing.getStartDate());
+      pstmt.setDate(2, listing.getEndDate());
+      pstmt.setLong(3, listing.getCityId());
+      pstmt.setBoolean(4, listing.isDeliveryOption());
+      pstmt.setLong(5, listing.getId());
+
+      return pstmt.executeUpdate() > 0;
+    } catch (SQLException e) {
+      System.err.println("Erreur lors de la mise à jour du listing: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  @Override
+  public List<Listing> findAndPaginateListings(String searchQuery, String status, String sortBy, int limit,
+      int offset) {
+    List<Listing> listings = new ArrayList<>();
+
+    StringBuilder sql = new StringBuilder(BASE_SELECT_SQL + " WHERE 1=1 ");
+    List<Object> params = new ArrayList<>();
+
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+      sql.append("AND (i.title LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?) ");
+      String searchLike = "%" + searchQuery + "%";
+      params.add(searchLike);
+      params.add(searchLike);
+      params.add(searchLike);
+    }
+
+    if (status != null && !status.equals("all")) {
+      sql.append("AND l.status = ? ");
+      params.add(status);
+    }
+
+    switch (sortBy) {
+      case "price_asc":
+        sql.append("ORDER BY i.price_per_day ASC ");
+        break;
+      case "price_desc":
+        sql.append("ORDER BY i.price_per_day DESC ");
+        break;
+      case "oldest":
+        sql.append("ORDER BY l.created_at ASC ");
+        break;
+      default:
+        sql.append("ORDER BY l.created_at DESC ");
+        break;
+    }
+
+    sql.append("LIMIT ? OFFSET ?");
+    params.add(limit);
+    params.add(offset);
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+      int i = 1;
+      for (Object param : params) {
+        ps.setObject(i++, param);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        while (rs.next()) {
+          listings.add(mapResultSetToListingBasic(rs));
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return listings;
+  }
+
+  @Override
+  public int countListings(String searchQuery, String status) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(*) FROM listings l " +
+            "JOIN items i ON l.item_id = i.id " +
+            "JOIN users u ON i.partner_id = u.id " +
+            "WHERE 1=1 ");
+    List<Object> params = new ArrayList<>();
+
+    if (searchQuery != null && !searchQuery.isEmpty()) {
+      sql.append("AND (i.title LIKE ? OR u.first_name LIKE ? OR u.last_name LIKE ?) ");
+      String searchLike = "%" + searchQuery + "%";
+      params.add(searchLike);
+      params.add(searchLike);
+      params.add(searchLike);
+    }
+
+    if (status != null && !status.equals("all")) {
+      sql.append("AND l.status = ? ");
+      params.add(status);
+    }
+
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+      int i = 1;
+      for (Object param : params) {
+        ps.setObject(i++, param);
+      }
+
+      try (ResultSet rs = ps.executeQuery()) {
+        if (rs.next()) {
+          return rs.getInt(1);
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0;
+  }
+
+  private Image findCoverImageForItem(long itemId) {
+    String sql = "SELECT id, item_id, url FROM images WHERE item_id = ? LIMIT 1";
+    try (Connection conn = DatabaseManager.getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(sql)) {
+      pstmt.setLong(1, itemId);
+      try (ResultSet rs = pstmt.executeQuery()) {
+        if (rs.next()) {
+          Image img = new Image();
+          img.setId(rs.getLong("id"));
+          img.setItemId(rs.getLong("item_id"));
+          img.setUrl(rs.getString("url"));
+          return img;
+        }
+      }
+    } catch (SQLException e) {
+      System.err.println("Erreur findCoverImageForItem pour ID " + itemId + ": " + e.getMessage());
+      e.printStackTrace();
+    }
+    return null;
+  }
 }

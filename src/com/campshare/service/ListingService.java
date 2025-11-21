@@ -1,5 +1,6 @@
 package com.campshare.service;
 
+import com.campshare.dao.impl.ItemDAOImpl;
 import com.campshare.dao.impl.ListingDAOImpl;
 import com.campshare.dao.impl.ItemDAOImpl;
 import com.campshare.dao.impl.CityDAOImpl;
@@ -361,5 +362,31 @@ public class ListingService {
     }
     System.out.println("ListingService: Returning " + result.size() + " processed listings for partner");
     return result;
+  }
+
+
+
+
+
+  // /////////////////////
+
+  public boolean updateListingContent(long itemId, String title, String description, long categoryId) {
+    return listingDAO.updateListingContent(itemId, title, description, categoryId);
+  }
+
+  public boolean updateListing(Listing listing, Item item) {
+
+    boolean itemUpdated = itemDAO.updateItem(item);
+    boolean listingUpdated = listingDAO.updateListing(listing);
+
+    return itemUpdated && listingUpdated;
+  }
+
+  public List<Listing> getPaginatedListings(String searchQuery, String status, String sortBy, int limit, int offset) {
+    return listingDAO.findAndPaginateListings(searchQuery, status, sortBy, limit, offset);
+  }
+
+  public int countTotalListings(String searchQuery, String status) {
+    return listingDAO.countListings(searchQuery, status);
   }
 }

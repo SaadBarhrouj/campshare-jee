@@ -113,54 +113,53 @@
                         </h2>
 
                         <div id="default-carousel" class="relative w-full" data-carousel="slide">
-                        <!-- Carousel wrapper -->
-                        <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-                            <!-- Item 1 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=2070"  class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="https://images.unsplash.com/photo-1532339142463-fd0a8979791a?q=80&w=2070" class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                            </div>
-                            <!-- Item 3 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=2070"  class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                            </div>
-                            <!-- Item 4 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=2070"  class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                            </div>
-                            <!-- Item 5 -->
-                            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                                <img src="https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=2070"  class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-                            </div>
-                        </div>
-                        <!-- Slider indicators -->
-                        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1" data-carousel-slide-to="0"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 2" data-carousel-slide-to="1"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 3" data-carousel-slide-to="2"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 4" data-carousel-slide-to="3"></button>
-                            <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5" data-carousel-slide-to="4"></button>
-                        </div>
-                        <!-- Slider controls -->
-                        <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
-                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
-                                </svg>
-                                <span class="sr-only">Previous</span>
-                            </span>
-                        </button>
-                        <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
-                            <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                                <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                                </svg>
-                                <span class="sr-only">Next</span>
-                            </span>
-                        </button>
+                            <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
+                            <c:choose>
+                                <c:when test="${not empty listingDetails.item.images}">
+                                    <c:forEach var="image" items="${listingDetails.item.images}" varStatus="loop">
+                                        <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                                            <img src="${pageContext.request.contextPath}/uploads/${image.url}" 
+                                                class="absolute block w-full h-full object-contain -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" 
+                                                alt="Image ${loop.index + 1}"
+                                                onerror="this.src='${pageContext.request.contextPath}/assets/images/hero-image.jpg'">
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="duration-700 ease-in-out flex justify-center items-center bg-gray-100 dark:bg-gray-700" data-carousel-item>
+                                        <img src="${pageContext.request.contextPath}/assets/images/placeholder-listing.png" 
+                                            class="block h-auto w-auto max-h-full max-w-full" 
+                                            alt="Placeholder image">
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+                                                        </div>
+                            <c:if test="${fn:length(listingDetails.item.images) > 1}">
+                                <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+                                    <c:forEach var="image" items="${listingDetails.item.images}" varStatus="loop">
+                                        <button type="button" class="w-3 h-3 rounded-full" aria-current="${loop.first ? 'true' : 'false'}" aria-label="Slide ${loop.index + 1}" data-carousel-slide-to="${loop.index}"></button>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
+                            <!-- Slider controls -->
+                            <c:if test="${fn:length(listingDetails.item.images) > 1}">
+                                <button type="button" class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-prev>
+                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                        <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                                        </svg>
+                                        <span class="sr-only">Previous</span>
+                                    </span>
+                                </button>
+                                <button type="button" class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none" data-carousel-next>
+                                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
+                                        <svg class="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                                        </svg>
+                                        <span class="sr-only">Next</span>
+                                    </span>
+                                </button>
+                            </c:if>
                         </div>
                     </div>
 
@@ -201,8 +200,8 @@
                                     <div>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">Statut</p>
                                         <c:set var="status" value="${listingDetails.status}"/>
-                                        <span class="badge ${status == 'active' ? 'badge-success' : (status == 'archived' ? 'badge-warning' : 'badge-danger')}">
-                                            <c:out value="${fn:toUpperCase(fn:substring(status, 0, 1))}${fn:toLowerCase(fn:substring(status, 1, -1))}"/>
+                                        <span class="badge ${status == 'active' ? 'badge-success' : (status == 'archived' ? 'badge-warning' : 'badge-danger')}" style="text-transform: capitalize;">
+                                            <c:out value="${status}"/>
                                         </span>
                                     </div>
                                 </div>
@@ -373,6 +372,10 @@
                             </form>
                         </c:if>
                         
+                        <a href="${pageContext.request.contextPath}/admin/listings/edit?id=${listingDetails.id}" 
+                        class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-gray-800 bg-yellow-400 hover:bg-yellow-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400 transition-colors">
+                        <i class="fas fa-pencil-alt mr-2"></i> Modifier
+                        </a>
                         <form action="${pageContext.request.contextPath}/admin/listings/delete" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette annonce ?');">
                             <input type="hidden" name="listingId" value="${listingDetails.id}">
                             <button type="submit" class="w-full flex items-center justify-center px-4 py-2 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors">

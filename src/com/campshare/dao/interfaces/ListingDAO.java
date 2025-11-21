@@ -3,6 +3,7 @@ package com.campshare.dao.interfaces;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.campshare.model.Item;
 import com.campshare.model.Listing;
 
 public interface ListingDAO {
@@ -45,5 +46,13 @@ public interface ListingDAO {
   boolean insertAnnonce(Listing listing);
   
 
+
+  boolean updateListingContent(long itemId, String title, String description, long categoryId);
+
+  boolean updateListing(Listing listing);
+
+  List<Listing> findAndPaginateListings(String searchQuery, String status, String sortBy, int limit, int offset);
+
+  int countListings(String searchQuery, String status);
 
 }

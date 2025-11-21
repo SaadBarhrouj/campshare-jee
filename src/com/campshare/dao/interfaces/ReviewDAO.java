@@ -24,4 +24,7 @@ public interface ReviewDAO {
     Map<Integer, Integer> getRatingPercentagesByRevieweeCId(long revieweeId);
     List<Review> findByRevieweeCId(long revieweeId);
 
+    List<Review> findByReservationId(long reservationId);
+    List<Review> findByReservationIdWithUser(long reservationId);
+
 }

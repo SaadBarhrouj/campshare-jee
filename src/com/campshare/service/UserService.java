@@ -142,4 +142,83 @@ public class UserService {
         }
     }
 
+    public boolean changeAdminPassword(long userId, String currentPasswordPlain, String newPasswordPlain,
+            String confirmPassword) {
+        User currentUser = userDAO.findById(userId);
+        if (currentUser == null) {
+            System.err.println("changeAdminPassword: Utilisateur non trouvé pour ID " + userId);
+            return false;
+        }
+
+        if (!PasswordUtils.checkPassword(currentPasswordPlain, currentUser.getPassword())) {
+            System.err.println("changeAdminPassword: Ancien mot de passe incorrect pour ID " + userId);
+            return false;
+        }
+
+        if (newPasswordPlain == null || newPasswordPlain.isEmpty()) {
+            System.err.println("changeAdminPassword: Le nouveau mot de passe ne peut pas être vide pour ID " + userId);
+            return false;
+        }
+
+        if (!isValidPassword(newPasswordPlain)) {
+            System.err.println(
+                    "changeAdminPassword: Le nouveau mot de passe ne respecte pas les critères de complexité pour ID "
+                            + userId);
+
+            return false;
+        }
+        if (!newPasswordPlain.equals(confirmPassword)) {
+            System.err
+                    .println("changeAdminPassword: Les nouveaux mots de passe ne correspondent pas pour ID " + userId);
+            return false;
+        }
+
+        String newHashedPassword = PasswordUtils.hashPassword(newPasswordPlain);
+
+        boolean updateSuccess = userDAO.updateUserPassword(userId, newHashedPassword);
+        if (!updateSuccess) {
+            System.err.println("changeAdminPassword: Échec de la mise à jour BDD pour ID " + userId);
+        }
+        return updateSuccess;
+    }
+
+    public List<String> validateAdminInfo(String firstName, String lastName, String email) {
+        List<String> errors = new ArrayList<>();
+
+        if (firstName == null || firstName.trim().isEmpty()) {
+            errors.add("Le prénom est requis.");
+        }
+
+        if (lastName == null || lastName.trim().isEmpty()) {
+            errors.add("Le nom est requis.");
+        }
+
+        if (email == null || email.trim().isEmpty()) {
+            errors.add("L'email est requis.");
+        } else if (!isValidEmail(email)) {
+            errors.add("Format d'email invalide.");
+        }
+
+        return errors;
+    }
+
+    public boolean updateAdminInfo(long userId, String firstName, String lastName, String email, String avatarUrl) {
+        User user = new User();
+        user.setId(userId);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setEmail(email);
+        user.setAvatarUrl(avatarUrl);
+
+        return userDAO.updateUserProfile(user);
+    }
+
+    public List<User> getPaginatedUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset) {
+        return userDAO.findAndPaginateUsers(role, searchQuery, status, sortBy, limit, offset);
+    }
+
+    public int countTotalUsers(String role, String searchQuery, String status) {
+        return userDAO.countUsers(role, searchQuery, status);
+    }
 }

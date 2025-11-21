@@ -2,6 +2,7 @@
 pageEncoding="UTF-8"%> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
 prefix="c" %>
 
+
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
   <head>
@@ -60,6 +61,8 @@ prefix="c" %>
 
     <meta name="msapplication-TileColor" content="#da532c" />
     <meta name="theme-color" content="#ffffff" />
+    <meta charset="UTF-8">
+
     <meta
       name="description"
       content="CampShare - Louez facilement le matériel de camping dont vous avez besoin directement entre particuliers."
@@ -108,6 +111,7 @@ prefix="c" %>
     class="font-sans antialiased text-gray-800 dark:text-gray-200 dark:bg-gray-900"
   >
     <jsp:include page="/jsp/common/header.jsp" />
+    
     <!-- Hero Section -->
     <header class="relative pt-16 overflow-hidden">
       <div class="absolute inset-0 z-0">

@@ -278,4 +278,179 @@ public class UserDAOImpl implements UserDAO {
             throw new RuntimeException("Erreur lors de la mise à jour du rôle de l'utilisateur.", e);
         }
     }
+    public boolean updateUserProfile(User user) {
+        if (user == null || user.getId() <= 0 || user.getFirstName() == null || user.getLastName() == null
+                || user.getEmail() == null) {
+            System.err.println("updateUserProfile: Données utilisateur invalides.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET first_name = ?, last_name = ?, email = ? , avatar_url = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, user.getFirstName());
+            pstmt.setString(2, user.getLastName());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getAvatarUrl());
+            pstmt.setLong(5, user.getId());
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la mise à jour du profil utilisateur (ID: " + user.getId() + "): "
+                    + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserPassword(long userId, String newHashedPassword) {
+        if (userId <= 0 || newHashedPassword == null || newHashedPassword.isEmpty()) {
+            System.err.println("updateUserPassword: ID utilisateur ou mot de passe invalide.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET password = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newHashedPassword);
+            pstmt.setLong(2, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err.println(
+                    "Erreur SQL lors de la mise à jour du mot de passe (ID: " + userId + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean updateUserAvatar(long userId, String avatarUrl) {
+        if (userId <= 0 || avatarUrl == null || avatarUrl.isEmpty()) {
+            System.err.println("updateUserAvatar: ID utilisateur ou URL d'avatar invalide.");
+            return false;
+        }
+
+        String sql = "UPDATE users SET avatar_url = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, avatarUrl);
+            pstmt.setLong(2, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            System.err
+                    .println("Erreur SQL lors de la mise à jour de l'avatar (ID: " + userId + "): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public List<User> findAndPaginateUsers(String role, String searchQuery, String status, String sortBy, int limit,
+            int offset) {
+        List<User> users = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder("SELECT * FROM users WHERE role = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(role);
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ");
+            String searchLike = "%" + searchQuery + "%";
+            params.add(searchLike);
+            params.add(searchLike);
+            params.add(searchLike);
+        }
+
+        if (status != null && !status.equals("all")) {
+            sql.append("AND is_active = ? ");
+            params.add(status.equals("active") ? 1 : 0);
+        }
+
+        switch (sortBy) {
+            case "name_asc":
+                sql.append("ORDER BY first_name ASC, last_name ASC ");
+                break;
+            case "name_desc":
+                sql.append("ORDER BY first_name DESC, last_name DESC ");
+                break;
+            case "oldest":
+                sql.append("ORDER BY created_at ASC ");
+                break;
+            default: 
+                sql.append("ORDER BY created_at DESC ");
+                break;
+        }
+
+        sql.append("LIMIT ? OFFSET ?");
+        params.add(limit);
+        params.add(offset);
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            for (Object param : params) {
+                ps.setObject(i++, param);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs)); 
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
+    }
+
+    @Override
+    public int countUsers(String role, String searchQuery, String status) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM users WHERE role = ? ");
+        List<Object> params = new ArrayList<>();
+        params.add(role);
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            sql.append("AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?) ");
+            String searchLike = "%" + searchQuery + "%";
+            params.add(searchLike);
+            params.add(searchLike);
+            params.add(searchLike);
+        }
+
+        if (status != null && !status.equals("all")) {
+            sql.append("AND is_active = ? ");
+            params.add(status.equals("active") ? 1 : 0);
+        }
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int i = 1;
+            for (Object param : params) {
+                ps.setObject(i++, param);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

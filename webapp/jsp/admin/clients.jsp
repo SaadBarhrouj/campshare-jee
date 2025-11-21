@@ -137,80 +137,45 @@
                     
                 </div>
                 
-                <!-- Filters and search -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 p-5">
+                            <!-- Filters and search -->
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 p-5">
+                <form action="${pageContext.request.contextPath}/admin/clients" method="GET">
                     <div class="flex flex-col md:flex-row md:items-center md:space-x-4 space-y-4 md:space-y-0">
-                        <!-- Search bar -->
+                        
                         <div class="flex-1">
-                        <form action="" method="GET">
                             <div class="relative">
                                 <input 
                                     type="text" 
                                     name="search" 
-                                    placeholder="Rechercher par nom, email ou ville..." 
+                                    placeholder="Rechercher par nom, email..." 
                                     class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-admin-primary dark:focus:ring-admin-secondary text-sm"
-                                    value=""
+                                    value="<c:out value='${searchQuery}'/>" <%-- Pour mémoriser la recherche --%>
                                 >
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
-                                    </div>
-                                    </div>
-                        </form>
-                            </div>
-                        
-                        <!-- Status filter -->
-                        <div class="relative inline-block text-left" id="status-filter-container">
-                            <button id="status-filter-button" class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                                <span>Statut: Tous</span>
-                                <i class="fas fa-chevron-down ml-2"></i>
-                            </button>
-                            <div id="status-filter-dropdown" class="filter-dropdown right-0 hidden">
-                                <div class="option active" data-value="all">Tous les statuts</div>
-                                <div class="option" data-value="active">Actifs</div>
-                                <div class="option" data-value="inactive">Inactifs</div>
-                         
-                            </div>
-                        </div>
-                        
-                        <!-- Sort filter -->
-                       
-
-                        <!-- Sort filter -->
-                        <div class="relative inline-block text-left" id="sort-filter-container">
-                            <button id="sort-filter-button" class="inline-flex justify-between items-center w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-admin-primary dark:focus:ring-admin-secondary">
-                                <span>Trier par 
-                                    
-                                </span>
-                                <i class="fas fa-chevron-down ml-2"></i>
-                            </button>
-                            <div id="sort-filter-dropdown" class="filter-dropdown right-0 hidden w-full">
-                                <div class="flex flex-col">
-                                    <a href="" 
-                                    class="option block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Plus récents
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Plus anciens
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nom (A-Z)
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nom (Z-A)
-                                    </a>
-                                    <a href="" 
-                                    class="option  block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                        Nombre de réservations
-                                    </a>
+                                    <i class="fas fa-search text-gray-400 dark:text-gray-500"></i>
                                 </div>
                             </div>
                         </div>
-                          
+                        
+                        <select name="status" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                            <option value="all" ${statusFilter == 'all' ? 'selected' : ''}>Statut: Tous</option>
+                            <option value="active" ${statusFilter == 'active' ? 'selected' : ''}>Statut: Actifs</option>
+                            <option value="inactive" ${statusFilter == 'inactive' ? 'selected' : ''}>Statut: Inactifs</option>
+                        </select>
+                        
+                        <select name="sort" class="w-full md:w-auto px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-sm font-medium text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-admin-primary">
+                            <option value="newest" ${sortBy == 'newest' ? 'selected' : ''}>Trier par: Plus récents</option>
+                            <option value="oldest" ${sortBy == 'oldest' ? 'selected' : ''}>Trier par: Plus anciens</option>
+                            <option value="name_asc" ${sortBy == 'name_asc' ? 'selected' : ''}>Trier par: Nom (A-Z)</option>
+                            <option value="name_desc" ${sortBy == 'name_desc' ? 'selected' : ''}>Trier par: Nom (Z-A)</option>
+                        </select>
+                        
+                        <button type="submit" class="w-full md:w-auto px-4 py-2 bg-admin-primary text-white rounded-md text-sm font-medium hover:bg-admin-dark">
+                            Filtrer
+                        </button>
                     </div>
-                </div>
+                </form>
+            </div>
               
                     
 
@@ -280,6 +245,45 @@
                 </div>
           </div>
     </div>
+
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm my-8 p-4 flex items-center justify-between">
+            
+            <div>
+                <p class="text-sm text-gray-700 dark:text-gray-400">
+                    Page <span class="font-medium">${currentPage}</span> sur <span class="font-medium">${totalPages}</span>
+                </p>
+            </div>
+
+            <c:if test="${totalPages > 1}">
+                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    
+                    <c:if test="${currentPage > 1}">
+                        <a href="${pageContext.request.contextPath}/admin/clients?page=${currentPage - 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                        class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <span class="sr-only">Précédent</span>
+                            <i class="fas fa-chevron-left h-5 w-5"></i>
+                        </a>
+                    </c:if>
+
+                    <c:forEach var="i" begin="1" end="${totalPages}">
+                        <a href="${pageContext.request.contextPath}/admin/clients?page=${i}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium 
+                                ${i == currentPage ? 'z-10 bg-admin-light dark:bg-admin-dark text-admin-primary dark:text-admin-accent' : 'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'}">
+                            ${i}
+                        </a>
+                    </c:forEach>
+
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="${pageContext.request.contextPath}/admin/clients?page=${currentPage + 1}&search=${searchQuery}&status=${statusFilter}&sort=${sortBy}"
+                        class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <span class="sr-only">Suivant</span>
+                            <i class="fas fa-chevron-right h-5 w-5"></i>
+                        </a>
+                    </c:if>
+                    
+                </nav>
+            </c:if>
+        </div>
 
     <jsp:include page="includes/admin_user_details_modal.jsp" />
 

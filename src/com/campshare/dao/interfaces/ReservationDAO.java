@@ -4,6 +4,10 @@ import com.campshare.model.Reservation;
 import com.campshare.model.Review;
 import com.campshare.model.User;
 import java.util.List;
+import java.util.Map;
+
+import java.util.Date;
+
 import com.campshare.dto.DailyStatsDTO;
 
 public interface ReservationDAO {
@@ -40,6 +44,28 @@ public interface ReservationDAO {
     List<Reservation> getConfirmedReservationsByListingId(long listingId);
 
     boolean store(Reservation reservation);
+
+
+    // 
+
+
+    
+  List<Reservation> findReservationsEndedOn(Date date);
+
+  List<Reservation> findAllWithDetails();
+
+  Map<String, Long> countByStatus();
+
+  Reservation findById(long id);
+
+  List<Reservation> findAndFilter(String searchQuery, String status, String sortBy, int limit, int offset);
+
+  int countFiltered(String searchQuery, String status);
+
+  List<Reservation> findReservationsWithPassedEndDate(String status);
+
+  boolean updateStatus(long reservationId, String newStatus);
+  List<Reservation> findExpiredConfirmedReservations();
 
 }
 

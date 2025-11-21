@@ -25,5 +25,7 @@ public interface  ItemDAO {
 
     Item findByListingId(long id);
 
+    boolean updateItem(Item item);
+
     
 }

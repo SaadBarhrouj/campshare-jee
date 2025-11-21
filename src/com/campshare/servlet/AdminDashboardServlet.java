@@ -20,13 +20,13 @@ public class AdminDashboardServlet extends HttpServlet {
   private ListingService listingService = new ListingService();
   final int RECENT_ITEMS_LIMIT = 5;
 
-  List<User> recentClients = userService.getRecentClients(RECENT_ITEMS_LIMIT);
-  List<User> recentPartners = userService.getRecentPartners(RECENT_ITEMS_LIMIT);
-  List<Listing> recentListings = listingService.getRecentListings(RECENT_ITEMS_LIMIT);
-
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
+
+    List<User> recentClients = userService.getRecentClients(RECENT_ITEMS_LIMIT);
+    List<User> recentPartners = userService.getRecentPartners(RECENT_ITEMS_LIMIT);
+    List<Listing> recentListings = listingService.getRecentListings(RECENT_ITEMS_LIMIT);
 
     AdminDashboardStatsDTO stats = dashboardService.getDashboardStats();
 
