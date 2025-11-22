@@ -1118,7 +1118,6 @@ public class ReservationDAOImpl implements ReservationDAO{
             JOIN users c ON c.id = r.client_id
             WHERE u.email = ?
             ORDER BY r.created_at DESC
-            LIMIT 2
         """;
 
         try (Connection conn = DatabaseManager.getConnection();

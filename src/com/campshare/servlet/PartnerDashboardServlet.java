@@ -10,13 +10,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import com.campshare.model.Category;
+
 
 import com.campshare.model.Review;
 import com.campshare.model.Reservation;
+import com.campshare.service.CategoryService;
 
 import com.campshare.model.User;
 import com.campshare.service.ReservationService;
-
+import com.campshare.service.CategoryService;
 import com.campshare.service.PartnerService;
 
 
@@ -29,15 +32,21 @@ public class PartnerDashboardServlet extends HttpServlet {
 
         PartnerService partnerService = new PartnerService();
         ReservationService reservationService = new ReservationService();
+        CategoryService categoryService = new CategoryService();
+                
+        List<Category> categories = categoryService.getAllCategories();
+        request.setAttribute("categories", categories);
 
         
-        User user = (User) request.getSession().getAttribute("authenticatedUser");
-        if (user == null) {
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        String email = user.getEmail();
+        String email = user1.getEmail();
+        User user = partnerService.getPartnerByEmail(email);
+
 
         request.setAttribute("user", user);
         long partnerId = user.getId(); 

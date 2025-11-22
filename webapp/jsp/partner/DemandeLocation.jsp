@@ -223,10 +223,9 @@
                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                         <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                           <!-- {{$NumberReservationCompleted}} demadddndes au total -->
+                           ${fn:length(ReservationsWithMontantTotal)} demandes au total
                         </span>
                     </div>
-                    <h1>${ReservationsWithMontantTotal} demandes au total</h1>
 
                     <!-- Request items -->
                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -306,14 +305,18 @@
                                                     </p>
 
                                                     <div class="flex space-x-2 w-full lg:w-auto">
-                                                        <form method="POST" action="acceptReservation?id=${reservation.id}" class="flex-1 lg:flex-initial">
-                                                            <button type="submit" class="w-full px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md transition-colors">
+                                                        <form action="reservationAction" method="post" class="flex-1">
+                                                            <input type="hidden" name="reservation_id" value="${reservation.id}" />
+                                                            <input type="hidden" name="action" value="accept" />
+                                                            <button type="submit" class="px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm rounded-md w-full">
                                                                 Accepter
                                                             </button>
                                                         </form>
 
-                                                        <form method="POST" action="rejectReservation?id=${reservation.id}" class="flex-1 lg:flex-initial">
-                                                            <button type="submit" class="w-full px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                        <form action="reservationAction" method="post" class="flex-1">
+                                                            <input type="hidden" name="reservation_id" value="${reservation.id}" />
+                                                            <input type="hidden" name="action" value="refuse" />
+                                                            <button type="submit" class="px-3 py-1.5 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 w-full">
                                                                 Refuser
                                                             </button>
                                                         </form>

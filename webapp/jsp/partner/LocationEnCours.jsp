@@ -215,12 +215,11 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                       2 Réservations endddd cours
+                       ${fn:length(PartenerReservation)} Réservations en cours
                     </span>
                 </div>
 
                 <!-- Request items -->
-                ${PartenerReservavtion}aaaaaaaaaaaaaaaaaaaaaaa
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     <div id="reservations1">
                         <c:forEach var="location" items="${PartenerReservavtion}" >

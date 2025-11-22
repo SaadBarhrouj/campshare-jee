@@ -1,10 +1,8 @@
 package com.campshare.dao.interfaces;
 
+import com.campshare.model.Listing;
 import java.sql.SQLException;
 import java.util.List;
-
-import com.campshare.model.Item;
-import com.campshare.model.Listing;
 
 public interface ListingDAO {
 
@@ -54,5 +52,10 @@ public interface ListingDAO {
   List<Listing> findAndPaginateListings(String searchQuery, String status, String sortBy, int limit, int offset);
 
   int countListings(String searchQuery, String status);
+
+    void updateReservationStatus(long reservationId, String status) throws SQLException;
+
+    
+
 
 }

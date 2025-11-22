@@ -48,7 +48,6 @@ public class PartnerAddItemServlet extends HttpServlet {
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) uploadDir.mkdirs();
 
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
         for (Part part : request.getParts()) {
             System.out.println("Part name: " + part.getName());

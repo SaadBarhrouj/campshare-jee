@@ -63,4 +63,18 @@ public class PartnerService {
 
 
 
+
+
+    public User getPartnerByEmail(String email) {
+        User user = new User();
+        user = userDAO.findByEmail(email);
+        user.setAvgRating(userDAO.getPartnerAverageRating(user.getId()));
+        user.setReviewCount(userDAO.getPartnerCountRating(user.getId()));
+
+        return user;
+    }
+
+
+
+
 }

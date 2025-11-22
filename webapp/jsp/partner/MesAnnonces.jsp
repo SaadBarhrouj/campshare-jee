@@ -137,12 +137,7 @@
                         Gérez vos annonces d'équipements de camping publiées
                     </p>
                 </div>
-                <div class="mt-4 md:mt-0 flex space-x-4">
-                    <a href="{{ route('partenaire.equipements') }}" class="inline-flex items-center px-4 py-2 bg-forest hover:bg-green-700 dark:bg-meadow dark:hover:bg-green-600 text-white font-medium rounded-md shadow-sm">
-                        <i class="fas fa-plus mr-2"></i>
-                        Publier une annonce
-                    </a>
-                </div>
+
             </div>
 
             <!-- Filtres -->

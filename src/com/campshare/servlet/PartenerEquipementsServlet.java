@@ -34,13 +34,16 @@ public class PartenerEquipementsServlet extends HttpServlet {
 
 
         
-        User user = (User) request.getSession().getAttribute("authenticatedUser");
-        if (user == null) {
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
 
-        String email = user.getEmail();
+        String email = user1.getEmail();
+
+        User user = partnerService.getPartnerByEmail(email);
+
 
         request.setAttribute("user", user);
 

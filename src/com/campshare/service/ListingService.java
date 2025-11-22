@@ -1,18 +1,17 @@
 package com.campshare.service;
 
+import com.campshare.dao.impl.CategoryDAOImpl;
+import com.campshare.dao.impl.CityDAOImpl;
+import com.campshare.dao.impl.ImageDAOImpl;
 import com.campshare.dao.impl.ItemDAOImpl;
 import com.campshare.dao.impl.ListingDAOImpl;
-import com.campshare.dao.impl.ItemDAOImpl;
-import com.campshare.dao.impl.CityDAOImpl;
-import com.campshare.dao.impl.CategoryDAOImpl;
-import com.campshare.dao.impl.ImageDAOImpl;
 import com.campshare.dao.impl.ReviewDAOImpl;
 import com.campshare.dao.impl.UserDAOImpl;
-import com.campshare.dao.interfaces.ListingDAO;
-import com.campshare.dao.interfaces.ItemDAO;
-import com.campshare.dao.interfaces.CityDAO;
 import com.campshare.dao.interfaces.CategoryDAO;
+import com.campshare.dao.interfaces.CityDAO;
 import com.campshare.dao.interfaces.ImageDAO;
+import com.campshare.dao.interfaces.ItemDAO;
+import com.campshare.dao.interfaces.ListingDAO;
 import com.campshare.dao.interfaces.ReviewDAO;
 import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.dto.ListingsPageStatsDTO;
@@ -23,6 +22,7 @@ import com.campshare.model.Item;
 import com.campshare.model.Listing;
 import com.campshare.model.Review;
 import com.campshare.model.User;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -389,4 +389,24 @@ public class ListingService {
   public int countTotalListings(String searchQuery, String status) {
     return listingDAO.countListings(searchQuery, status);
   }
+
+
+
+    public Item getItemDetails(long itemId) {
+
+        return itemDAO.getItemDetail(itemId);
+    
+    }
+    public int getCountListingsByItem(long itemId){
+      return itemDAO.countListingsByItemId(itemId);
+    }
+    public int getCountReservationByItem(long itemId){
+      return itemDAO.countReservationByItemId(itemId);
+    }
+    public void acceptReservation(long reservationId) throws SQLException {
+        listingDAO.updateReservationStatus(reservationId, "confirmed");
+    }
+    public void refuseReservation(long reservationId) throws SQLException {
+        listingDAO.updateReservationStatus(reservationId, "canceled");
+    }
 }

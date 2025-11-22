@@ -4,13 +4,12 @@ import com.campshare.dao.interfaces.ListingDAO;
 import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.model.Category;
 import com.campshare.model.City;
+import com.campshare.model.Image;
 import com.campshare.model.Item;
 import com.campshare.model.Listing;
-import com.campshare.model.User;
-import com.campshare.model.Image;
 import com.campshare.model.Review;
+import com.campshare.model.User;
 import com.campshare.util.DatabaseManager;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -906,4 +905,14 @@ public List<Listing> getPartnerListings(String email) {
     }
     return null;
   }
+
+      public void updateReservationStatus(long reservationId, String status) throws SQLException {
+        String sql = "UPDATE reservations SET status = ? WHERE id = ?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, status);
+            pstmt.setLong(2, reservationId);
+            pstmt.executeUpdate();
+        }
+    }
 }

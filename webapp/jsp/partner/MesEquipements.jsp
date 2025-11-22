@@ -208,14 +208,14 @@
                        
                         
                         <div class="absolute top-2 right-2 flex space-x-2">
-                            <button class="edit-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-forest dark:text-meadow hover:bg-forest hover:text-white dark:hover:bg-meadow transition-colors" 
+                            <%-- <button class="edit-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-forest dark:text-meadow hover:bg-forest hover:text-white dark:hover:bg-meadow transition-colors" 
                                     data-id="${equipment.id}" 
                                     data-title="${equipment.title}" 
                                     data-description="${equipment.description}" 
                                     data-price="${equipment.pricePerDay}" 
                                     data-category="${equipment.category.id}">
                                 <i class="fas fa-edit"></i>
-                            </button>
+                            </button> --%>
                             <button class="delete-equipment-btn p-2 bg-white dark:bg-gray-700 rounded-full shadow-md text-red-500 hover:bg-red-500 hover:text-white transition-colors" 
                                     data-id="${equipment.id}" 
                                     data-title="${equipment.title}">
@@ -594,7 +594,7 @@
         </div>
     </div>
 
-    <script>
+   <script>
         const addEquipmentButton = document.getElementById('add-equipment-button');
         const addEquipmentForm = document.getElementById('add-equipment-form');
         const addEquipmentModal = document.getElementById('add-equipment-modal');
@@ -832,63 +832,70 @@
                 // Charger les données détaillées de l'équipement
                 console.log('Fetching equipment details for ID:', id);
                 console.log('URL:', `${contextPath}/partner/equipment/details?id=${id}`);
+
+                const idbtn = button.getAttribute('data-id');
                 
-                fetch(`${contextPath}/partner/equipment/details?id=${id}`)
+                fetch(contextPath + '/partner/equipment/details?id=' + idbtn)
                     .then(response => {
                         console.log('Response status:', response.status);
                         console.log('Response ok:', response.ok);
                         if (!response.ok) {
+                            console.log('Error fetching equipment details:', response.statusText);
                             throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
                         }
                         return response.json();
                     })
                     .then(data => {
+                        console.log('Equipment details data:', data);
                         // Mettre à jour les informations de base
-                        const equipment = data.equipment;
+                        const equipment = data.item;
                         const stats = data.stats;
-                        
-                        document.getElementById('detail-title').textContent = equipment.title;
-                        document.getElementById('detail-price').textContent = `${equipment.price_per_day} MAD/jour`;
-                        document.getElementById('detail-category').textContent = equipment.category ? equipment.category.name : 'Non catégorisé';
-                        document.getElementById('detail-description').textContent = equipment.description || 'Aucune description';
+                        console.log('Equipment title:', data.pricePerDay);
+                        document.getElementById('detail-title').textContent = data.item.title;
+                        document.getElementById('detail-price').textContent = data.item.pricePerDay + " MAD/jour";;
+                        document.getElementById('detail-category').textContent = data.item.category ? data.item.category.name : 'Non catégorisé';
+                        document.getElementById('detail-description').textContent = data.item.description || 'Aucune description';
                         
                         // Statistiques
-                        document.getElementById('detail-annonces-count').textContent = stats.annonces_count;
-                        document.getElementById('detail-active-annonces').textContent = `${stats.active_annonce_count} actives`;
-                        document.getElementById('detail-reservations-count').textContent = stats.reservations_count;
-                        document.getElementById('detail-completed-reservations').textContent = `${stats.completed_reservations_count} terminées`;
-                        document.getElementById('detail-revenue').textContent = `${stats.revenue.toLocaleString()} MAD`;
+                        document.getElementById('detail-annonces-count').textContent = data.nbrListing;
+                        //document.getElementById('detail-active-annonces').textContent = `${stats.active_annonce_count} actives`;
+                        document.getElementById('detail-reservations-count').textContent = data.nbrReservation;
+                        //document.getElementById('detail-completed-reservations').textContent = `${stats.completed_reservations_count} terminées`;
+                       // document.getElementById('detail-revenue').textContent = `${stats.revenue.toLocaleString()} MAD`;
                         
                         // Avis
-                        const avgRating = equipment.reviews && equipment.reviews.length > 0 
-                            ? equipment.reviews.reduce((sum, review) => sum + review.rating, 0) / equipment.reviews.length 
+                        const avgRating = data.item.reviews && data.item.reviews.length > 0 
+                            ? data.item.reviews.reduce((sum, review) => sum + review.rating, 0) / data.item.reviews.length 
                             : 0;
                         document.getElementById('detail-avg-rating').textContent = avgRating.toFixed(1);
-                        document.getElementById('detail-review-count').textContent = `${equipment.reviews ? equipment.reviews.length : 0} avis`;
-                        document.getElementById('detail-reviews-summary').textContent = equipment.reviews && equipment.reviews.length > 0 
-                            ? `${equipment.reviews.length} avis` 
-                            : 'Aucun avis';
+                        document.getElementById('detail-review-count').textContent = data.item.reviews ? data.item.reviews.length : 0 + "avis";
+                        document.getElementById('detail-reviews-summary').textContent = data.item.reviews && data.item.reviews.length > 0 
+                            ? `${data.item.reviews.length} avis` 
+                            : 'Aucun avis'; 
                         
                         // Images
                         imageSlider.innerHTML = '';
                         
                         // Créer le carousel d'images
-                        if (equipment.images && equipment.images.length > 0) {
+                        console.log('Creating image slider with images:', data.item.images);
+                        if (data.item.images && data.item.images.length > 0) {
                             // Conteneur pour les indicateurs
+                            console.log('Creating image slider with images:', data.item.images);
                             const imageDots = document.createElement('div');
                             imageDots.className = 'flex justify-center mt-2 space-x-2';
-                            imageDots.id = 'detail-image-dots';
+                            //imageDots.id = 'detail-image-dots';
                             
                             // Ajouter chaque image au slider
-                            equipment.images.forEach((image, index) => {
+                            data.item.images.forEach((image, index) => {
                                 // Créer la diapositive d'image
                                 const imgDiv = document.createElement('div');
-                                imgDiv.className = 'w-full h-64 flex-shrink-0 snap-center relative';
+                                imgDiv.className = 'w-full h-64 flex-shrink-0 snap-center relative overflow-hidden';
                                 imgDiv.setAttribute('data-index', index);
+                                console.log('Adding image to slider:', image.url);
                                 imgDiv.innerHTML = `
-                                    <img src="/${image.url}" alt="${equipment.title}" class="w-full h-full object-cover">
+                                    <img src="http://localhost:8080/webapp//assets/images/items/\${image.url}" alt="\${data.title}" class="w-full h-full object-cover">
                                     <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
-                                        ${index + 1}/${equipment.images.length}
+                                        \${index + 1}/\${data.item.images.length}
                                     </div>
                                 `;
                                 imageSlider.appendChild(imgDiv);
@@ -900,6 +907,7 @@
                                 dot.addEventListener('click', () => {
                                     // Faire défiler jusqu'à cette image
                                     const imgElement = imageSlider.querySelector(`[data-index="${index}"]`);
+                                    console.log("aa",imgElement);
                                     if (imgElement) {
                                         imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
                                     }
@@ -924,16 +932,17 @@
                             prevButton.className = 'absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-70 transition-opacity z-10';
                             prevButton.innerHTML = '<i class="fas fa-chevron-left"></i>';
                             prevButton.addEventListener('click', () => {
+                                console.log('Prev button clicked');
                                 // Trouver l'image visible actuelle
                                 const scrollPosition = imageSlider.scrollLeft;
                                 const imgWidth = imageSlider.offsetWidth;
                                 const currentIndex = Math.round(scrollPosition / imgWidth);
                                 
                                 // Calculer l'index de l'image précédente
-                                const prevIndex = (currentIndex - 1 + equipment.images.length) % equipment.images.length;
+                                const prevIndex = (currentIndex - 1 + data.item.images.length) % data.item.images.length;
                                 
                                 // Faire défiler jusqu'à l'image précédente
-                                const imgElement = imageSlider.querySelector(`[data-index="${prevIndex}"]`);
+                                const imgElement = imageSlider.querySelector(`[data-index="\${prevIndex}"]`);
                                 if (imgElement) {
                                     imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
                                     
@@ -942,7 +951,7 @@
                                         btn.classList.remove('bg-forest', 'dark:bg-meadow');
                                         btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
                                     });
-                                    const activeDot = imageDots.querySelector(`[data-index="${prevIndex}"]`);
+                                    const activeDot = imageDots.querySelector(`[data-index="\${prevIndex}"]`);
                                     if (activeDot) {
                                         activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
                                         activeDot.classList.add('bg-forest', 'dark:bg-meadow');
@@ -960,10 +969,10 @@
                                 const currentIndex = Math.round(scrollPosition / imgWidth);
                                 
                                 // Calculer l'index de l'image suivante
-                                const nextIndex = (currentIndex + 1) % equipment.images.length;
+                                const nextIndex = (currentIndex + 1) % data.item.images.length;
                                 
                                 // Faire défiler jusqu'à l'image suivante
-                                const imgElement = imageSlider.querySelector(`[data-index="${nextIndex}"]`);
+                                const imgElement = imageSlider.querySelector(`[data-index="\${nextIndex}"]`);
                                 if (imgElement) {
                                     imgElement.scrollIntoView({ behavior: 'smooth', inline: 'center' });
                                     
@@ -972,7 +981,7 @@
                                         btn.classList.remove('bg-forest', 'dark:bg-meadow');
                                         btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
                                     });
-                                    const activeDot = imageDots.querySelector(`[data-index="${nextIndex}"]`);
+                                    const activeDot = imageDots.querySelector(`[data-index="\${nextIndex}"]`);
                                     if (activeDot) {
                                         activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
                                         activeDot.classList.add('bg-forest', 'dark:bg-meadow');
@@ -997,7 +1006,7 @@
                                     btn.classList.remove('bg-forest', 'dark:bg-meadow');
                                     btn.classList.add('bg-gray-300', 'dark:bg-gray-600');
                                 });
-                                const activeDot = imageDots.querySelector(`[data-index="${currentIndex}"]`);
+                                const activeDot = imageDots.querySelector(`[data-index="\${currentIndex}"]`);
                                 if (activeDot) {
                                     activeDot.classList.remove('bg-gray-300', 'dark:bg-gray-600');
                                     activeDot.classList.add('bg-forest', 'dark:bg-meadow');
@@ -1013,7 +1022,7 @@
                         
                         // Lien pour créer une annonce
                         const createAnnonceLink = document.getElementById('detail-create-annonce-link');
-                        createAnnonceLink.href = `${contextPath}/partner/annonces/create?equipment_id=${equipment.id}`;
+                        createAnnonceLink.href = `\${contextPath}/partner/annonces/create?equipment_id=\${data.item.id}`;
                         
                         // Avis
                         const reviewsContainer = document.getElementById('detail-reviews-container');
@@ -1022,60 +1031,68 @@
                         // Clear previous reviews
                         reviewsContainer.innerHTML = '';
                         
-                        if (!equipment.reviews || equipment.reviews.length === 0) {
+                        if (!data.item.reviews || data.item.reviews.length === 0) {
                             reviewsContainer.appendChild(noReviewsMessage);
                         } else {
-                            equipment.reviews.forEach(review => {
-                                const reviewDiv = document.createElement('div');
-                                reviewDiv.className = 'bg-gray-50 dark:bg-gray-700 p-4 rounded-lg';
-                                
-                                // Create stars
-                                let stars = '';
-                                for (let i = 0; i < 5; i++) {
-                                    if (i < review.rating) {
-                                        stars += '<i class="fas fa-star text-amber-400"></i>';
-                                    } else {
-                                        stars += '<i class="far fa-star text-amber-400"></i>';
-                                    }
-                                }
-                                
-                                const reviewerName = review.reviewer ? review.reviewer.username || 'Utilisateur' : 'Utilisateur';
+                            data.item.reviews.forEach(review => {
+                            const reviewDiv = document.createElement('div');
+                            reviewDiv.className = 'bg-gray-50 dark:bg-gray-700 p-4 rounded-lg';
 
-                                const reviewerAvatar = review.reviewer.avatar_url || `${contextPath}/assets/images/default-avatar.png`;
-                                
-                                const reviewDate = new Date(review.created_at).toLocaleDateString('fr-FR');
-                                
-                                reviewDiv.innerHTML = `
-                                    <div class="flex items-center mb-2">
-                                        <img src="${reviewerAvatar}" alt="${reviewerName}" class="w-8 h-8 rounded-full mr-2">
-                                        <div>
-                                            <div class="font-medium text-gray-900 dark:text-white">${reviewerName}</div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">${reviewDate}</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex mb-2">
-                                        ${stars}
-                                    </div>
-                                    <p class="text-gray-700 dark:text-gray-300">${review.comment || 'Aucun commentaire'}</p>
-                                `;
-                                
-                                reviewsContainer.appendChild(reviewDiv);
-                            });
+                            // Reviewer section
+                            const reviewerDiv = document.createElement('div');
+                            reviewerDiv.className = 'flex items-center mb-2';
+
+                            const img = document.createElement('img');
+                            img.className = 'w-8 h-8 rounded-full mr-2';
+                            img.alt = review.reviewer?.username || 'Utilisateur';
+                            img.src = review.reviewer?.avatarUrl ? contextPath + '/assets/images/users/' + review.reviewer.avatarUrl
+                                                                : contextPath + '/assets/images/default-avatar.png';
+
+                            const infoDiv = document.createElement('div');
+                            console.log("img.src:", img.src);
+                            const nameDiv = document.createElement('div');
+                            nameDiv.textContent = review.reviewer?.username || 'Utilisateur';
+                            const dateDiv = document.createElement('div');
+                            dateDiv.textContent = new Date(review.createdAt).toLocaleDateString('fr-FR');
+
+                            infoDiv.appendChild(nameDiv);
+                            infoDiv.appendChild(dateDiv);
+
+                            reviewerDiv.appendChild(img);
+                            reviewerDiv.appendChild(infoDiv);
+
+                            // Stars
+                            const starsDiv = document.createElement('div');
+                            starsDiv.className = 'flex mb-2';
+                            for (let i = 0; i < 5; i++) {
+                                const star = document.createElement('i');
+                                star.className = i < review.rating ? 'fas fa-star text-amber-400' : 'far fa-star text-amber-400';
+                                starsDiv.appendChild(star);
+                            }
+
+                            // Comment
+                            const commentP = document.createElement('p');
+                            commentP.className = 'text-gray-700 dark:text-gray-300';
+                            commentP.textContent = review.comment || 'Aucun commentaire';
+
+                            // Assemble
+                            reviewDiv.appendChild(reviewerDiv);
+                            reviewDiv.appendChild(starsDiv);
+                            reviewDiv.appendChild(commentP);
+
+                            reviewsContainer.appendChild(reviewDiv);
+                        });
                         }
                     })
                     .catch(error => {
                         console.error('Erreur détaillée:', error);
                         console.error('Message d\'erreur:', error.message);
                         // Afficher un message d'erreur
-                        document.getElementById('detail-title').textContent = 'Erreur de chargement';
-                        document.getElementById('detail-description').textContent = `Erreur: ${error.message}`;
+                        //document.getElementById('detail-title').textContent = 'Erreur de chargement';
+                        //document.getElementById('detail-description').textContent = `Erreur: ${error.message}`;
                         
                         // Vider le conteneur d'images et afficher une icône d'erreur
-                        imageSlider.innerHTML = `
-                            <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
-                                <i class="fas fa-exclamation-triangle text-5xl text-red-500"></i>
-                            </div>
-                        `;
+                        
                     });
             });
         });

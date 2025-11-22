@@ -4,7 +4,6 @@ import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.dto.DailyRegistrationStatsDTO;
 import com.campshare.model.User;
 import com.campshare.util.DatabaseManager;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -452,5 +451,46 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+        public int getPartnerCountRating(long userId) {
+        String sql = "SELECT COUNT(*) AS total FROM reviews WHERE reviewee_id = ? AND type = 'forPartner'";
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, userId);   // ✔ un seul paramètre
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("total");  // ✔ récupérer le count
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération du nombre de reviews.", e);
+        }
+
+        return 0; // ✔ si aucun résultat
+    }
+    public double getPartnerAverageRating(long userId) {
+        String sql = "SELECT AVG(rating) AS total FROM reviews WHERE reviewee_id = ? AND type = 'forPartner'";
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, userId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("total");  // récupère le decimal correctement
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur lors de la récupération de la note moyenne.", e);
+        }
+
+        return 0.0; // si aucun résultat
     }
 }

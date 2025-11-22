@@ -1,5 +1,8 @@
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 
 
 <style>
@@ -421,15 +424,26 @@
                         
                         <div class="flex text-amber-400">
                         
-                            <i class="fas fa-star"></i>
+                            <c:set var="fullStars" value="${user.avgRating.intValue()}" />
+                            <c:set var="halfStar" value="${user.avgRating - fullStars >= 0.5 ? 1 : 0}" />
+                            <c:set var="emptyStars" value="${5 - fullStars - halfStar}" />
+
+
+                            <c:forEach var="i" begin="1" end="${fullStars}">
+                                <i class="fas fa-star"></i>
+                            </c:forEach>
                         
     
                         
-                            <i class="fas fa-star-half-alt"></i>
+                                <c:if test="${halfStar == 1}">
+                                    <i class="fas fa-star-half-alt"></i>
+                                </c:if>
                        
                         </div>
-                        <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">5</span>
-                        <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">Not Rated</span>
+                        <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">${user.avgRating}</span>
+                        <span class="ml-1 text-gray-600 dark:text-gray-400 text-sm">
+                            <c:if test="${user.avgRating == 0}">Not Rated</c:if>
+                        </span>
                     </div>
                 </div>
                 

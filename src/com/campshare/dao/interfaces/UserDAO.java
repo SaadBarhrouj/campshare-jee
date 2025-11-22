@@ -1,9 +1,8 @@
 package com.campshare.dao.interfaces;
 
+import com.campshare.dto.DailyRegistrationStatsDTO;
 import com.campshare.model.User;
 import java.util.List;
-
-import com.campshare.dto.DailyRegistrationStatsDTO;
 
 public interface UserDAO {
     User findByEmail(String email);
@@ -39,4 +38,10 @@ public interface UserDAO {
             int offset);
 
     int countUsers(String role, String searchQuery, String status);
+
+    double getPartnerAverageRating(long userId);
+    int getPartnerCountRating(long userId);
+
+
+    
 }

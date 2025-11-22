@@ -1,22 +1,20 @@
 package com.campshare.dao.impl;
 
+import com.campshare.dao.interfaces.ItemDAO;
+import com.campshare.model.Category;
+import com.campshare.model.Image;
+import com.campshare.model.Item;
+import com.campshare.model.Review;
+import com.campshare.model.User;
+import com.campshare.util.DatabaseManager;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.campshare.dao.interfaces.ItemDAO;
-
-
-import com.campshare.model.Image;
-import com.campshare.model.Item;
-import com.campshare.model.Review;
-import com.campshare.model.Category;
-import com.campshare.util.DatabaseManager;
-import java.sql.Statement;
 
 
 
@@ -520,4 +518,153 @@ public class ItemDAOImpl implements ItemDAO {
       return false;
     }
   }
+      private List<Review> getItemReviewsWithReviewer(long itemId, Connection conn) throws SQLException {
+        List<Review> reviews = new ArrayList<>();
+        String sql = """
+            SELECT r.id, r.rating, r.comment, r.created_at,
+                u.id AS user_id, u.email, u.avatar_url, u.username
+            FROM reviews r
+            LEFT JOIN users u ON r.reviewer_id = u.id
+            WHERE r.item_id = ? AND r.type = 'forObject' AND r.is_visible = true
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setLong(1, itemId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Review review = new Review();
+                    review.setId(rs.getLong("id"));
+                    review.setRating(rs.getInt("rating"));
+                    review.setComment(rs.getString("comment"));
+                    review.setCreatedAt(rs.getTimestamp("created_at"));
+
+                    // Créer un objet reviewer ou remplir les champs correspondants
+                    User reviewer = new User();
+                    reviewer.setId(rs.getLong("user_id"));
+                    reviewer.setEmail(rs.getString("email"));
+                    reviewer.setAvatarUrl(rs.getString("avatar_url"));
+                    reviewer.setUsername(rs.getString("username"));
+
+                    review.setReviewer(reviewer); // Assurez-vous que Review a un champ User reviewer
+
+                    reviews.add(review);
+                }
+            }
+        }
+
+        return reviews;
+    }
+        public Item getItemDetail(long id) {
+        String sql = """
+            SELECT 
+                i.id AS item_id, i.partner_id, i.title, i.description, i.price_per_day,
+                i.category_id, i.created_at,
+                c.id AS category_id, c.name AS category_name,
+                img.id AS img_id, img.url AS img_url
+            FROM items i
+            LEFT JOIN categories c ON c.id = i.category_id
+            LEFT JOIN images img ON img.item_id = i.id
+            WHERE i.id = ?
+        """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, id);
+
+            Item item = null;
+            List<Image> images = new ArrayList<>();
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                
+                while (rs.next()) {
+
+                    // Première ligne → créer l’item
+                    if (item == null) {
+                        item = new Item();
+                        item.setId(rs.getLong("item_id"));
+                        item.setPartnerId(rs.getLong("partner_id"));
+                        item.setTitle(rs.getString("title"));
+                        item.setDescription(rs.getString("description"));
+                        item.setPricePerDay(rs.getDouble("price_per_day"));
+                        item.setCreatedAt(rs.getTimestamp("created_at"));
+
+                        Category category = new Category();
+                        category.setId(rs.getLong("category_id"));
+                        category.setName(rs.getString("category_name"));
+                        item.setCategory(category);
+
+                        // Reviews
+                        List<Review> reviews = getItemReviewsWithReviewer(id, conn);
+                        item.setReviews(reviews);
+                    }
+
+                    // Charger toutes les images
+                    int imgId = rs.getInt("img_id");
+                    if (!rs.wasNull()) {
+                        Image img = new Image();
+                        img.setId(imgId);
+                        img.setUrl(rs.getString("img_url"));
+                        images.add(img);
+                    }
+                }
+            }
+
+            if (item != null) {
+                item.setImages(images);
+            }
+
+            return item;
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erreur SQL lors de la récupération de l'article.", e);
+        }
+    }
+
+    public int countListingsByItemId(long itemId) {
+        String sql = "SELECT COUNT(id) AS total FROM listings WHERE item_id = ?";
+        int total = 0;
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setLong(1, itemId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du comptage des listings pour itemId : " + e.getMessage());
+            throw new RuntimeException("Erreur de base de données lors du comptage des listings.", e);
+        }
+
+        return total;
+    }
+    public int countReservationByItemId(long itemId) {
+        String sql = "SELECT COUNT(r.id) AS total FROM reservations r LEFT JOIN listings l ON l.id = r.listing_id  WHERE l.item_id = ?";
+        int total = 0;
+
+        try (Connection conn = DatabaseManager.getConnection();
+            PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setLong(1, itemId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    total = rs.getInt("total");
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du comptage des listings pour itemId : " + e.getMessage());
+            throw new RuntimeException("Erreur de base de données lors du comptage des listings.", e);
+        }
+
+        return total;
+    }
+
 }

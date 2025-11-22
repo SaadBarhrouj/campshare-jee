@@ -152,11 +152,11 @@
                 </div>
                 
                 <div class="mt-4 md:mt-0 flex space-x-3">
-                    <a href="{{ route('partenaire.annonces.edit', $listing->id) }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-medium rounded-md shadow-sm transition-colors">
+                    <a href="${pageContext.request.contextPath}/partner/AnnonceEdit?listing_id=${listing.id}" class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-700 dark:hover:bg-indigo-600 text-white font-medium rounded-md shadow-sm transition-colors">
                         <i class="fas fa-edit mr-2"></i>
                         Modifier l'annonce
                     </a>
-                    <a href="{{ route('client.listings.show', $listing->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <a href="${pageContext.request.contextPath}/partner/AnnonceEdit?listing_id=${annonce.id}" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <i class="far fa-eye mr-2"></i>
                         Voir côté client
                     </a>

@@ -27,5 +27,11 @@ public interface  ItemDAO {
 
     boolean updateItem(Item item);
 
+
+    
+    Item getItemDetail(long id);
+    int countListingsByItemId(long itemId);
+    int countReservationByItemId(long itemId);
+
     
 }

@@ -10,8 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.campshare.model.City;
+import com.campshare.model.User;
 import com.campshare.service.CityService;
 import com.campshare.service.ListingService;
+import com.campshare.service.PartnerService;
 
 @WebServlet("/partner/AnnonceEdit")
 public class partnerEditAnnonceServle extends HttpServlet {
@@ -20,6 +22,12 @@ public class partnerEditAnnonceServle extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        PartnerService partnerService = new PartnerService();
+
+    String email = "maronakram@gmail.com";
+    User user = partnerService.getPartnerByEmail(email);
+    request.setAttribute("user", user);
 
 
     String idParam = request.getParameter("listing_id");
