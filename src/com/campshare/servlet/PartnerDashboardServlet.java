@@ -30,8 +30,15 @@ public class PartnerDashboardServlet extends HttpServlet {
         PartnerService partnerService = new PartnerService();
         ReservationService reservationService = new ReservationService();
 
-        String email = "maronakram@gmail.com";
-        User user = partnerService.getClientByEmail(email);
+        
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user.getEmail();
+
         request.setAttribute("user", user);
         long partnerId = user.getId(); 
 

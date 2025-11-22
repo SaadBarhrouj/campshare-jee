@@ -42,8 +42,15 @@ public class PartnerDemandeLocationServlet extends HttpServlet {
         final String finalDateFilter = dateFilter;
 
         // For testing, hard-coded email (replace with partnerEmail if needed)
-        String email = "maronakram@gmail.com";
-        User user = partnerService.getClientByEmail(email);
+        
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user.getEmail();
+
         request.setAttribute("user", user);
         long partnerId = user.getId();
 

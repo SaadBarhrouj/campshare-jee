@@ -33,8 +33,15 @@ public class PartnerMesAnnonceServlet extends HttpServlet {
         ItemService itemService = new ItemService();
 
 
-        String email = "maronakram@gmail.com";
-        User user = partnerService.getClientByEmail(email);
+        
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user.getEmail();
+
         request.setAttribute("user", user);
 
         List<Listing> PartenerListings = partnerService.getPartnerListings(email);

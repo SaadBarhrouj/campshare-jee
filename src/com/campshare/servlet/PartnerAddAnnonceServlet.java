@@ -39,8 +39,15 @@ public class PartnerAddAnnonceServlet extends HttpServlet {
 
 
 
-        String email = "maronakram@gmail.com";
-        User user = partnerService.getClientByEmail(email);
+        
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user.getEmail();
+
         request.setAttribute("user", user);
         Optional<Item> opitem = partnerService.findItemWithImages(equipmentId);
         Item item = opitem.get();
