@@ -46,6 +46,10 @@ public interface ReservationDAO {
     boolean store(Reservation reservation);
 
 
+    double getAverageRatingForPartner(long partnerId);
+    double getTotalRevenueByPartner(long partnerId);
+    User getPartnerProfile(String email);
+
     // 
 
 

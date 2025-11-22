@@ -95,6 +95,19 @@ public class ReservationService {
         return reservationDAO.store(reservation);
     }
 
+
+    public User getPartnerProfile(String email) {
+        return reservationDAO.getPartnerProfile(email);
+    }
+
+    public double getAverageRatingForPartner(long partnerId) {
+        return reservationDAO.getAverageRatingForPartner(partnerId);
+    }
+
+    public double getTotalRevenueByPartner(long partnerId) {
+        return reservationDAO.getTotalRevenueByPartner(partnerId);
+    }
+
     
 
 
