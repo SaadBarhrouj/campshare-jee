@@ -243,7 +243,7 @@
                                 </div>
                                 <div class="relative">
                                     <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                        <img src="${pageContext.request.contextPath}/assets/images/users/${user.avatarUrl}"
+                                        <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
                                            alt="Avatar de ${user.username}"
                                            class="h-8 w-8 rounded-full object-cover" />
                                         <span class="font-medium text-gray-800 dark:text-gray-200">${user.username}</span>
@@ -405,7 +405,7 @@
             <div class="p-5">
                 <div class="mb-6 px-3 flex flex-col items-center">
                     <div class="relative">
-                        <img src="${pageContext.request.contextPath}/assets/images/users/${user.avatarUrl}"  
+                        <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"  
                              alt="${user.username}"  
                              class="w-24 h-24 rounded-full border-4 border-forest dark:border-meadow object-cover" />
                         <div class="absolute bottom-1 right-1 bg-green-500 p-1 rounded-full border-2 border-white dark:border-gray-800">
@@ -495,7 +495,8 @@
                 
                 <div class="mb-6 px-3 flex flex-col items-center">
                     <div class="relative">
-                        <img src=""  
+                        <img  
+                        src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}" 
                              alt="a"  
                              class="w-20 h-20 rounded-full border-4 border-forest dark:border-meadow object-cover" />
                         <div class="absolute bottom-1 right-1 bg-green-500 p-1 rounded-full border-2 border-white dark:border-gray-800">
