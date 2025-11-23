@@ -223,44 +223,28 @@
                             
                             <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">5 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[5]}%"></div>
+
+                                    <c:forEach items="${clientRatingPercentages}" var="entry" begin="0" end="2">
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-24 font-medium text-gray-700 dark:text-gray-300">${entry.key} étoiles</div>
+                                            <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-400 rounded-full" style="width: ${entry.value}%"></div>
+                                            </div>
+                                            <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${entry.value}%</div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[5]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">4 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[4]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[4]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">3 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[3]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[3]}%</div>
-                                    </div>
+                                    </c:forEach>
                                 </div>
                                 
                                 <div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">2 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[2]}%"></div>
+                                    <c:forEach items="${clientRatingPercentages}" var="entry" begin="3" end="4">
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-24 font-medium text-gray-700 dark:text-gray-300">${entry.key} étoiles</div>
+                                            <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-400 rounded-full" style="width: ${entry.value}%"></div>
+                                            </div>
+                                            <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${entry.value}%</div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[2]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">1 étoile</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[1]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[1]}%</div>
-                                    </div>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>

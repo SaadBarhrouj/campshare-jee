@@ -276,7 +276,7 @@
                         
                         <button id="toggleMapBtn" class="flex items-center px-4 py-2 bg-white dark:bg-gray-700 rounded-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 transition-all">
                             <i class="fas fa-map-marked-alt mr-2"></i>
-                            <span>Voir la carte</span>
+                            <span>Voir carte</span>
                         </button>
                     </div>
                 </div>
@@ -495,7 +495,7 @@
     
                 // Change button text
                 const span = toggleBtn.querySelector('span');
-                span.textContent = mapContainer.classList.contains('hidden') ? 'Voir la carte' : 'Cacher la carte';
+                span.textContent = mapContainer.classList.contains('hidden') ? 'Voir carte' : 'Cacher carte';
             });
         });
 
