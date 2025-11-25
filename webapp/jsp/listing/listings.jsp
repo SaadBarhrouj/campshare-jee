@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="fr" class="scroll-smooth">
@@ -417,18 +419,22 @@
             console.log("Initializing map...");
             const locations = [
                 <c:forEach var="listingData" items="${listings}" varStatus="loop">
+                    <c:set var="listingImage" value="${pageContext.request.contextPath}/assets/images/item-default.jpg" />
+                    <c:if test="${not empty listingData.firstImage}">
+                        <c:set var="listingImage" value="${pageContext.request.contextPath}/${listingData.firstImage.url}" />
+                    </c:if>
                     {
                         lat: ${listingData.listing.latitude},
                         lng: ${listingData.listing.longitude},
-                        title: "<c:out value='${listingData.item.title}' />",
+                        title: "<c:out value='${listingData.item.title}' escapeXml='true' />",
                         url: "${pageContext.request.contextPath}/listing?id=${listingData.listing.id}",
-                        category: "<c:out value='${listingData.category.name}' />",
-                        username: "<c:out value='${listingData.partner.username}' />",
-                        image: "rrr"
+                        category: "<c:out value='${listingData.category.name}' escapeXml='true' />",
+                        username: "<c:out value='${listingData.partner.username}' escapeXml='true' />",
+                        image: "<c:out value='${listingImage}' escapeXml='true' />"
                     }<c:if test="${!loop.last}">,</c:if>
                 </c:forEach>
             ];
-            console.log("Locations loaded:", locations);
+            
             let map = null;
             let mapInitialized = false;
     
@@ -446,7 +452,9 @@
                     }).addTo(map);
     
                     const bounds = [];
-    
+                    
+                    console.log("Locations loaded:", locations);
+                    
                     locations.forEach(loc => {
                         if (loc.lat && loc.lng) {
                             // Small offset to hide the exact location (±0.01 degrees ≈ ±1km)
@@ -460,17 +468,18 @@
                                 radius: 1500 
                             }).addTo(map);
     
-                            circle.bindPopup(`
-                                <div class="flex gap-2 items-center" style="min-width: 250px;">
-                                    <img src="${loc.image}" alt="Image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">
-                                    <div>
-                                        <strong>${loc.title}</strong><br>
-                                        <small>Catégorie: ${loc.category}</small><br>
-                                        <small>Partenaire: ${loc.username}</small><br>
-                                        <em>Zone approximative</em>
-                                    </div>
-                                </div>
-                            `);
+                            // Create popup content with proper closure
+                            const popupContent = '<div class="flex gap-2 items-center" style="min-width: 250px;">' +
+                                '<img src="' + loc.image + '" alt="Image" style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;">' +
+                                '<div>' +
+                                '<strong>' + loc.title + '</strong><br>' +
+                                '<small>Catégorie: ' + loc.category + '</small><br>' +
+                                '<small>Partenaire: ' + loc.username + '</small><br>' +
+                                '<em>Zone approximative</em>' +
+                                '</div>' +
+                                '</div>';
+                            
+                            circle.bindPopup(popupContent);
     
                             circle.on('click', function () {
                                 window.location.href = loc.url;
