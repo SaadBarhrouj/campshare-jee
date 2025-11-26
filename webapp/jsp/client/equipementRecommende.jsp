@@ -77,7 +77,7 @@
             </div>
                 
             <div class="flex justify-end">
-                <a href="{{ route('client.listings.index') }}"
+                <a href="${pageContext.request.contextPath}/listings"
                     class="inline-block mb-8 px-4 py-2 bg-forest text-white text-sm font-medium rounded hover:bg-green-700 transition">
                     Voir tous les équipements
                     <i class="fas fa-arrow-right ml-2"></i>
@@ -91,7 +91,7 @@
                         <c:forEach var="res" items="${similarListings}">
                             <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
                                 
-                                <a href="#" class="block relative h-48">
+                                <a href="${pageContext.request.contextPath}/listing?id=${res.listing.id}" class="block relative h-48">
                                     <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" 
                                         alt="Image" class="w-full h-full object-cover" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -162,7 +162,7 @@
                                     </div>
 
                                     <div class="mt-auto pt-2">
-                                        <a href="#" class="inline-block px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
+                                        <a href="${pageContext.request.contextPath}/listing?id=${res.listing.id}" class="inline-block px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
                                             Voir les détails
                                         </a>
                                     </div>

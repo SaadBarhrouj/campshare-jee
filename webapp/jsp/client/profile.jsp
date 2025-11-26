@@ -161,7 +161,7 @@
                     </div>
 
                     <div class="flex items-center justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-right gap-4">
-                        <a href=""
+                        <a href="${pageContext.request.contextPath}/client-profile?id=${userProfile.id}"
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                             <i class="fa-solid fa-address-card mr-2"></i> Mon profil Public
                         </a>
