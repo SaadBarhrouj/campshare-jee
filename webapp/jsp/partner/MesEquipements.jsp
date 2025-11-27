@@ -202,7 +202,7 @@
                 data-category="${equipment.category.id}"
                 data-price="${equipment.pricePerDay}">
                     <div class="relative h-48">
-                            <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}" 
+                            <img src="${pageContext.request.contextPath}/uploads/${equipment.images[0].url}" 
                                  alt="${equipment.title}" 
                                  class="w-full h-full object-cover">
                        
@@ -893,7 +893,7 @@
                                 imgDiv.setAttribute('data-index', index);
                                 console.log('Adding image to slider:', image.url);
                                 imgDiv.innerHTML = `
-                                    <img src="http://localhost:8080/webapp//assets/images/items/\${image.url}" alt="\${data.title}" class="w-full h-full object-cover">
+                                    <img src="http://localhost:8080/webapp/uploads/\${image.url}" alt="\${data.title}" class="w-full h-full object-cover">
                                     <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
                                         \${index + 1}/\${data.item.images.length}
                                     </div>
@@ -1045,7 +1045,7 @@
                             const img = document.createElement('img');
                             img.className = 'w-8 h-8 rounded-full mr-2';
                             img.alt = review.reviewer?.username || 'Utilisateur';
-                            img.src = review.reviewer?.avatarUrl ? contextPath + '/assets/images/users/' + review.reviewer.avatarUrl
+                            img.src = review.reviewer?.avatarUrl ? contextPath + '/uploads/' + review.reviewer.avatarUrl
                                                                 : contextPath + '/assets/images/default-avatar.png';
 
                             const infoDiv = document.createElement('div');

@@ -88,7 +88,7 @@
                 <div class="flex-grow grid grid-cols-1 lg:grid-cols-7 gap-4 mb-4 lg:mb-0">
                     <div class="flex-shrink-0 mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto col-span-2">
                         <div class="flex items-center lg:w-16">
-                            <img src="${pageContext.request.contextPath}/images/avatars/${review.reviewer.avatarUrl}"
+                            <img src="${pageContext.request.contextPath}/uploads/${review.reviewer.avatarUrl}"
                                  alt=""
                                  class="w-12 h-12 rounded-full object-cover aspect-square" />
                             <div class="ml-4">

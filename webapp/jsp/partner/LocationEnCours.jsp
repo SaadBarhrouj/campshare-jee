@@ -232,7 +232,7 @@
                                 <div class="flex flex-col lg:flex-row lg:items-start">
                                     <div class="flex gap-2 mb-4 lg:mb-0 lg:mr-28 w-full lg:w-auto">
                                         <div class="flex items-center lg:w-16">
-                                            <img src="${pageContext.request.contextPath}/assets/images/users/${location.client.avatarUrl}"
+                                            <img src="${pageContext.request.contextPath}/uploads/${location.client.avatarUrl}"
                                                 alt="${location.client.username}" 
                                                 class="w-12 h-12 rounded-full object-cover" />
                                             <div class="lg:hidden ml-3">

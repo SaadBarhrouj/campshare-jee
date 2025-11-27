@@ -164,7 +164,7 @@
                                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
                                         <div class="px-6 py-4">
                                             <div class="flex items-start">
-                                                <img src="${pageContext.request.contextPath}/assets/images/users/${reservation.client.avatarUrl}" 
+                                                <img src="${pageContext.request.contextPath}/uploads/${reservation.client.avatarUrl}" 
                                                     alt="${reservation.client.username}" 
                                                     class="w-10 h-10 rounded-full object-cover mr-4" />
 
@@ -214,7 +214,7 @@
 
                                 <c:if test="${fn:length(PendingReservationsWithMontantTotal) != 0}">
                                     <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 text-center">
-                                        <a href="HomePartenaieDemandes" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
+                                        <a href="/webapp/partner/DemandeLocation" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
                                             Voir toutes les demandes
                                         </a>
                                     </div>
@@ -257,7 +257,7 @@
                         <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                             <div class="relative h-48">
                                 <c:if test="${equipment.images != null && fn:length(equipment.images) > 0}">
-                                    <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}"
+                                    <img src="${pageContext.request.contextPath}/uploads/${equipment.images[0].url}"
                                         alt="${equipment.title}" 
                                         class="w-full h-full object-cover" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -265,7 +265,7 @@
 
                                 <div class="absolute bottom-4 left-4 right-4">
                                     <h3 class="text-white font-bold text-lg truncate">${equipment.title}</h3>
-                                    <p class="text-gray-200 text-sm">${equipment.category.name} - Excellent état</p>
+                                    <p class="text-gray-200 text-sm">${equipment.category.name}</p>
                                 </div>
                             </div>
 

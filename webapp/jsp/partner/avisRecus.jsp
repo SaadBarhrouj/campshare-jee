@@ -228,7 +228,7 @@
                                             <div class="flex gap-2 items-center content-center mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto">
                                                 <div class="flex items-center content-center w-12">
                                                     <a href="{{ route('client.profile.index', 21) }}">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/users/${review.reviewer.avatarUrl}"
+                                                    <img src="${pageContext.request.contextPath}/uploads/${review.reviewer.avatarUrl}"
                                                         alt="Mehdi Idrissi" 
                                                         class="w-12 h-12 rounded-full object-cover" />
                                                     </a>
