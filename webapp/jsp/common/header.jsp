@@ -1,6 +1,23 @@
   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
   <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-  <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> 
+  <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+  <%@ page import="com.campshare.model.User" %>
+  <%@ page import="com.campshare.service.NotificationService" %>
+  
+  <%
+    // Get notification counts for authenticated user
+    int clientNotificationCount = 0;
+    int partnerNotificationCount = 0;
+    User authUser = (User) session.getAttribute("authenticatedUser");
+    if (authUser != null) {
+      NotificationService notificationService = new NotificationService();
+      long userId = authUser.getId();
+      clientNotificationCount = notificationService.getUnreadClientNotificationCount(userId);
+      partnerNotificationCount = notificationService.getUnreadPartnerNotificationCount(userId);
+    }
+    pageContext.setAttribute("clientNotificationCount", clientNotificationCount);
+    pageContext.setAttribute("partnerNotificationCount", partnerNotificationCount);
+  %> 
 
    <!-- Header -->
     <nav class="bg-white bg-opacity-95 dark:bg-gray-800 dark:bg-opacity-95 shadow-md fixed w-full z-50 transition-all duration-300">
@@ -59,10 +76,22 @@
                                         <div class="relative">
                                             <a id="notifications-client-icon-link" href="${notificationsLink}" class="relative p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
                                                 <i class="fas fa-bell"></i>
-
-                                                    <span id="notification-badge-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
-                                                    5
-                                                    </span>
+                                                <c:choose>
+                                                    <c:when test="${isPartnerRoute}">
+                                                        <c:if test="${partnerNotificationCount > 0}">
+                                                            <span id="notification-badge-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+                                                                ${partnerNotificationCount}
+                                                            </span>
+                                                        </c:if>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:if test="${clientNotificationCount > 0}">
+                                                            <span id="notification-badge-count" class="absolute -top-1 -right-1 inline-flex items-center justify-center w-4 h-4 text-xs font-bold text-white bg-red-600 rounded-full">
+                                                                ${clientNotificationCount}
+                                                            </span>
+                                                        </c:if>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </a>
                                         </div>
                                     </c:if>

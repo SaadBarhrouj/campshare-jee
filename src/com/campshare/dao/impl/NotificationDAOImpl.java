@@ -123,6 +123,89 @@ public class NotificationDAOImpl implements NotificationDAO {
     }
 
     @Override
+    public List<Notification> findPartnerNotifications(long userId) {
+        String sql = "SELECT id, user_id, type, message, is_read, listing_id, reservation_id, created_at " +
+                "FROM notifications " +
+                "WHERE user_id = ? AND type = 'review_client' " +
+                "ORDER BY created_at DESC";
+
+        List<Notification> notifications = new ArrayList<>();
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Notification n = new Notification();
+                    n.setId(rs.getLong("id"));
+                    n.setUserId(rs.getLong("user_id"));
+                    n.setType(rs.getString("type"));
+                    n.setMessage(rs.getString("message"));
+                    n.setRead(rs.getBoolean("is_read"));
+
+                    long listingId = rs.getLong("listing_id");
+                    if (rs.wasNull()) {
+                        n.setListingId(null);
+                    } else {
+                        n.setListingId(listingId);
+                    }
+
+                    long reservationId = rs.getLong("reservation_id");
+                    if (rs.wasNull()) {
+                        n.setReservationId(null);
+                    } else {
+                        n.setReservationId(reservationId);
+                    }
+
+                    n.setCreatedAt(rs.getTimestamp("created_at"));
+                    notifications.add(n);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL (findPartnerNotifications): " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return notifications;
+    }
+
+    @Override
+    public int getUnreadClientNotificationCount(long userId) {
+        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND type <> 'review_client'";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL (getUnreadClientNotificationCount): " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int getUnreadPartnerNotificationCount(long userId) {
+        String sql = "SELECT COUNT(*) FROM notifications WHERE user_id = ? AND is_read = 0 AND type = 'review_client'";
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setLong(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL (getUnreadPartnerNotificationCount): " + e.getMessage());
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
     public boolean markAsRead(long userId, long notificationId) {
         String sql = "UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?";
         try (Connection conn = DatabaseManager.getConnection();

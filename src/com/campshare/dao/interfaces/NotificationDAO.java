@@ -15,6 +15,21 @@ public interface NotificationDAO {
      */
     List<Notification> findClientNotifications(long userId);
 
+    /**
+     * Get all notifications for a partner space (only 'review_client' type).
+     */
+    List<Notification> findPartnerNotifications(long userId);
+
+    /**
+     * Get count of unread client notifications (all types except 'review_client').
+     */
+    int getUnreadClientNotificationCount(long userId);
+
+    /**
+     * Get count of unread partner notifications (only 'review_client' type).
+     */
+    int getUnreadPartnerNotificationCount(long userId);
+
     boolean markAsRead(long userId, long notificationId);
 
     int markAllAsRead(long userId);

@@ -8,7 +8,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CampShare - Notifications Client</title>
+    <title>CampShare - Notifications Partenaire</title>
 
     <link
       rel="stylesheet"
@@ -117,7 +117,6 @@
     <jsp:include page="/jsp/common/header.jsp" />
 
     <!-- Main Content -->
-    <!-- Main content -->
     <main class="flex-1 pt-16 bg-gray-50 dark:bg-gray-900 min-h-screen">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <!-- Header with breadcrumbs -->
@@ -127,9 +126,9 @@
                         <nav class="flex mb-3" aria-label="Breadcrumb">
                             <ol class="inline-flex items-center space-x-1 md:space-x-3">
                                 <li class="inline-flex items-center">
-                                    <a href="${pageContext.request.contextPath}/client/dashboard" class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-forest dark:hover:text-meadow">
+                                    <a href="${pageContext.request.contextPath}/partner/dashboard" class="inline-flex items-center text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-forest dark:hover:text-meadow">
                                         <i class="fas fa-tachometer-alt mr-2"></i>
-                                        Tableau de Bord Client
+                                        Tableau de Bord Partenaire
                                     </a>
                                 </li>
                                 <li aria-current="page">
@@ -141,7 +140,7 @@
                             </ol>
                         </nav>
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Mes Notifications</h1>
-                        <p class="text-gray-600 dark:text-gray-400 mt-1">Consultez vos notifications liées à vos réservations et aux annonces.</p>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">Consultez vos notifications liées aux évaluations des clients.</p>
                     </div>
 
                     <div class="mt-4 md:mt-0 flex space-x-2">
@@ -180,18 +179,13 @@
                             <select id="filter-select" class="py-2 px-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md shadow-sm text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-forest dark:focus:ring-meadow focus:border-forest dark:focus:border-meadow">
                                 <option value="all">Toutes</option>
                                 <option value="unread">Non lues</option>
-                                <option value="review_object">Avis Objet</option>
-                                <option value="review_partner">Avis Partenaire</option>
-                                <option value="accepted_reservation">Résa. Acceptée</option>
-                                <option value="rejected_reservation">Résa. Refusée</option>
-                                <option value="added_listing">Annonce Ajoutée</option>
-                                <option value="updated_listing">Annonce MàJ</option>
+                                <option value="review_client">Avis Client</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <form id="notifications-form" method="post" action="${pageContext.request.contextPath}/client/notifications">
+                <form id="notifications-form" method="post" action="${pageContext.request.contextPath}/partner/notifications">
                     <input type="hidden" name="action" id="action-input" value="">
                     <input type="hidden" name="singleId" id="single-id-input" value="">
 
@@ -203,63 +197,14 @@
                         </c:if>
 
                         <c:forEach var="notification" items="${notifications}">
-                            <c:set var="isReviewNotification"
-                                   value="${notification.type == 'review_object' or notification.type == 'review_partner' or notification.type == 'review_client'}"/>
-
-                            <!-- Default styles -->
-                            <c:set var="iconClass" value="fa-info-circle"/>
-                            <c:set var="bgColorClass" value="bg-gray-100 dark:bg-gray-700"/>
-                            <c:set var="textColorClass" value="text-gray-500 dark:text-gray-400"/>
-                            <c:set var="tagText" value="Système"/>
-                            <c:set var="tagBgClass" value="bg-gray-100 dark:bg-gray-700"/>
-                            <c:set var="tagTextColorClass" value="text-gray-800 dark:text-gray-300"/>
-                            <c:set var="titleText" value="${notification.type}"/>
-
-                            <c:choose>
-                                <c:when test="${notification.type == 'accepted_reservation'}">
-                                    <c:set var="iconClass" value="fa-calendar-check"/>
-                                    <c:set var="bgColorClass" value="bg-green-100 dark:bg-green-800"/>
-                                    <c:set var="textColorClass" value="text-green-500 dark:text-green-300"/>
-                                    <c:set var="tagText" value="Réservation"/>
-                                    <c:set var="tagBgClass" value="bg-green-100 dark:bg-green-800"/>
-                                    <c:set var="tagTextColorClass" value="text-green-800 dark:text-green-300"/>
-                                    <c:set var="titleText" value="Réservation Acceptée"/>
-                                </c:when>
-                                <c:when test="${notification.type == 'rejected_reservation'}">
-                                    <c:set var="iconClass" value="fa-calendar-times"/>
-                                    <c:set var="bgColorClass" value="bg-red-100 dark:bg-red-800"/>
-                                    <c:set var="textColorClass" value="text-red-500 dark:text-red-300"/>
-                                    <c:set var="tagText" value="Réservation"/>
-                                    <c:set var="tagBgClass" value="bg-red-100 dark:bg-red-800"/>
-                                    <c:set var="tagTextColorClass" value="text-red-800 dark:text-red-300"/>
-                                    <c:set var="titleText" value="Réservation Refusée"/>
-                                </c:when>
-                                <c:when test="${notification.type == 'added_listing' or notification.type == 'updated_listing'}">
-                                    <c:set var="iconClass" value="fa-bullhorn"/>
-                                    <c:set var="bgColorClass" value="bg-indigo-100 dark:bg-indigo-800"/>
-                                    <c:set var="textColorClass" value="text-indigo-500 dark:text-indigo-300"/>
-                                    <c:set var="tagText" value="Annonce"/>
-                                    <c:set var="tagBgClass" value="bg-indigo-100 dark:bg-indigo-800"/>
-                                    <c:set var="tagTextColorClass" value="text-indigo-800 dark:text-indigo-300"/>
-                                    <c:choose>
-                                        <c:when test="${notification.type == 'added_listing'}">
-                                            <c:set var="titleText" value="Nouvelle Annonce"/>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:set var="titleText" value="Annonce Mise à Jour"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:when>
-                                <c:when test="${notification.type == 'review_object' or notification.type == 'review_partner' or notification.type == 'review_client'}">
-                                    <c:set var="iconClass" value="fa-star"/>
-                                    <c:set var="bgColorClass" value="bg-yellow-100 dark:bg-yellow-800"/>
-                                    <c:set var="textColorClass" value="text-yellow-500 dark:text-yellow-300"/>
-                                    <c:set var="tagText" value="Évaluation"/>
-                                    <c:set var="tagBgClass" value="bg-yellow-100 dark:bg-yellow-800"/>
-                                    <c:set var="tagTextColorClass" value="text-yellow-800 dark:text-yellow-300"/>
-                                    <c:set var="titleText" value="Demande d'évaluation"/>
-                                </c:when>
-                            </c:choose>
+                            <!-- Styles for review_client -->
+                            <c:set var="iconClass" value="fa-star"/>
+                            <c:set var="bgColorClass" value="bg-yellow-100 dark:bg-yellow-800"/>
+                            <c:set var="textColorClass" value="text-yellow-500 dark:text-yellow-300"/>
+                            <c:set var="tagText" value="Évaluation"/>
+                            <c:set var="tagBgClass" value="bg-yellow-100 dark:bg-yellow-800"/>
+                            <c:set var="tagTextColorClass" value="text-yellow-800 dark:text-yellow-300"/>
+                            <c:set var="titleText" value="Demande d'évaluation"/>
 
                             <div class="notification-item flex p-5 ${!notification.read ? 'bg-blue-50 dark:bg-blue-900/20' : ''}"
                                  data-type="${notification.type}"
@@ -301,15 +246,8 @@
                                         </p>
 
                                         <div class="mt-3 flex items-center flex-wrap gap-x-4 gap-y-1">
-                                            <!-- Lien vers l'annonce pour les notifications liées à une annonce -->
-                                            <c:if test="${!isReviewNotification and notification.listingId != null}">
-                                                <a href="${pageContext.request.contextPath}/partner/AnnonceDetails?listing_id=${notification.listingId}" class="text-sm text-forest dark:text-meadow hover:underline">
-                                                    <i class="fas fa-eye mr-1"></i> Voir l'annonce
-                                                </a>
-                                            </c:if>
-
-                                            <!-- Lien vers le formulaire d'évaluation pour les notifications de type review -->
-                                            <c:if test="${isReviewNotification and notification.reservationId != null}">
+                                            <!-- Lien vers le formulaire d'évaluation -->
+                                            <c:if test="${notification.reservationId != null}">
                                                 <a href="${pageContext.request.contextPath}/reviews/create?reservation=${notification.reservationId}&type=${notification.type}" class="text-sm text-forest dark:text-meadow hover:underline font-semibold">
                                                     <i class="fas fa-pen-alt mr-1"></i> Laisser une évaluation
                                                 </a>
@@ -468,6 +406,6 @@
         applyFilter();
       });
     </script>
-
 </body>
 </html>
+

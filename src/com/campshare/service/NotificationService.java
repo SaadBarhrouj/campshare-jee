@@ -55,6 +55,45 @@ public class NotificationService {
     }
   }
 
+  /**
+   * Get all notifications for the partner space (only 'review_client' type).
+   */
+  public List<Notification> getPartnerNotifications(long userId) {
+    try {
+      return notificationDAO.findPartnerNotifications(userId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la récupération des notifications partenaire: " + e.getMessage());
+      e.printStackTrace();
+      return new ArrayList<>();
+    }
+  }
+
+  /**
+   * Get count of unread client notifications (all types except 'review_client').
+   */
+  public int getUnreadClientNotificationCount(long userId) {
+    try {
+      return notificationDAO.getUnreadClientNotificationCount(userId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la récupération du nombre de notifications client non lues: " + e.getMessage());
+      e.printStackTrace();
+      return 0;
+    }
+  }
+
+  /**
+   * Get count of unread partner notifications (only 'review_client' type).
+   */
+  public int getUnreadPartnerNotificationCount(long userId) {
+    try {
+      return notificationDAO.getUnreadPartnerNotificationCount(userId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la récupération du nombre de notifications partenaire non lues: " + e.getMessage());
+      e.printStackTrace();
+      return 0;
+    }
+  }
+
   public boolean markNotificationAsRead(long userId, long notificationId) {
     try {
       return notificationDAO.markAsRead(userId, notificationId);
