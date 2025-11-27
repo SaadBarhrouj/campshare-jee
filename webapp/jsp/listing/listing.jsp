@@ -441,7 +441,7 @@
                                          <div class="review-item review-card bg-white dark:bg-gray-800/50 p-4 border-b dark:border-gray-700 last:border-b-0 ${loop.index >= 3 ? 'hidden' : ''}">
                                               <div class="flex items-start space-x-4">
                                                 <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}" class="flex-shrink-0">
-                                                    <img src="${pageContext.request.contextPath}/${not empty review.reviewer.avatarUrl ? review.reviewer.avatarUrl : 'images/avatars/default-avatar.jpg'}"
+                                                    <img src="${pageContext.request.contextPath}/uploads/${not empty review.reviewer.avatarUrl ? review.reviewer.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                                         alt="Avatar de ${not empty review.reviewer.username ? review.reviewer.username : 'Utilisateur'}"
                                                         class="w-12 h-12 rounded-full object-cover flex-shrink-0 mt-1 border-2 border-white dark:border-gray-600 shadow-sm">
                                                 </a>
@@ -662,7 +662,7 @@
                                   <p class="text-xs text-gray-500 dark:text-gray-400 mb-3">Proposé par :</p>
                                  <div class="flex items-center bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg hover-lift">
                                     <a href="${pageContext.request.contextPath}/partner-profile?id=${partner.id}" class="flex-shrink-0">
-                                        <img src="${pageContext.request.contextPath}/${not empty partner.avatarUrl ? partner.avatarUrl : 'images/avatars/default-avatar.jpg'}"
+                                        <img src="${pageContext.request.contextPath}/uploads/${not empty partner.avatarUrl ? partner.avatarUrl : 'images/avatars/default-avatar.jpg'}"
                                             alt="Avatar de ${not empty partner.username ? partner.username : 'Partenaire'}"
                                             class="w-12 h-12 rounded-full object-cover mr-3 border-2 border-white dark:border-gray-600 shadow-sm">
                                     </a>

@@ -168,7 +168,7 @@
                                     <div class="flex items-start mb-4">
                                         <c:if test="${not empty res.partner}">
                                             <a href="#">
-                                                <img src="${pageContext.request.contextPath}/images/avatars/${res.partner.avatarUrl}" alt="image"
+                                                <img src="${pageContext.request.contextPath}/uploads/${res.partner.avatarUrl}" alt="image"
                                                     class="w-8 h-8 rounded-full object-cover mr-3" />
                                             </a>
                                             <div>

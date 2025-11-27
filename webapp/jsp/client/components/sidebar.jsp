@@ -193,7 +193,7 @@
             <div class="p-5">
                 <div class="mb-6 px-3 flex flex-col items-center">
                     <div class="relative">
-                    <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
+                    <img src="${pageContext.request.contextPath}/uploads/${user.avatarUrl}"
                          
                         class="w-24 h-24 rounded-full border-4 border-forest dark:border-meadow object-cover" />
                         <div class="absolute bottom-1 right-1 bg-green-500 p-1 rounded-full border-2 border-white dark:border-gray-800">

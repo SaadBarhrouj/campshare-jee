@@ -1045,7 +1045,7 @@
                             const img = document.createElement('img');
                             img.className = 'w-8 h-8 rounded-full mr-2';
                             img.alt = review.reviewer?.username || 'Utilisateur';
-                            img.src = review.reviewer?.avatarUrl ? contextPath + '/assets/images/users/' + review.reviewer.avatarUrl
+                            img.src = review.reviewer?.avatarUrl ? contextPath + '/uploads/' + review.reviewer.avatarUrl
                                                                 : contextPath + '/assets/images/default-avatar.png';
 
                             const infoDiv = document.createElement('div');

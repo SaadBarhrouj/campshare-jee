@@ -127,7 +127,7 @@
                         <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
                             <c:choose>
                                 <c:when test="${not empty partner.avatarUrl}">
-                                    <img src="${pageContext.request.contextPath}/${partner.avatarUrl}"
+                                    <img src="${pageContext.request.contextPath}/uploads/${partner.avatarUrl}"
                                          alt="${partner.username}"
                                          class="w-full h-full object-cover" />
                                 </c:when>
@@ -339,7 +339,7 @@
                                     <div class="flex">
                                         <div class="mr-4">
                                             <a href="${pageContext.request.contextPath}/client-profile?id=${review.reviewer.id}">
-                                                <img src="${review.reviewer != null && review.reviewer.avatarUrl != null ? pageContext.request.contextPath.concat('/').concat(review.reviewer.avatarUrl) : pageContext.request.contextPath.concat('/assets/images/users/image4.png')}" 
+                                                <img src="${review.reviewer != null && review.reviewer.avatarUrl != null ? pageContext.request.contextPath.concat('/uploads/').concat(review.reviewer.avatarUrl) : pageContext.request.contextPath.concat('/assets/images/users/image4.png')}" 
                                                      alt="${review.reviewer != null ? review.reviewer.username : ''}" 
                                                      class="w-12 h-12 rounded-full object-cover" />
                                             </a>

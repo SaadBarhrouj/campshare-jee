@@ -308,8 +308,7 @@ prefix="c" %>
                   class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
                 ></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 class="text-xl font-bold text-white">Tentes</h3>
-                  <p class="text-sm text-gray-200">68 articles disponibles</p>
+                  <h3 class="text-xl font-bold text-white">Tentes et Abris</h3>
                 </div>
               </div>
             </a>
@@ -329,7 +328,6 @@ prefix="c" %>
                 ></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4">
                   <h3 class="text-xl font-bold text-white">Éclairage</h3>
-                  <p class="text-sm text-gray-200">42 articles disponibles</p>
                 </div>
               </div>
             </a>
@@ -348,8 +346,7 @@ prefix="c" %>
                   class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
                 ></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 class="text-xl font-bold text-white">Cuisine</h3>
-                  <p class="text-sm text-gray-200">56 articles disponibles</p>
+                  <h3 class="text-xl font-bold text-white">Équipement de cuisine</h3>
                 </div>
               </div>
             </a>
@@ -368,8 +365,7 @@ prefix="c" %>
                   class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
                 ></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 class="text-xl font-bold text-white">Mobilier</h3>
-                  <p class="text-sm text-gray-200">37 articles disponibles</p>
+                  <h3 class="text-xl font-bold text-white">Mobilier camping</h3>
                 </div>
               </div>
             </a>
@@ -567,14 +563,14 @@ prefix="c" %>
                   <span>Inscription et publication d'annonces gratuites</span>
                 </li>
               </ul>
-              <a
+              <%-- <a
                 href="#"
                 class="inline-block px-6 py-3 bg-sunlight hover:bg-amber-600 text-white font-medium rounded-md shadow-md transition duration-300"
               >
                 Devenir Partenaire maintenant
-              </a>
+              </a> --%>
             </div>
-
+<%-- 
             <div class="mt-10 md:mt-0 md:w-2/5">
               <div
                 class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl p-6 md:p-8 transition-all duration-300"
@@ -691,7 +687,7 @@ prefix="c" %>
                   </div>
                 </form>
               </div>
-            </div>
+            </div> --%>
           </div>
         </div>
       </section>
@@ -715,10 +711,46 @@ prefix="c" %>
             </p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+
+            <!-- Testimonial 0 -->
+            <div
+              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-5 transition-all duration-300"
+            >
+              <div class="flex items-center mb-4">
+                <div class="text-amber-400 flex">
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="fas fa-star"></i>
+                  <i class="far fa-star"></i>
+                </div>
+                <span class="ml-2 text-gray-600 dark:text-gray-300">4.0</span>
+              </div>
+              <p class="text-gray-600 dark:text-gray-300 mb-6">
+                "On a loué une tente 4 places pour un weekend entre amis.
+                Matériel impeccable, échanges faciles avec le propriétaire. J'aime!"
+              </p>
+              <div class="flex items-center">
+                <div
+                  class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center"
+                >
+                  <span class="text-gray-600 font-medium">ER</span>
+                </div>
+                <div class="ml-3">
+                  <h4 class="font-medium text-gray-900 dark:text-white">
+                    El Abida Rajae
+                  </h4>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Client depuis 2022
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <!-- Testimonial 1 -->
             <div
-              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300"
+              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-5 transition-all duration-300"
             >
               <div class="flex items-center mb-4">
                 <div class="text-amber-400 flex">
@@ -731,19 +763,17 @@ prefix="c" %>
                 <span class="ml-2 text-gray-600 dark:text-gray-300">5.0</span>
               </div>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
-                "J'ai loué une tente 4 places pour un weekend entre amis.
-                Matériel impeccable, échanges faciles avec le propriétaire, et
-                prix bien plus abordable qu'en boutique. Je recommande !"
+                "Location d'un bungalow sympa pour un weekend entre amis. Matériel propre, hôte réactif, cadre paisible et soirée conviviale."
               </p>
               <div class="flex items-center">
                 <div
                   class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center"
                 >
-                  <span class="text-gray-600 font-medium">IK</span>
+                  <span class="text-gray-600 font-medium">EM</span>
                 </div>
                 <div class="ml-3">
                   <h4 class="font-medium text-gray-900 dark:text-white">
-                    El Haouari mohamed
+                    El Hauari Mohamed
                   </h4>
                   <p class="text-sm text-gray-500 dark:text-gray-400">
                     Client depuis 2022
@@ -754,7 +784,7 @@ prefix="c" %>
 
             <!-- Testimonial 2 -->
             <div
-              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300"
+              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-5 transition-all duration-300"
             >
               <div class="flex items-center mb-4">
                 <div class="text-amber-400 flex">
@@ -768,8 +798,7 @@ prefix="c" %>
               </div>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
                 "En tant que partenaire, j'ai déjà rentabilisé mon matériel de
-                randonnée en seulement une saison ! Plateforme intuitive et
-                équipe réactive. Très satisfait de mon expérience."
+                randonnée en seulement une saison ! Plateforme intuitive."
               </p>
               <div class="flex items-center">
                 <div
@@ -790,7 +819,7 @@ prefix="c" %>
 
             <!-- Testimonial 3 -->
             <div
-              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-6 transition-all duration-300"
+              class="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md p-5 transition-all duration-300"
             >
               <div class="flex items-center mb-4">
                 <div class="text-amber-400 flex">
@@ -803,15 +832,13 @@ prefix="c" %>
                 <span class="ml-2 text-gray-600 dark:text-gray-300">4.5</span>
               </div>
               <p class="text-gray-600 dark:text-gray-300 mb-6">
-                "Premier camping en famille réussi grâce à CampShare ! J'ai pu
-                louer tout le nécessaire sans investir des centaines d'euros, et
-                les conseils du propriétaire étaient précieux."
+                "On a profité d'un bungalow deux nuits près du lac. Équipement nickel, propriétaire sympa. Vraiment une location au top!"
               </p>
               <div class="flex items-center">
                 <div
                   class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center"
                 >
-                  <span class="text-gray-600 font-medium">DF</span>
+                  <span class="text-gray-600 font-medium">MI</span>
                 </div>
                 <div class="ml-3">
                   <h4 class="font-medium text-gray-900 dark:text-white">

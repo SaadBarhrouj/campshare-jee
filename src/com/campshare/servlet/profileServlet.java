@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import com.campshare.model.User;
 import com.campshare.service.ClientService;
 import com.campshare.service.ReservationService;
+import com.campshare.util.FileUploadUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,20 +102,37 @@ public class profileServlet extends HttpServlet {
             String avatarFileName = existingUser != null ? existingUser.getAvatarUrl() : null;
 
             try {
-                Part filePart = request.getPart("avatar");
-                if (filePart != null && filePart.getSize() > 0) {
-                    String submittedFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-                    if (!submittedFileName.isBlank()) {
-                        String uploadsDirPath = getServletContext().getRealPath("/images/avatars");
-                        File uploadsDir = new File(uploadsDirPath);
-                        if (!uploadsDir.exists()) {
-                            uploadsDir.mkdirs();
-                        }
-                        avatarFileName = System.currentTimeMillis() + "_" + submittedFileName;
-                        File destination = new File(uploadsDir, avatarFileName);
-                        filePart.write(destination.getAbsolutePath());
+                //Part filePart = request.getPart("avatar");
+                //if (filePart != null && filePart.getSize() > 0) {
+                //    String submittedFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
+                //    if (!submittedFileName.isBlank()) {
+                //        String uploadsDirPath = getServletContext().getRealPath("/images/avatars");
+                //        File uploadsDir = new File(uploadsDirPath);
+                //        if (!uploadsDir.exists()) {
+                //            uploadsDir.mkdirs();
+                //        }
+                //        avatarFileName = System.currentTimeMillis() + "_" + submittedFileName;
+                //        File destination = new File(uploadsDir, avatarFileName);
+                //         filePart.write(destination.getAbsolutePath());
+                //    }
+                //} 
+
+                
+                // 222
+                Part avatarPart = request.getPart("avatar");
+
+                if (avatarPart != null && avatarPart.getSize() > 0) {
+                    String userHome = System.getProperty("user.home");
+                    String uploadDirectory = userHome + File.separator + "campshare_uploads";
+                    
+                    String newAvatarPath = FileUploadUtil.uploadFile(avatarPart, uploadDirectory, "avatars");
+                    
+                    if (newAvatarPath != null) {
+                        avatarFileName = newAvatarPath; 
                     }
                 }
+
+
             } catch (Exception e) {
                 System.out.println("Error handling file upload: " + e.getMessage());
             }
@@ -131,12 +149,12 @@ public class profileServlet extends HttpServlet {
                 );
 
                 // Update the authenticatedUser in session with the latest user data
-                HttpSession session = request.getSession(false);
+                /*HttpSession session = request.getSession(false);
                 User updatedUser = reservationService.getClientProfile(email);
                 session.setAttribute("authenticatedUser", updatedUser);
 
                 System.out.println("Updated User: " + updatedUser);
-                System.out.println("Authenticated User: " + session.getAttribute("authenticatedUser"));
+                System.out.println("Authenticated User: " + session.getAttribute("authenticatedUser"));*/
                 
              
                 
