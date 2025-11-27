@@ -75,6 +75,13 @@ public class profileServlet extends HttpServlet {
         @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("=== doPost method called ===");
+
+
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         
         // Handle profile update
         String action = request.getParameter("action");
@@ -149,12 +156,18 @@ public class profileServlet extends HttpServlet {
                 );
 
                 // Update the authenticatedUser in session with the latest user data
-                /*HttpSession session = request.getSession(false);
-                User updatedUser = reservationService.getClientProfile(email);
-                session.setAttribute("authenticatedUser", updatedUser);
+                if(updateSuccess){
+                    user1.setEmail(email);
+                    user1.setFirstName(firstName);
+                    user1.setLastName(lastName);
+                    user1.setUsername(username);
+                    user1.setPhoneNumber(phoneNumber);
+                    user1.setAvatarUrl(avatarFileName);
+                    request.getSession().setAttribute("authenticatedUser", user1);
+                }
 
-                System.out.println("Updated User: " + updatedUser);
-                System.out.println("Authenticated User: " + session.getAttribute("authenticatedUser"));*/
+                System.out.println("Updated User: " + user1);
+                //System.out.println("Authenticated User: " + request.getSession().getAttribute("authenticatedUser"));
                 
              
                 

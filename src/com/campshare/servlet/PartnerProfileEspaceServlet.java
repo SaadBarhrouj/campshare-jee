@@ -67,6 +67,11 @@ public class PartnerProfileEspaceServlet extends HttpServlet {
      @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("=== doPost method called ===");
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         
         // Handle profile update
         String action = request.getParameter("action");
@@ -74,7 +79,7 @@ public class PartnerProfileEspaceServlet extends HttpServlet {
         
         if ("update".equals(action)) {
             String emailParam = request.getParameter("email");
-            String email = (emailParam != null && !emailParam.isBlank()) ? emailParam : "maronakram@gmail.com";
+            String email = (emailParam != null && !emailParam.isBlank()) ? emailParam : user1.getEmail();
 
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
@@ -121,6 +126,14 @@ public class PartnerProfileEspaceServlet extends HttpServlet {
                     password, // can be null if not changing password
                     avatarFileName // can be null if not changing avatar
                 );
+                if(updateSuccess) {
+                    user1.setFirstName(firstName);
+                    user1.setLastName(lastName);
+                    user1.setUsername(username);
+                    user1.setPhoneNumber(phoneNumber);
+                    user1.setAvatarUrl(avatarFileName);
+                    request.getSession().setAttribute("authenticatedUser", user1);
+                } 
                 
                
                 

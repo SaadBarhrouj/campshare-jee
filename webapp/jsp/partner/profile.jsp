@@ -218,11 +218,7 @@
                             <div class="flex flex-col md:flex-row items-start md:items-center mb-8">
                                 <div class="relative mb-6 md:mb-0 md:mr-8">
                                     <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
-<<<<<<< HEAD
-                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/assets/images/users/${userProfile.avatarUrl}"
-=======
                                         <img id="avatarPreview" src="${pageContext.request.contextPath}/uploads/${userProfile.avatarUrl}"
->>>>>>> main
                                              alt="${userProfile.username}"
                                              class="w-full h-full object-cover" />
                                     </div>
