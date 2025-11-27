@@ -208,7 +208,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des Avis Reçus</h2>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                        2 Total Avis Reçus
+                        ${fn:length(ParteneReviews)} Total Avis Reçus
                     </span>
                 </div>
                 <%-- ${ParteneReviews} --%>
@@ -228,7 +228,7 @@
                                             <div class="flex gap-2 items-center content-center mb-4 lg:mb-0 lg:mr-6 w-full lg:w-auto">
                                                 <div class="flex items-center content-center w-12">
                                                     <a href="{{ route('client.profile.index', 21) }}">
-                                                    <img src="${pageContext.request.contextPath}/assets/images/users/${review.reviewer.avatarUrl}"
+                                                    <img src="${pageContext.request.contextPath}/uploads/${review.reviewer.avatarUrl}"
                                                         alt="Mehdi Idrissi" 
                                                         class="w-12 h-12 rounded-full object-cover" />
                                                     </a>

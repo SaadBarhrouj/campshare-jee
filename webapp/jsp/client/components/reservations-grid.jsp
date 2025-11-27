@@ -19,7 +19,7 @@
             <c:forEach var="res" items="${reservations}">
                 <div class="reservation-card bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden" data-status="${res.status}">
                     <div class="relative h-40">
-                        <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" 
+                        <img src="${pageContext.request.contextPath}/uploads/${res.listing.item.images.get(0).url}" 
                              alt="Image" class="w-full h-full object-cover" />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         
@@ -48,7 +48,7 @@
                     <div class="p-4">
                         <div class="flex items-start mb-4">
                             <c:if test="${not empty res.partner}">
-                                <img src="${pageContext.request.contextPath}/images/avatars/${res.partner.avatarUrl}" 
+                                <img src="${pageContext.request.contextPath}/uploads/${res.partner.avatarUrl}" 
                                      alt="image" class="w-8 h-8 rounded-full object-cover mr-3" />
                                 <div>
                                     <p class="font-medium text-gray-900 dark:text-white">

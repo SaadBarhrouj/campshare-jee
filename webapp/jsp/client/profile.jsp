@@ -70,7 +70,7 @@
                         <div class="flex flex-col md:flex-row items-start md:items-center">
                             <div class="relative mb-6 md:mb-0 md:mr-8">
                                 <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
-                                    <img src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}" 
+                                    <img src="${pageContext.request.contextPath}/uploads/${userProfile.avatarUrl}" 
                                          alt="${userProfile.username}" 
                                          class="w-full h-full object-cover" />
                                 </div>
@@ -161,7 +161,7 @@
                     </div>
 
                     <div class="flex items-center justify-end max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-right gap-4">
-                        <a href=""
+                        <a href="${pageContext.request.contextPath}/client-profile?id=${userProfile.id}"
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors">
                             <i class="fa-solid fa-address-card mr-2"></i> Mon profil Public
                         </a>
@@ -180,7 +180,7 @@
                             <div class="flex flex-col md:flex-row items-start md:items-center mb-8">
                                 <div class="relative mb-6 md:mb-0 md:mr-8">
                                     <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
-                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}" 
+                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/uploads/${userProfile.avatarUrl}" 
                                             alt="${userProfile.username}" 
                                             class="w-full h-full object-cover" />
                                     </div>

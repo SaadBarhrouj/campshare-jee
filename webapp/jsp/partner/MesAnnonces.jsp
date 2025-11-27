@@ -221,7 +221,7 @@
                                                 <c:choose>
                                                     <c:when test="${not empty annonce.item.images}">
                                                         <img class="h-10 w-10 rounded-md object-cover"
-                                                            src="${pageContext.request.contextPath}/assets/images/items/${annonce.item.images[0].url}"
+                                                            src="${pageContext.request.contextPath}/uploads/${annonce.item.images[0].url}"
                                                             alt="${annonce.item.title}">
                                                     </c:when>
                                                     <c:otherwise>

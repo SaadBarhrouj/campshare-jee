@@ -19,9 +19,17 @@ public class AnnonceDetailsServlet extends HttpServlet {
 
       PartnerService partnerService = new PartnerService();
 
-      String email = "maronakram@gmail.com";
-      User user = partnerService.getPartnerByEmail(email);
-      request.setAttribute("user", user);
+      User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user1.getEmail();
+        User user = partnerService.getPartnerByEmail(email);
+
+
+        request.setAttribute("user", user);
         
 
     String idParam = request.getParameter("listing_id");

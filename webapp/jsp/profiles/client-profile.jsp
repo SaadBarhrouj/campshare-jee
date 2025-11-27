@@ -127,7 +127,7 @@
                         <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
                             <c:choose>
                                 <c:when test="${not empty client.avatarUrl}">
-                                    <img src="${pageContext.request.contextPath}/${client.avatarUrl}"
+                                    <img src="${pageContext.request.contextPath}/uploads/${client.avatarUrl}"
                                          alt="${client.username}"
                                          class="w-full h-full object-cover" />
                                 </c:when>
@@ -180,10 +180,6 @@
                                 </c:choose>
                             </div>
                             
-                            <div class="flex flex-col items-center">
-                                <div class="text-2xl font-bold text-gray-900 dark:text-white">${listingsCount}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Annonces publiées</div>
-                            </div>
                             
                         </div>
                     </div>
@@ -223,44 +219,28 @@
                             
                             <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">5 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[5]}%"></div>
+
+                                    <c:forEach items="${clientRatingPercentages}" var="entry" begin="0" end="2">
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-24 font-medium text-gray-700 dark:text-gray-300">${entry.key} étoiles</div>
+                                            <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-400 rounded-full" style="width: ${entry.value}%"></div>
+                                            </div>
+                                            <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${entry.value}%</div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[5]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">4 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[4]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[4]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">3 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[3]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[3]}%</div>
-                                    </div>
+                                    </c:forEach>
                                 </div>
                                 
                                 <div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">2 étoiles</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[2]}%"></div>
+                                    <c:forEach items="${clientRatingPercentages}" var="entry" begin="3" end="4">
+                                        <div class="flex items-center mb-2">
+                                            <div class="w-24 font-medium text-gray-700 dark:text-gray-300">${entry.key} étoiles</div>
+                                            <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                                                <div class="h-full bg-amber-400 rounded-full" style="width: ${entry.value}%"></div>
+                                            </div>
+                                            <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${entry.value}%</div>
                                         </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[2]}%</div>
-                                    </div>
-                                    <div class="flex items-center mb-2">
-                                        <div class="w-24 font-medium text-gray-700 dark:text-gray-300">1 étoile</div>
-                                        <div class="flex-1 h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                            <div class="h-full bg-amber-400 rounded-full" style="width: ${clientRatingPercentages[1]}%"></div>
-                                        </div>
-                                        <div class="w-12 text-right text-gray-500 dark:text-gray-400 text-sm">${clientRatingPercentages[1]}%</div>
-                                    </div>
+                                    </c:forEach>
                                 </div>
                             </div>
                         </div>
@@ -280,7 +260,7 @@
                                     <div class="flex">
                                         <div class="mr-4">
                                             <a href="${pageContext.request.contextPath}/partner-profile?id=${review.reviewer.id}">
-                                                <img src="${review.reviewer != null && review.reviewer.avatarUrl != null ? pageContext.request.contextPath.concat('/').concat(review.reviewer.avatarUrl) : pageContext.request.contextPath.concat('/assets/images/users/image4.png')}" 
+                                                <img src="${review.reviewer != null && review.reviewer.avatarUrl != null ? pageContext.request.contextPath.concat('/uploads/').concat(review.reviewer.avatarUrl) : pageContext.request.contextPath.concat('/assets/images/users/image4.png')}" 
                                                      alt="${review.reviewer != null ? review.reviewer.username : ''}" 
                                                      class="w-12 h-12 rounded-full object-cover" />
                                             </a>

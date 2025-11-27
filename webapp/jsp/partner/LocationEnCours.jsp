@@ -215,7 +215,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <h2 class="font-bold text-xl text-gray-900 dark:text-white">Liste des demandes</h2>
                     <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 text-xs font-medium rounded-full">
-                       ${fn:length(PartenerReservation)} Réservations en cours
+                       ${fn:length(PartenerReservavtion)} Réservations en cours
                     </span>
                 </div>
 
@@ -232,7 +232,7 @@
                                 <div class="flex flex-col lg:flex-row lg:items-start">
                                     <div class="flex gap-2 mb-4 lg:mb-0 lg:mr-28 w-full lg:w-auto">
                                         <div class="flex items-center lg:w-16">
-                                            <img src="${pageContext.request.contextPath}/assets/images/users/${location.client.avatarUrl}"
+                                            <img src="${pageContext.request.contextPath}/uploads/${location.client.avatarUrl}"
                                                 alt="${location.client.username}" 
                                                 class="w-12 h-12 rounded-full object-cover" />
                                             <div class="lg:hidden ml-3">

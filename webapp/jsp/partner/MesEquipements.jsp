@@ -202,7 +202,7 @@
                 data-category="${equipment.category.id}"
                 data-price="${equipment.pricePerDay}">
                     <div class="relative h-48">
-                            <img src="${pageContext.request.contextPath}//assets/images/items/${equipment.images[0].url}" 
+                            <img src="${pageContext.request.contextPath}/uploads/${equipment.images[0].url}" 
                                  alt="${equipment.title}" 
                                  class="w-full h-full object-cover">
                        
@@ -315,7 +315,7 @@
                         <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md px-6 pt-5 pb-6 cursor-pointer" id="image-drop-area">
                             <div class="space-y-1 text-center">
                                 <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
-                                <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
+                                <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center overflow-hidden">
                                     <label for="images" class="relative cursor-pointer rounded-md font-medium text-forest dark:text-meadow hover:text-meadow focus-within:outline-none">
                                         <span>Ajouter des images</span>
                                         <input id="images" name="temp_images" type="file" class="sr-only" accept="image/*" multiple>
@@ -500,7 +500,7 @@
                     <!-- Colonne de gauche: Images et informations de base -->
                     <div>
                         <div class="bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden mb-4">
-                            <div id="detail-image-slider" class="w-full h-64 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide no-scrollbar">
+                            <div id="detail-image-slider" class="w-full h-64 flex overflow-hidden snap-x snap-mandatory scrollbar-hide no-scrollbar">
                                 <!-- Images will be added here dynamically -->
                                 <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
                                     <i class="fas fa-campground text-5xl text-gray-400 dark:text-gray-500"></i>
@@ -893,7 +893,7 @@
                                 imgDiv.setAttribute('data-index', index);
                                 console.log('Adding image to slider:', image.url);
                                 imgDiv.innerHTML = `
-                                    <img src="http://localhost:8080/webapp//assets/images/items/\${image.url}" alt="\${data.title}" class="w-full h-full object-cover">
+                                    <img src="http://localhost:8080/webapp/uploads/\${image.url}" alt="\${data.title}" class="w-full h-full object-cover">
                                     <div class="absolute bottom-2 right-2 bg-black bg-opacity-50 text-white text-xs px-2 py-1 rounded-full">
                                         \${index + 1}/\${data.item.images.length}
                                     </div>
@@ -1045,7 +1045,7 @@
                             const img = document.createElement('img');
                             img.className = 'w-8 h-8 rounded-full mr-2';
                             img.alt = review.reviewer?.username || 'Utilisateur';
-                            img.src = review.reviewer?.avatarUrl ? contextPath + '/assets/images/users/' + review.reviewer.avatarUrl
+                            img.src = review.reviewer?.avatarUrl ? contextPath + '/uploads/' + review.reviewer.avatarUrl
                                                                 : contextPath + '/assets/images/default-avatar.png';
 
                             const infoDiv = document.createElement('div');

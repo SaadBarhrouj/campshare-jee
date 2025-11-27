@@ -184,7 +184,7 @@ pageEncoding="UTF-8"%>
       <!-- Logo -->
       <div class="flex justify-center mb-6">
         <div class="flex items-center">
-          <a href="/index.html">
+          <a href="${pageContext.request.contextPath}/">
             <span class="text-forest dark:text-meadow text-3xl font-extrabold"
               >Camp<span class="text-sunlight">Share</span></span
             >
@@ -905,7 +905,7 @@ pageEncoding="UTF-8"%>
           Déjà un compte ? Connectez-vous
         </a>
         <a
-          href="/index.html"
+          href="${pageContext.request.contextPath}/"
           class="footer-link text-gray-600 dark:text-gray-400 hover:text-forest dark:hover:text-meadow"
         >
           <i class="fas fa-home mr-2"></i>
