@@ -295,7 +295,7 @@ prefix="c" %>
             class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
           >
             <!-- Category 1 -->
-            <a href="#" class="group">
+            <a href="${pageContext.request.contextPath}/listings?category=Tentes%20et%20Abris" class="group">
               <div
                 class="relative rounded-lg overflow-hidden shadow-lg aspect-w-3 aspect-h-2 mb-4"
               >
@@ -315,7 +315,7 @@ prefix="c" %>
             </a>
 
             <!-- Category 2 -->
-            <a href="#" class="group">
+            <a href="${pageContext.request.contextPath}/listings?category=Éclairage" class="group">
               <div
                 class="relative rounded-lg overflow-hidden shadow-lg aspect-w-3 aspect-h-2 mb-4"
               >
@@ -328,14 +328,14 @@ prefix="c" %>
                   class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"
                 ></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4">
-                  <h3 class="text-xl font-bold text-white">Couchage</h3>
+                  <h3 class="text-xl font-bold text-white">Éclairage</h3>
                   <p class="text-sm text-gray-200">42 articles disponibles</p>
                 </div>
               </div>
             </a>
 
             <!-- Category 3 - Cuisine image updated -->
-            <a href="#" class="group">
+            <a href="${pageContext.request.contextPath}/listings?category=Équipement%20de%20cuisine" class="group">
               <div
                 class="relative rounded-lg overflow-hidden shadow-lg aspect-w-3 aspect-h-2 mb-4"
               >
@@ -355,7 +355,7 @@ prefix="c" %>
             </a>
 
             <!-- Category 4 -->
-            <a href="#" class="group">
+            <a href="${pageContext.request.contextPath}/listings?category=Mobilier%20camping" class="group">
               <div
                 class="relative rounded-lg overflow-hidden shadow-lg aspect-w-3 aspect-h-2 mb-4"
               >

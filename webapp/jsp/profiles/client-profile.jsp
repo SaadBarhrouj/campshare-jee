@@ -180,10 +180,6 @@
                                 </c:choose>
                             </div>
                             
-                            <div class="flex flex-col items-center">
-                                <div class="text-2xl font-bold text-gray-900 dark:text-white">${listingsCount}</div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Annonces publiées</div>
-                            </div>
                             
                         </div>
                     </div>
