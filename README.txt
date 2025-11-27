@@ -108,19 +108,27 @@ C. RÔLE CLIENT (Recherche et Location)
 ========================================================================
 6. AUTOMATISATION & TÂCHES DE FOND (CRON JOB)
 ========================================================================
-L'application intègre un listener (Tâche automatique) qui vérifie l'état des
-réservations à chaque démarrage du serveur (ou périodiquement).
+L'application intègre un planificateur de tâches (ScheduledExecutorService)
+configuré via un Listener (AppContextListener).
 
-Fonctionnement :
-Le système détecte les réservations dont la date de fin est passée mais 
-qui sont encore au statut "Confirmed". Il les passe automatiquement 
-au statut "Completed" et génère les notifications pour demander les avis.
+CONFIGURATION TECHNIQUE :
+- Démarrage : 1 minute après le lancement du serveur (Délai initial).
+- Fréquence : S'exécute ensuite toutes les 1440 minutes (24 heures).
 
-TESTER CETTE FONCTIONNALITÉ :
-Si vous voyez des réservations expirées mais non complétées dans la base :
-1. Redémarrez simplement le serveur Tomcat.
-2. Connectez-vous : vous verrez que les statuts sont passés à "Completed".
-3. Les utilisateurs concernés auront reçu une notification "Évaluer l'équipement".
+FONCTIONNEMENT DU SCRIPT :
+1. Clôture automatique : Le système recherche les réservations au statut 
+   "Confirmed" dont la date de fin est passée et les passe à "Completed".
+2. Notifications : Il identifie les réservations terminées la veille 
+   et génère automatiquement les notifications demandant aux utilisateurs 
+   de laisser un avis (Client et Partenaire).
+
+COMMENT TESTER CETTE FONCTIONNALITÉ :
+Pour voir le script en action sans attendre 24h :
+1. Assurez-vous d'avoir des réservations "Confirmed" avec une date passée dans la BDD.
+2. Lancez (ou redémarrez) le serveur Tomcat.
+3. ATTENDEZ 1 MINUTE (Observez la console du serveur si possible).
+4. Actualisez votre Dashboard : les statuts seront passés à "Completed" et 
+   les notifications d'avis seront apparues.
 
 ========================================================================
 FIN DU README
