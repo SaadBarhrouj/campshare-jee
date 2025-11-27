@@ -27,25 +27,32 @@ public class PartnerProfileEspaceServlet extends HttpServlet {
        @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ClientService clientService = new ClientService();
-        String email = "maronakram@gmail.com";
-        User user = clientService.getClientByEmail(email);
+        PartnerService partnerService = new PartnerService();
+
+                
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        User user = partnerService.getPartnerByEmail(user1.getEmail());
         request.setAttribute("user", user);
 
         ReservationService reservationService = new ReservationService();
-        User userProfile = reservationService.getPartnerProfile(email);
+        User userProfile = reservationService.getPartnerProfile(user.getEmail());
         request.setAttribute("userProfile", userProfile);
-        int totalReservations = reservationService.getTotalReservationsByEmail(email);
+        int totalReservations = reservationService.getTotalReservationsByEmailPartner(user.getEmail());
         request.setAttribute("totalReservations", totalReservations);
 
-        double totalDepense = reservationService.getTotalDepenseByEmail(email);
+        double totalDepense = reservationService.getTotalDepenseByEmailPartner(user1.getEmail());
         request.setAttribute("totalDepense", totalDepense);
 
                 // Calculate stars
       
 
-        double noteMoyenne = reservationService.getNoteMoyenneByEmail(email);
+        double noteMoyenne = userProfile.getAvgRating();
         request.setAttribute("noteMoyenne", noteMoyenne);
-        int fullStars = (int) Math.floor(noteMoyenne);
+        int fullStars = (int) Math.floor(userProfile.getAvgRating());
         boolean hasHalfStar = (noteMoyenne - fullStars) >= 0.5;
         int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
@@ -90,7 +97,7 @@ public class PartnerProfileEspaceServlet extends HttpServlet {
                 if (filePart != null && filePart.getSize() > 0) {
                     String submittedFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
                     if (!submittedFileName.isBlank()) {
-                        String uploadsDirPath = getServletContext().getRealPath("/images/avatars");
+                        String uploadsDirPath = getServletContext().getRealPath("/assets/images/users");
                         File uploadsDir = new File(uploadsDirPath);
                         if (!uploadsDir.exists()) {
                             uploadsDir.mkdirs();

@@ -1,6 +1,7 @@
 package com.campshare.dao.impl;
 
 import com.campshare.dao.interfaces.ReservationDAO;
+import com.campshare.dto.DailyStatsDTO;
 import com.campshare.model.Category;
 import com.campshare.model.City;
 import com.campshare.model.Image;
@@ -10,7 +11,6 @@ import com.campshare.model.Reservation;
 import com.campshare.model.Review;
 import com.campshare.model.User;
 import com.campshare.util.DatabaseManager;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import com.campshare.dto.DailyStatsDTO;
 
 
 
@@ -58,6 +57,33 @@ public class ReservationDAOImpl implements ReservationDAO{
         return 0; 
     }
 
+        public int getTotalReservationsByEmailPartner(String email) {
+    String sql = """
+        SELECT COUNT(r.id) AS total_reservations
+        FROM users u
+        LEFT JOIN reservations r ON u.id = r.partner_id
+        WHERE u.email = ?
+        GROUP BY u.id, u.username
+        LIMIT 1
+    """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("total_reservations");
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors de la récupération du nombre de réservations : " + e.getMessage());
+        }
+
+        return 0; 
+    }
+
+
         @Override
     public double getTotalDepenseByEmail(String email) {
         String sql = """
@@ -86,6 +112,35 @@ public class ReservationDAOImpl implements ReservationDAO{
 
         return 0;
     }
+
+    public double getTotalDepenseByEmailPartner(String email) {
+        String sql = """
+            SELECT COALESCE(SUM(ABS(DATEDIFF(r.end_date, r.start_date) + 1) * i.price_per_day), 0) AS total_depense
+            FROM users u
+            LEFT JOIN reservations r ON u.id = r.partner_id
+            LEFT JOIN listings l ON r.listing_id = l.id
+            LEFT JOIN items i ON l.item_id = i.id
+            WHERE u.email = ? AND r.status = 'completed'
+        """;
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getDouble("total_depense");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur SQL lors du calcul de la dépense totale : " + e.getMessage());
+            throw new RuntimeException("Erreur lors du calcul de la dépense totale.", e);
+        }
+
+        return 0;
+    }
+
 
         @Override
     public double getNoteMoyenneByEmail(String email) {

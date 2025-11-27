@@ -315,7 +315,7 @@
                         <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md px-6 pt-5 pb-6 cursor-pointer" id="image-drop-area">
                             <div class="space-y-1 text-center">
                                 <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 dark:text-gray-500 mb-3"></i>
-                                <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center">
+                                <div class="flex text-sm text-gray-600 dark:text-gray-400 justify-center overflow-hidden">
                                     <label for="images" class="relative cursor-pointer rounded-md font-medium text-forest dark:text-meadow hover:text-meadow focus-within:outline-none">
                                         <span>Ajouter des images</span>
                                         <input id="images" name="temp_images" type="file" class="sr-only" accept="image/*" multiple>
@@ -500,7 +500,7 @@
                     <!-- Colonne de gauche: Images et informations de base -->
                     <div>
                         <div class="bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden mb-4">
-                            <div id="detail-image-slider" class="w-full h-64 flex overflow-x-auto snap-x snap-mandatory scrollbar-hide no-scrollbar">
+                            <div id="detail-image-slider" class="w-full h-64 flex overflow-hidden snap-x snap-mandatory scrollbar-hide no-scrollbar">
                                 <!-- Images will be added here dynamically -->
                                 <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex-shrink-0 snap-center flex items-center justify-center">
                                     <i class="fas fa-campground text-5xl text-gray-400 dark:text-gray-500"></i>
