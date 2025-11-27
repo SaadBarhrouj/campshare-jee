@@ -421,7 +421,7 @@
                 <c:forEach var="listingData" items="${listings}" varStatus="loop">
                     <c:set var="listingImage" value="${pageContext.request.contextPath}/assets/images/item-default.jpg" />
                     <c:if test="${not empty listingData.firstImage}">
-                        <c:set var="listingImage" value="${pageContext.request.contextPath}/${listingData.firstImage.url}" />
+                        <c:set var="listingImage" value="${pageContext.request.contextPath}/uploads/${listingData.firstImage.url}" />
                     </c:if>
                     {
                         lat: ${listingData.listing.latitude},

@@ -29,7 +29,7 @@ import com.campshare.util.FileUploadUtil;
 
 
 @WebServlet("/partner/AddItem")
-@MultipartConfig(maxFileSize = 2 * 1024 * 1024) // 2MB
+@MultipartConfig(maxFileSize = 10 * 1024 * 1024) // 2MB
 public class PartnerAddItemServlet extends HttpServlet {
 
     

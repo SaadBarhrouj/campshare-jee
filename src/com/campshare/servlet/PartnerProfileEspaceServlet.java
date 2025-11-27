@@ -19,8 +19,8 @@ import java.nio.file.Paths;
 
 @WebServlet("/partner/profile")
 @MultipartConfig(
-        maxFileSize = 1024 * 1024 * 5,
-        maxRequestSize = 1024 * 1024 * 10
+        maxFileSize = 1024 * 1024 * 20,
+        maxRequestSize = 1024 * 1024 * 20
 )
 public class PartnerProfileEspaceServlet extends HttpServlet {
 

@@ -28,7 +28,7 @@ import com.campshare.service.ReservationService;
 
 
 @WebServlet("/partner/DeleteItem/*")
-@MultipartConfig(maxFileSize = 2 * 1024 * 1024) // 2MB
+@MultipartConfig(maxFileSize = 10 * 1024 * 1024) // 2MB
 public class PartnerDeleteItemServlet extends HttpServlet {
 
     

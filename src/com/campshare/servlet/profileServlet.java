@@ -21,8 +21,8 @@ import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.Part;
 
 @MultipartConfig(
-    maxFileSize = 1024 * 1024 * 5, 
-    maxRequestSize = 1024 * 1024 * 10 
+    maxFileSize = 1024 * 1024 * 20, 
+    maxRequestSize = 1024 * 1024 * 20
 )
 @WebServlet("/client/profile")
 
