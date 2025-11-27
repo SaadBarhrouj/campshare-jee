@@ -15,8 +15,8 @@ MEMBRES DU GROUPE :
 1. PRÉREQUIS TECHNIQUES
 ========================================================================
 Pour exécuter ce projet, assurez-vous d'avoir installé :
-- Java Development Kit (JDK) : Version 1.8 ou supérieure.
-- Serveur d'application : Apache Tomcat 9.
+- Java Development Kit (JDK) : Version 21 (Obligatoire pour supporter les Text Blocks).
+- Serveur d'application : Apache Tomcat 9 ou 10.
 - Base de données : MySQL (Version 5.7 ou 8.0).
 - Navigateur Web : Chrome, Firefox ou Edge.
 
@@ -69,7 +69,8 @@ Méthode 1 : Déploiement WAR (Classique)
 Méthode 2 : Via IDE (Eclipse / IntelliJ / VS Code)
 1. Importez le projet en tant que "Dynamic Web Project".
 2. Ajoutez le serveur Tomcat à l'IDE.
-3. Ajoutez le projet au serveur et cliquez sur "Run".
+3. Configurez le "Build Path" pour utiliser le JDK 21.
+4. Ajoutez le projet au serveur et cliquez sur "Run".
 
 L'application sera accessible à l'adresse : 
 http://localhost:8080/CampShare/
