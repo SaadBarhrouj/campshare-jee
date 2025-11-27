@@ -1,4 +1,6 @@
 package com.campshare.service;
+import com.campshare.dao.impl.ReservationDAOImpl;
+import com.campshare.dao.impl.UserDAOImpl;
 import com.campshare.dao.interfaces.ReservationDAO;
 import com.campshare.dao.interfaces.UserDAO;
 import com.campshare.model.Reservation;
@@ -6,9 +8,6 @@ import com.campshare.model.Review;
 import com.campshare.model.User;
 import java.util.List;
 import java.util.Map;
-
-import com.campshare.dao.impl.ReservationDAOImpl;
-import com.campshare.dao.impl.UserDAOImpl;
 
 
 
@@ -19,9 +18,16 @@ public class ReservationService {
     public int getTotalReservationsByEmail(String email) {
         return reservationDAO.getTotalReservationsByEmail(email);
     }
+        public int getTotalReservationsByEmailPartner(String email) {
+        return reservationDAO.getTotalReservationsByEmailPartner(email);
+    }
+    
 
     public double getTotalDepenseByEmail(String email) {
         return reservationDAO.getTotalDepenseByEmail(email);
+    }
+    public double getTotalDepenseByEmailPartner(String email) {
+        return reservationDAO.getTotalDepenseByEmailPartner(email);
     }
 
     public double getNoteMoyenneByEmail(String email) {

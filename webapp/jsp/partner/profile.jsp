@@ -114,7 +114,7 @@
                         <div class="flex flex-col md:flex-row items-start md:items-center">
                             <div class="relative mb-6 md:mb-0 md:mr-8">
                                 <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
-                                    <img src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}"
+                                    <img src="${pageContext.request.contextPath}/assets/images/users/${userProfile.avatarUrl}"
                                          alt="${userProfile.username}"
                                          class="w-full h-full object-cover" />
                                 </div>
@@ -142,9 +142,10 @@
 
                                 <div class="flex flex-wrap gap-16 mt-6">
                                     <div class="flex flex-col items-center">
+
                                         <div class="text-2xl font-bold text-gray-900 dark:text-white">
                                             <c:choose>
-                                                <c:when test="${noteMoyenne != 0}">
+                                                <c:when test="${userProfile.avgRating != 0}">
                                                     <div class="flex text-amber-400 mr-1">
                                                         <c:forEach var="i" begin="1" end="${fullStars}">
                                                             <i class="fas fa-star text-base"></i>
@@ -175,7 +176,7 @@
 
                                     <div class="flex flex-col items-center">
                                         <div class="text-2xl font-bold text-gray-900 dark:text-white">
-                                            <fmt:formatNumber value="${totalRevenue}" type="number" maxFractionDigits="2"/> MAD
+                                            <fmt:formatNumber value="${totalDepense}" type="number" maxFractionDigits="2"/> MAD
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Gains totaux</div>
                                     </div>
@@ -217,7 +218,7 @@
                             <div class="flex flex-col md:flex-row items-start md:items-center mb-8">
                                 <div class="relative mb-6 md:mb-0 md:mr-8">
                                     <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-md">
-                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/images/avatars/${userProfile.avatarUrl}"
+                                        <img id="avatarPreview" src="${pageContext.request.contextPath}/assets/images/users/${userProfile.avatarUrl}"
                                              alt="${userProfile.username}"
                                              class="w-full h-full object-cover" />
                                     </div>

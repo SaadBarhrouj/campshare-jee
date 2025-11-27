@@ -1,18 +1,18 @@
 package com.campshare.dao.interfaces;
 
+import com.campshare.dto.DailyStatsDTO;
 import com.campshare.model.Reservation;
 import com.campshare.model.Review;
 import com.campshare.model.User;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import java.util.Date;
-
-import com.campshare.dto.DailyStatsDTO;
 
 public interface ReservationDAO {
 
     int getTotalReservationsByEmail(String email);
+        int getTotalReservationsByEmailPartner(String email);
+
     double getTotalDepenseByEmail(String email);
     double getNoteMoyenneByEmail(String email);
     List<Reservation> getReservationDetailsByEmail(String email);
@@ -70,6 +70,8 @@ public interface ReservationDAO {
 
   boolean updateStatus(long reservationId, String newStatus);
   List<Reservation> findExpiredConfirmedReservations();
+
+  double getTotalDepenseByEmailPartner(String email) ;
 
 }
 

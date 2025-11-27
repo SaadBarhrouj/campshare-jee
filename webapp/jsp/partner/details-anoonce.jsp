@@ -301,7 +301,8 @@
                     <c:choose>
                         <c:when test="${not empty images}">
                             <div class="rounded-lg overflow-hidden h-48">
-                                <img src="${pageContext.request.contextPath}/${images.get(0).url}" 
+                                <img src="${pageContext.request.contextPath}//assets/images/items/${images.get(0).url}" 
+" 
                                     alt="${item.title}" 
                                     class="w-full h-full object-cover">
                             </div>
