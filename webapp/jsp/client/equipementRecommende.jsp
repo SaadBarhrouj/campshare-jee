@@ -92,7 +92,7 @@
                             <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden flex flex-col h-full">
                                 
                                 <a href="${pageContext.request.contextPath}/listing?id=${res.listing.id}" class="block relative h-48">
-                                    <img src="${pageContext.request.contextPath}/images/items/${res.listing.item.images.get(0).url}" 
+                                    <img src="${pageContext.request.contextPath}/uploads/${res.listing.item.images.get(0).url}" 
                                         alt="Image" class="w-full h-full object-cover" />
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                                     <div class="absolute bottom-4 left-4 right-4">

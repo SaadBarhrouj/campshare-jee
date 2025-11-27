@@ -25,6 +25,7 @@ import com.campshare.model.Image;
 import com.campshare.service.ItemService;
 import com.campshare.service.PartnerService;
 import com.campshare.service.ReservationService;
+import com.campshare.util.FileUploadUtil;
 
 
 @WebServlet("/partner/AddItem")
@@ -55,14 +56,27 @@ public class PartnerAddItemServlet extends HttpServlet {
             System.out.println("Size: " + part.getSize());
         }
 
-        for (Part part : request.getParts()) {
-            if ("images[]".equals(part.getName()) && part.getSize() > 0) {
-                String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
-                part.write(uploadPath + File.separator + fileName);
 
+        for (Part part : request.getParts()) {
+            // String fileName = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+            // part.write(uploadPath + File.separator + fileName);
+
+            // Image img = new Image();
+            // img.setUrl(fileName); 
+            // images.add(img);
+
+            if ("images[]".equals(part.getName()) && part.getSize() > 0) {
+                String userHome = System.getProperty("user.home");
+                String uploadDirectory = userHome + File.separator + "campshare_uploads";
+                String newAvatarPath = FileUploadUtil.uploadFile(part, uploadDirectory, "items");
+                System.out.println("the new avatar path" + newAvatarPath);
                 Image img = new Image();
-                img.setUrl(fileName); 
+                img.setUrl(newAvatarPath);
                 images.add(img);
+                
+                // if (newAvatarPath != null) {
+                //     avatarUrl = newAvatarPath; 
+                // }
             }
         }
 

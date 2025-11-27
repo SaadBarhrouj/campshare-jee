@@ -156,7 +156,7 @@
                         <i class="fas fa-edit mr-2"></i>
                         Modifier l'annonce
                     </a>
-                    <a href="${pageContext.request.contextPath}/partner/AnnonceEdit?listing_id=${annonce.id}" target="_blank" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <a href="${pageContext.request.contextPath}/listing?id=${listing.id}" class="inline-flex items-center px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                         <i class="far fa-eye mr-2"></i>
                         Voir côté client
                     </a>
@@ -301,7 +301,7 @@
                     <c:choose>
                         <c:when test="${not empty images}">
                             <div class="rounded-lg overflow-hidden h-48">
-                                <img src="${pageContext.request.contextPath}/${images.get(0).url}" 
+                                <img src="${pageContext.request.contextPath}/uploads/${images.get(0).url}" 
                                     alt="${item.title}" 
                                     class="w-full h-full object-cover">
                             </div>

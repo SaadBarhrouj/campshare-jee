@@ -338,7 +338,7 @@
                         <div class="mb-8 sm:mb-10">
                              <div class="relative aspect-[4/3] mb-4 sm:mb-6 bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden shadow-md product-img-container">
                                 <img id="mainImage"
-                                     src="${pageContext.request.contextPath}/${not empty images and images.size() > 0 ? images[0].url : 'assets/images/item-default.jpg'}"
+                                     src="${pageContext.request.contextPath}/uploads/${not empty images and images.size() > 0 ? images[0].url : 'assets/images/item-default.jpg'}"
                                      alt="Image principale de ${not empty item.title ? item.title : 'équipement'}"
                                      class="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ease-in-out p-1"/>
                             </div>
@@ -346,8 +346,8 @@
                                 <div class="grid grid-cols-5 gap-2 sm:gap-3">
                                     <c:forEach var="image" items="${images}" varStatus="loop" begin="0" end="4">
                                     <div class="thumbnail aspect-square ${loop.first ? 'active border-sunlight' : 'border-transparent'} bg-gray-100 dark:bg-gray-700 rounded-lg overflow-hidden cursor-pointer border-2 transition-all duration-200 hover:opacity-90"
-                                         onclick="changeImage(this, '${pageContext.request.contextPath}/${image.url}')">
-                                        <img src="${pageContext.request.contextPath}/${image.url}" alt="Miniature ${loop.index + 1}" class="w-full h-full object-cover" loading="lazy"/>
+                                         onclick="changeImage(this, '${pageContext.request.contextPath}/uploads/${image.url}')">
+                                        <img src="${pageContext.request.contextPath}/uploads/${image.url}" alt="Miniature ${loop.index + 1}" class="w-full h-full object-cover" loading="lazy"/>
                                     </div>
                                     </c:forEach>
                                     <c:forEach var="i" begin="${images.size()}" end="4">

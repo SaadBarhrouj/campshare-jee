@@ -224,7 +224,7 @@
                             </div>
                             <a href="${pageContext.request.contextPath}/listing?id=${vm.listing.id}">
                                 <div class="relative h-48">
-                                    <img src="${vm.firstImage != null ? pageContext.request.contextPath.concat('/').concat(vm.firstImage.url) : pageContext.request.contextPath.concat('/assets/images/items/test1.jpg')}" alt="image" class="w-full h-full object-cover" />
+                                    <img src="${vm.firstImage != null ? pageContext.request.contextPath.concat('/uploads/').concat(vm.firstImage.url) : pageContext.request.contextPath.concat('/assets/images/items/test1.jpg')}" alt="image" class="w-full h-full object-cover" />
                                 </div>
                                 <div class="p-4">
                                     <div class="flex justify-between items-start mb-2">

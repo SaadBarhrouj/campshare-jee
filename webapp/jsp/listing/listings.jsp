@@ -323,7 +323,7 @@
                                     <div class="relative h-48">
                                         <c:choose>
                                             <c:when test="${not empty firstImage}">
-                                                <img src="${pageContext.request.contextPath}/<c:out value='${firstImage.url}' />"
+                                                <img src="${pageContext.request.contextPath}/uploads/<c:out value='${firstImage.url}' />"
                                                     alt="<c:out value='${item.title}' />" 
                                                     class="w-full h-full object-cover" />
                                             </c:when>
