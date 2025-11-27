@@ -79,7 +79,15 @@ public class PartnerAddItemServlet extends HttpServlet {
         category.setId(categoryId);
         item.setCategory(category);
         User partner = new User(); // Placeholder for the actual partner user retrieval
-        partner.setId(1); // Set the actual partner ID
+
+        User user = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+        long partnerId = user.getId();
+
+        partner.setId(partnerId); // Set the actual partner ID
         item.setPartner(partner);
         item.setImages(images);
         partnerService.createItemWithImages(item,  getServletContext());

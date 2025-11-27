@@ -182,166 +182,12 @@
             border-left: 4px solid #4F7942;
         }
     </style>
-        <!-- Navigation -->
-<nav class="bg-white bg-opacity-95 dark:bg-gray-800 dark:bg-opacity-95 shadow-md fixed w-full z-50 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex-shrink-0 flex items-center">
-                <!-- Logo -->
-                <a href="{{ route('index') }}" class="flex items-center">
-                    <span class="text-forest dark:text-meadow text-3xl font-extrabold">Camp<span class="text-sunlight">Share</span></span>
-                    <span class="text-xs ml-2 text-gray-500 dark:text-gray-400">by ParentCo</span>
-                </a>
-            </div>
-            
-            <!-- Desktop Navigation -->
-
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="{{ route('client.listings.index') }}" class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300">Explorer le materiel</a>
-                
-
-                    <c:if test="${not empty sessionScope.user}">
-                        <c:if test="${sessionScope.user.role == 'client'}">
-                            <button type="button" id="openPartnerModalBtn"
-                                class="nav-link text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight font-medium transition duration-300 cursor-pointer">
-                                Devenir Partenaire
-                            </button>
-                        </c:if>
-                    </c:if>
-
-                        <div class="relative ml-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="relative">
-                                    <a id="notifications-client-icon-link"
-                                    href="${pageContext.request.contextPath}/notifications/client/index"
-                                    data-mark-read-url="${pageContext.request.contextPath}/notifications/client/markAllAsRead"
-                                    class="relative p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
-                                        <i class="fas fa-bell"></i>
-
-                                        <c:if test="${not empty unreadClientNotificationsCountGlobal and unreadClientNotificationsCountGlobal > 0}">
-                                            <span id="notification-badge-count" class="notification-badge">
-                                                ${unreadClientNotificationsCountGlobal}
-                                            </span>
-                                        </c:if>
-                                    </a>
-                                </div>
-                                <div class="relative">
-                                    <button id="user-menu-button" class="flex items-center space-x-2 focus:outline-none">
-                                        <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
-                                           alt="Avatar de {{ $user->username }}"
-                                           class="h-8 w-8 rounded-full object-cover" />
-                                        <span class="font-medium text-gray-800 dark:text-gray-200">${user.username}</span>
-                                        <i class="fas fa-chevron-down text-sm text-gray-500"></i>
-                                    </button>
-                                    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg z-50 border border-gray-200 dark:border-gray-600">
-                                        <div class="py-1">
-                                            <a href="${pageContext.request.contextPath}/client/profile"  data-target="profile" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user-circle mr-2 opacity-70"></i> Mon profil
-                                            </a>
-                                            <a href="{{ route('HomeClient') }}" class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                <i class="fas fa-user-circle mr-2 opacity-70"></i>  Espace Partenaire
-                                            </a>
-                                          <c:if test="${user != null and user.role == 'partner'}">
-                                                <a href="${pageContext.request.contextPath}/HomePartenaire" 
-                                                class="sidebar-link block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                                    <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Partenaire
-                                                </a>
-                                            </c:if>
-                                            <div class="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                                            <a href="{{ route('logout') }}"
-                                            class="block px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                                <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
-                                            </a>
-
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-              
-
-            </div>
-            
-            <!-- Mobile menu button -->
-            <div class="md:hidden flex items-center">
-                <button id="mobile-menu-button" class="text-gray-600 dark:text-gray-300 hover:text-forest dark:hover:text-sunlight focus:outline-none">
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </button>
-            </div>
-
-        </div>
-    </div>
     
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-gray-800 pb-4 shadow-lg">
-        <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <a href="{{ route('client.listings.index') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">Explorer le materiel</a>
-           <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-            <c:if test="${not empty sessionScope.user}">
-                <c:if test="${sessionScope.user.role == 'client'}">
-                    <a href="#devenir"
-                    class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                        Devenir Partenaire
-                    </a>
-                </c:if>
-            </c:if>
+    
+    <!-- Header -->
+    <jsp:include page="/jsp/common/header.jsp" />
 
 
-                        <!-- Mobile profile menu -->
-                        <div class="border-t border-gray-200 dark:border-gray-700 pt-4 pb-3">
-                            <div class="flex items-center px-5">
-                                <div class="flex-shrink-0">
-                                    <img src="${pageContext.request.contextPath}/images/avatars/${user.avatarUrl}"
-                                        alt="Avatar de ${user.username}"
-                                        class="h-8 w-8 rounded-full" />
-                                </div>
-                                <div class="ml-3">
-                                    <div class="text-base font-medium text-gray-800 dark:text-white">${user.firstName} ${user.lastName} - ${user.username}</div>
-                                    <div class="text-sm font-medium text-gray-500 dark:text-gray-400">${user.email}</div>
-                                </div>
-                                <div class="ml-auto flex items-center space-x-4">
-                                    <button class="flex-shrink-0 p-1 rounded-full text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
-                                        <i class="fas fa-bell text-lg"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="mt-3 space-y-1 px-2">
-                                <a href="/Client/profile" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                                    <i class="fas fa-user-circle mr-2 opacity-70"></i> Mon profil
-                                </a>
-                                <a href="{{ route('HomeClient') }}" class=" block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                                    <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Partenaire
-                                </a>
-                                @if($user->role == 'partner')
-                                <a href="{{ route('HomePartenaie') }}" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                                    <i class="fas fa-user-circle mr-2 opacity-70"></i> Espace Partenaire
-                                </a>
-                                @endif
-                                <a href="{{ route('logout') }}" class="block px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-300">
-                                    <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
-                                </a>
-                            </div>
-                        </div>
-
-                @endif
-            @else
-                <div class="mt-4 flex flex-col space-y-3 px-3">
-                    <a href="{{ route('login.form') }}" class="px-4 py-2 font-medium rounded-md text-center bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 transition duration-300">Connexion</a>
-                    <a href="{{ route('register') }}" class="px-4 py-2 font-medium rounded-md text-center bg-sunlight hover:bg-amber-600 text-white transition duration-300">Inscription</a>
-                </div>
-            @endauth
-        </div>
-    </div>
-
-
-</nav>
     <div class="flex flex-col md:flex-row pt-16">
         <aside class="hidden md:block w-64 bg-white dark:bg-gray-800 shadow-md h-screen fixed overflow-y-auto">
             <div class="p-5">
@@ -411,12 +257,10 @@
                     </a>
                     
                 </nav>
-                <div class="mt-28">
-                    <form method="POST" action="{{ route('logout') }}">
-                        <button type="submit" class="w-full text-left px-4 py-2 text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition duration-300">
-                            <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
-                        </button>
-                    </form>
+                <div class="mt-32">
+                    <a href="${pageContext.request.contextPath}/logout" class="sidebar-link2 flex items-center px-4 py-3 text-base font-mediumtext-red-600 dark:text-red-400 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2 opacity-70"></i> Se deconnecter
+                    </a>
                 </div>
             </div>
         </aside>
@@ -449,7 +293,7 @@
         </div>
     </div>
 
-    <script>
+<script>
    
     function setActiveSidebarLink() {
         const currentPath = window.location.pathname;
@@ -478,144 +322,4 @@
     }
     document.addEventListener('DOMContentLoaded', setActiveSidebarLink);
 
-// Mobile menu toggle
-const mobileMenuButton = document.getElementById('mobile-menu-button');
-const mobileMenu = document.getElementById('mobile-menu');
-
-mobileMenuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-});
-
-
-// User dropdown toggle
-const userMenuButton = document.getElementById('user-menu-button');
-const userDropdown = document.getElementById('user-dropdown');
-
-userMenuButton?.addEventListener('click', () => {
-    userDropdown.classList.toggle('hidden');
-});
-
-// Notifications dropdown toggle
-const notificationsButton = document.getElementById('notifications-button');
-const notificationsDropdown = document.getElementById('notifications-dropdown');
-
-notificationsButton?.addEventListener('click', () => {
-    notificationsDropdown.classList.toggle('hidden');
-});
-
-// Messages dropdown toggle
-const messagesButton = document.getElementById('messages-button');
-const messagesDropdown = document.getElementById('messages-dropdown');
-
-messagesButton?.addEventListener('click', () => {
-    messagesDropdown.classList.toggle('hidden');
-});
-
-// Hide dropdowns when clicking outside
-document.addEventListener('click', (e) => {
-    // User dropdown
-    if (userMenuButton && !userMenuButton.contains(e.target) && userDropdown && !userDropdown.contains(e.target)) {
-        userDropdown.classList.add('hidden');
-    }
-    
-    // Notifications dropdown
-    if (notificationsButton && !notificationsButton.contains(e.target) && notificationsDropdown && !notificationsDropdown.contains(e.target)) {
-        notificationsDropdown.classList.add('hidden');
-    }
-    
-    // Messages dropdown
-    if (messagesButton && !messagesButton.contains(e.target) && messagesDropdown && !messagesDropdown.contains(e.target)) {
-        messagesDropdown.classList.add('hidden');
-    }
-});
-         
-document.addEventListener('DOMContentLoaded', function() {
-    const openModalBtn = document.getElementById('openPartnerModalBtn');
-    const partnerModal = document.getElementById('partnerAcceptModal');
-    if (openModalBtn && partnerModal) {
-        const closeModalBtn = document.getElementById('closePartnerModalBtn');
-        const cancelModalBtn = document.getElementById('cancelPartnerModalBtn');
-        const openModal = () => {
-            partnerModal.classList.remove('hidden');
-            partnerModal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        };
-        const closeModal = () => {
-            partnerModal.classList.add('hidden');
-            partnerModal.classList.remove('flex');
-            document.body.style.overflow = '';
-        };
-        openModalBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            openModal();
-        });
-        if (closeModalBtn) {
-            closeModalBtn.addEventListener('click', closeModal);
-        }
-        if (cancelModalBtn) {
-            cancelModalBtn.addEventListener('click', closeModal);
-        }
-        partnerModal.addEventListener('click', (event) => {
-            if (event.target === partnerModal) {
-                closeModal();
-            }
-        });
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !partnerModal.classList.contains('hidden')) {
-                closeModal();
-            }
-        });
-    }
-});
-
-    const notificationsClientIconLink = document.getElementById('notifications-client-icon-link');
-
-    if (notificationsClientIconLink) {
-        notificationsClientIconLink.addEventListener('click', function(event) {
-            const badge = document.getElementById('notification-badge-count');
-            const unreadCount = badge ? parseInt(badge.textContent) : 0;
-            const markReadUrl = this.dataset.markReadUrl;
-
-            if (unreadCount > 0 && markReadUrl) {
-                const csrfToken = document.querySelector('meta[name="csrf-token"]');
-                if (!csrfToken) {
-                    console.error('CSRF token not found! Assurez-vous que la balise meta csrf-token est présente dans votre <head>.');
-                    return;
-                }
-
-                fetch(markReadUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken.getAttribute('content'),
-                        'Accept': 'application/json',
-                    }
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error('Erreur HTTP:', response.status, response.statusText);
-                        return response.json().then(errData => {
-                            throw new Error(errData.message || `Erreur ${response.status} lors du marquage.`);
-                        }).catch(() => {
-                            throw new Error(`Erreur ${response.status} lors du marquage.`);
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.message && data.message.toLowerCase().includes('notifications client marquées comme lues')) {
-                        console.log((data.updated_count || 0) + ' notifications client marquées comme lues.');
-                        if (badge) {
-                            badge.style.display = 'none';
-                        }
-                    } else {
-                        console.warn('Problème marquage (réponse serveur):', data.message || data);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur fetch/traitement:', error);
-                });
-            }
-        });
-    }
 </script>

@@ -50,9 +50,9 @@ public class LoginServlet extends HttpServlet {
                 if ("admin".equals(userRole)) {
                     redirectURL += "/admin/dashboard";
                 } else if ("partner".equals(userRole)) {
-                    redirectURL += "/jsp/partner/dashboard.jsp";
+                    redirectURL += "/partner/dashboard";
                 } else {
-                    redirectURL += "/jsp/client/dashboard.jsp";
+                    redirectURL += "/client/dashboard";
                 }
 
                 response.sendRedirect(redirectURL);

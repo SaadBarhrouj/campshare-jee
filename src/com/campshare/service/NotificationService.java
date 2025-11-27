@@ -4,6 +4,9 @@ import com.campshare.dao.interfaces.NotificationDAO;
 import com.campshare.dao.impl.NotificationDAOImpl;
 import com.campshare.model.Notification;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class NotificationService {
 
   private NotificationDAO notificationDAO = new NotificationDAOImpl();
@@ -39,4 +42,56 @@ public class NotificationService {
     }
   }
 
+  /**
+   * Get all notifications for the client space (all types except 'review_client').
+   */
+  public List<Notification> getClientNotifications(long userId) {
+    try {
+      return notificationDAO.findClientNotifications(userId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la récupération des notifications client: " + e.getMessage());
+      e.printStackTrace();
+      return new ArrayList<>();
+    }
+  }
+
+  public boolean markNotificationAsRead(long userId, long notificationId) {
+    try {
+      return notificationDAO.markAsRead(userId, notificationId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors du marquage comme lu de la notification: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  public int markAllNotificationsAsRead(long userId) {
+    try {
+      return notificationDAO.markAllAsRead(userId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors du marquage comme lu de toutes les notifications: " + e.getMessage());
+      e.printStackTrace();
+      return 0;
+    }
+  }
+
+  public boolean deleteNotification(long userId, long notificationId) {
+    try {
+      return notificationDAO.deleteById(userId, notificationId);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la suppression de la notification: " + e.getMessage());
+      e.printStackTrace();
+      return false;
+    }
+  }
+
+  public int deleteNotifications(long userId, List<Long> notificationIds) {
+    try {
+      return notificationDAO.deleteByIds(userId, notificationIds);
+    } catch (Exception e) {
+      System.err.println("[Service] Erreur lors de la suppression des notifications: " + e.getMessage());
+      e.printStackTrace();
+      return 0;
+    }
+  }
 }

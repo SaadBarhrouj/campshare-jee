@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.campshare.model.User;
 import com.campshare.service.ClientService;
@@ -28,8 +29,19 @@ public class profileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         ClientService clientService = new ClientService();
-        String email = "maronakram@gmail.com";
+
+
+        User user1 = (User) request.getSession().getAttribute("authenticatedUser");
+        if (user1 == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        String email = user1.getEmail();
+
         User user = clientService.getClientByEmail(email);
+
+
         request.setAttribute("user", user);
 
         ReservationService reservationService = new ReservationService();
@@ -117,6 +129,14 @@ public class profileServlet extends HttpServlet {
                     password, // can be null if not changing password
                     avatarFileName // can be null if not changing avatar
                 );
+
+                // Update the authenticatedUser in session with the latest user data
+                HttpSession session = request.getSession(false);
+                User updatedUser = reservationService.getClientProfile(email);
+                session.setAttribute("authenticatedUser", updatedUser);
+
+                System.out.println("Updated User: " + updatedUser);
+                System.out.println("Authenticated User: " + session.getAttribute("authenticatedUser"));
                 
              
                 

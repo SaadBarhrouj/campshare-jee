@@ -214,7 +214,7 @@
 
                                 <c:if test="${fn:length(PendingReservationsWithMontantTotal) != 0}">
                                     <div class="px-6 py-3 bg-gray-50 dark:bg-gray-700/50 text-center">
-                                        <a href="HomePartenaieDemandes" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
+                                        <a href="/webapp/partner/DemandeLocation" class="text-forest dark:text-meadow hover:underline text-sm font-medium">
                                             Voir toutes les demandes
                                         </a>
                                     </div>
