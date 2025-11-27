@@ -68,7 +68,7 @@
             </servlet>
             <servlet-mapping>
                 <servlet-name>ClientNotificationsServlet</servlet-name>
-                <url-pattern>/notifications-client</url-pattern>
+                <url-pattern>/client/notifications</url-pattern>
             </servlet-mapping>
 
             <servlet>

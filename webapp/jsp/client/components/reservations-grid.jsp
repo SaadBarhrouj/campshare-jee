@@ -48,7 +48,7 @@
                     <div class="p-4">
                         <div class="flex items-start mb-4">
                             <c:if test="${not empty res.partner}">
-                                <img src="${pageContext.request.contextPath}/images/avatars/${res.partner.avatarUrl}" 
+                                <img src="${pageContext.request.contextPath}/uploads/${res.partner.avatarUrl}" 
                                      alt="image" class="w-8 h-8 rounded-full object-cover mr-3" />
                                 <div>
                                     <p class="font-medium text-gray-900 dark:text-white">

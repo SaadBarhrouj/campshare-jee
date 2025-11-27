@@ -164,7 +164,7 @@
                                     <div class="divide-y divide-gray-200 dark:divide-gray-700">
                                         <div class="px-6 py-4">
                                             <div class="flex items-start">
-                                                <img src="${pageContext.request.contextPath}/assets/images/users/${reservation.client.avatarUrl}" 
+                                                <img src="${pageContext.request.contextPath}/uploads/${reservation.client.avatarUrl}" 
                                                     alt="${reservation.client.username}" 
                                                     class="w-10 h-10 rounded-full object-cover mr-4" />
 

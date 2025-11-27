@@ -46,7 +46,7 @@
                                             <c:choose>
                                             <c:when test="${not empty authenticatedUser.avatarUrl}">
                                                 <img
-                                                src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                                src="${pageContext.request.contextPath}/uploads/${authenticatedUser.avatarUrl}"
                                                 alt="Avatar User"
                                                 class="h-8 w-8 rounded-full object-cover"
                                                 />
@@ -178,7 +178,7 @@
                                     <c:choose>
                                         <c:when test="${not empty authenticatedUser.avatarUrl}">
                                         <img
-                                        src="${pageContext.request.contextPath}/${authenticatedUser.avatarUrl}"
+                                        src="${pageContext.request.contextPath}/uploads/${authenticatedUser.avatarUrl}"
                                         alt="Avatar User"
                                         class="h-8 w-8 rounded-full object-cover"
                                         />
