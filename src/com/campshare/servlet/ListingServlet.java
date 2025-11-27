@@ -156,7 +156,7 @@ public class ListingServlet extends HttpServlet {
         req.setAttribute("listing", listing);
 
         // Redirect to same listing page
-        resp.sendRedirect(req.getContextPath() + "/listing?id=" + listingId); 
+        resp.sendRedirect(req.getContextPath() + "/client/allReservation"); 
 
     } catch (Exception e) {
         e.printStackTrace();
