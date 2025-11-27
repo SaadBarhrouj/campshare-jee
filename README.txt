@@ -6,10 +6,10 @@ ANNÉE  : 2025/2026
 ========================================================================
 
 MEMBRES DU GROUPE :
-1. BARHROUJ Saad
-2. [Nom Étudiant 2]
-3. [Nom Étudiant 3]
-4. [Nom Étudiant 4]
+1. BARHROUJ Saad       <saad.barhrouj@etu.uae.ac.ma>
+2. EL HAUARI Mohamed   <elhauari.imohamed@etu.uae.ac.ma>
+3. EL ABIDA Rajae      <elabida.rajae@etu.uae.ac.ma>
+4. MAROUN Ilias        <maroun.ilias@etu.uae.ac.ma>
 
 ========================================================================
 1. PRÉREQUIS TECHNIQUES
@@ -32,24 +32,31 @@ sont déjà incluses dans le dossier : /src/main/webapp/WEB-INF/lib/
    (Ce fichier contient la structure des tables ET les données de test).
 
 IMPORTANT - CONNEXION JDBC :
-Si votre mot de passe MySQL n'est pas vide, veuillez le modifier dans le code :
+Si votre mot de passe MySQL local n'est pas vide, veuillez le modifier ici :
 Fichier : src/main/java/com/campshare/utils/DatabaseManager.java
-Ligne   : private static final String PASSWORD = ""; // Mettre votre mot de passe ici
+Ligne   : private static final String PASSWORD = ""; // Mettre votre mot de passe
 
 ========================================================================
-3. CONFIGURATION DU DOSSIER D'IMAGES (UPLOADS)
+3. CONFIGURATION DU DOSSIER D'IMAGES (TRÈS IMPORTANT)
 ========================================================================
-Le projet stocke les images (avatars, CIN, équipements) en dehors du dossier 
-de déploiement pour éviter leur suppression lors des redémarrages serveur.
+L'application utilise le dossier utilisateur ("user.home") pour stocker les images
+(photos des équipements + dossiers 'avatars' et 'cin').
 
-1. Créez un dossier nommé "campshare_uploads" sur votre disque (ex: C:/campshare_uploads).
-2. Vérifiez le chemin configuré dans la classe utilitaire :
-   Fichier : src/main/java/com/campshare/utils/FileUploadUtil.java
-   Variable : UPLOAD_DIR
+Un dossier complet nommé "campshare_uploads" est fourni dans cette archive ZIP.
 
-Note : Le fichier SQL fourni contient des liens vers des images. Pour que les 
-avatars de test s'affichent, copiez le contenu du dossier "ressources_images" 
-fourni dans votre dossier "campshare_uploads".
+INSTRUCTION :
+Veuillez copier/coller le dossier "campshare_uploads" fourni à la racine 
+de votre dossier utilisateur principal.
+
+Chemin final attendu sur votre PC :
+- Windows : C:\Users\VotreNom\campshare_uploads\
+- Mac/Linux : /home/VotreNom/campshare_uploads/
+
+Vérification :
+À l'intérieur de ce dossier sur votre disque, vous devez voir :
+1. Les images (ex: tente_1_a.jpg, sac_3_a.jpg...)
+2. Le dossier "avatars" (contenant les photos de profil)
+3. Le dossier "cin" (contenant les documents d'identité)
 
 ========================================================================
 4. INSTALLATION ET DÉMARRAGE
@@ -70,21 +77,23 @@ http://localhost:8080/CampShare/
 ========================================================================
 5. SCÉNARIOS DE TEST & IDENTIFIANTS
 ========================================================================
-La base de données est pré-remplie avec des comptes fonctionnels.
+Les mots de passe sont stockés sous forme hachée (cryptée) dans la base de données.
+Cependant, pour permettre la correction, le mot de passe ci-dessous est valide 
+pour tous les comptes de test fournis.
 
-A. COMPTE ADMINISTRATEUR (Accès complet Dashboard, Gestion Utilisateurs)
-   - Email : admin@campshare.com
-   - Mot de passe : [Mettre le mot de passe ici, ex: admin123]
+MOT DE PASSE UNIVERSEL (À saisir au login) : password#123
+
+A. COMPTE ADMINISTRATEUR (Accès complet Dashboard)
+   - Email : saad.admin@campshare.com
+   - Mot de passe : password#123
 
 B. COMPTE PARTENAIRE (Propriétaire d'équipements)
-   - Email : partner@email.com
-   - Mot de passe : [Mettre le mot de passe ici]
-   - Données : Possède 3 annonces actives et 2 réservations en attente.
+   - Email : zineb.saidi@email.com
+   - Mot de passe : password#123
 
 C. COMPTE CLIENT (Locataire)
-   - Email : client@email.com
-   - Mot de passe : [Mettre le mot de passe ici]
-   - Données : A effectué une réservation récente.
+   - Email : ayoub.belkadi@email.com
+   - Mot de passe : password#123
 
 ========================================================================
 FIN DU README
