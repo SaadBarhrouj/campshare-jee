@@ -31,27 +31,37 @@ public class equipementServlet extends HttpServlet {
 
         request.setAttribute("user", user);
 
-        ReservationService reservationService = new ReservationService();
-        double noteMoyenne = reservationService.getNoteMoyenneByEmail(email);
-        request.setAttribute("noteMoyenne", noteMoyenne);
+        try {
+            ReservationService reservationService = new ReservationService();
+            double noteMoyenne = reservationService.getNoteMoyenneByEmail(email);
+            request.setAttribute("noteMoyenne", noteMoyenne);
 
-        // Get ALL similar listings (without LIMIT 3)
-        List<Reservation> allSimilarListings = reservationService.getAllSimilarListingsByCategory(email);
-        request.setAttribute("similarListings", allSimilarListings);
+            // Get ALL similar listings (without LIMIT 3)
+            List<Reservation> similarListings = reservationService.getAllSimilarListingsByCategory(email);
+            request.setAttribute("similarListings", similarListings);
 
-        // Calculate stars
-        int fullStars = (int) Math.floor(noteMoyenne);
-        boolean hasHalfStar = (noteMoyenne - fullStars) >= 0.5;
-        int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            // Calculate stars
+            int fullStars = (int) Math.floor(noteMoyenne);
+            boolean hasHalfStar = (noteMoyenne - fullStars) >= 0.5;
+            int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-        // Set attributes for JSP
-        request.setAttribute("fullStars", fullStars);
-        request.setAttribute("hasHalfStar", hasHalfStar);
-        request.setAttribute("emptyStars", emptyStars);
-        
-        List<Reservation> similarListings = reservationService.getAllSimilarListingsByCategory(email);
-        request.setAttribute("similarListings", similarListings);
-        request.getRequestDispatcher("/jsp/client/equipementRecommende.jsp").forward(request, response);
+            // Set attributes for JSP
+            request.setAttribute("fullStars", fullStars);
+            request.setAttribute("hasHalfStar", hasHalfStar);
+            request.setAttribute("emptyStars", emptyStars);
+            
+            request.getRequestDispatcher("/jsp/client/equipementRecommende.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.err.println("Erreur dans equipementServlet : " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("error", "Une erreur est survenue lors du chargement des équipements recommandés.");
+            request.setAttribute("similarListings", new java.util.ArrayList<Reservation>());
+            try {
+                request.getRequestDispatcher("/jsp/client/equipementRecommende.jsp").forward(request, response);
+            } catch (Exception ex) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erreur lors du chargement de la page");
+            }
+        }
               
     }
     

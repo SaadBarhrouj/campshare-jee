@@ -267,17 +267,29 @@
                     <c:when test="${not empty similarListings}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             <c:forEach var="item" items="${similarListings}">
-                                <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                                    <a href="${pageContext.request.contextPath}/listing?id=${item.listing.id}">
-                                        <div class="relative h-48">
-                                            <img src="${pageContext.request.contextPath}/uploads/${item.listing.item.images.get(0).url}" 
-                                                alt="Image" class="w-full h-full object-cover" />
-                                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                            <div class="absolute bottom-4 left-4 right-4">
-                                                <h3 class="text-white font-bold text-lg truncate">${item.listing.item.title}</h3>
-                                                <p class="text-gray-200 text-sm">${item.listing.item.category.name}</p>
+                                <c:if test="${item.listing != null && item.listing.item != null}">
+                                    <div class="equipment-card bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+                                        <a href="${pageContext.request.contextPath}/listing?id=${item.listing.id}">
+                                            <div class="relative h-48">
+                                                <c:choose>
+                                                    <c:when test="${not empty item.listing.item.images && not empty item.listing.item.images[0]}">
+                                                        <img src="${pageContext.request.contextPath}/uploads/${item.listing.item.images[0].url}" 
+                                                            alt="Image" class="w-full h-full object-cover" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                                                            <i class="fas fa-image text-gray-400 text-4xl"></i>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                                <div class="absolute bottom-4 left-4 right-4">
+                                                    <h3 class="text-white font-bold text-lg truncate">${item.listing.item.title}</h3>
+                                                    <c:if test="${item.listing.item.category != null}">
+                                                        <p class="text-gray-200 text-sm">${item.listing.item.category.name}</p>
+                                                    </c:if>
+                                                </div>
                                             </div>
-                                        </div>
 
                                         <div class="p-4">
                                             <div class="flex justify-between items-center mb-3">
@@ -288,27 +300,45 @@
 
                                                 <div class="flex items-center text-sm">
                                                     <c:choose>
-                                                        <c:when test="${item.partner != null && item.partner.reviewCount > 0}">
+                                                        <c:when test="${item.partner != null && item.partner.reviewCount > 0 && item.partner.avgRating > 0}">
                                                             <c:set var="rating" value="${item.partner.avgRating}" />
-                                                            <c:set var="fullStars" value="${fn:substringBefore(rating, '.')}" />
-                                                            <c:set var="hasHalfStar" value="${(rating - fullStars) ge 0.5}" />
-                                                            <c:set var="emptyStars" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />
+                                                            <c:set var="ratingInt" value="${fn:substringBefore(fn:replace(rating, ',', '.'), '.')}" />
+                                                            <c:choose>
+                                                                <c:when test="${empty ratingInt}">
+                                                                    <c:set var="ratingInt" value="0" />
+                                                                </c:when>
+                                                            </c:choose>
+                                                            <c:set var="fullStars" value="${ratingInt}" />
+                                                            <c:set var="decimalPart" value="${rating - fullStars}" />
+                                                            <c:set var="hasHalfStar" value="${decimalPart ge 0.5 and decimalPart lt 1.0}" />
+                                                            <c:set var="emptyStarsCalc" value="${5 - fullStars - (hasHalfStar ? 1 : 0)}" />
+                                                            <c:choose>
+                                                                <c:when test="${emptyStarsCalc < 0}">
+                                                                    <c:set var="emptyStars" value="0" />
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <c:set var="emptyStars" value="${emptyStarsCalc}" />
+                                                                </c:otherwise>
+                                                            </c:choose>
 
                                                             <div class="flex items-center">
                                                                 <div class="flex text-amber-400 mr-1">
-                                                                    <c:forEach begin="0" end="${fullStars - 1}" var="i">
-                                                                        <i class="fas fa-star"></i>
-                                                                    </c:forEach>
+                                                                    <c:if test="${fullStars > 0}">
+                                                                        <c:forEach begin="1" end="${fullStars}" var="i">
+                                                                            <i class="fas fa-star"></i>
+                                                                        </c:forEach>
+                                                                    </c:if>
                                                                     <c:if test="${hasHalfStar}">
                                                                         <i class="fas fa-star-half-alt"></i>
                                                                     </c:if>
-                                                                    <c:forEach begin="0" end="${emptyStars - 1}" var="i">
-                                                                        <i class="far fa-star"></i>
-                                                                    </c:forEach>
+                                                                    <c:if test="${emptyStars > 0}">
+                                                                        <c:forEach begin="1" end="${emptyStars}" var="i">
+                                                                            <i class="far fa-star"></i>
+                                                                        </c:forEach>
+                                                                    </c:if>
                                                                 </div>
                                                                 <span class="text-gray-600 dark:text-gray-400">
                                                                     <fmt:formatNumber value="${rating}" maxFractionDigits="1"/>
-                                                               
                                                                 </span>
                                                             </div>
                                                         </c:when>
@@ -319,20 +349,23 @@
                                                 </div>
                                             </div>
 
-                                            <div class="text-sm mb-3">
-                                                <span class="text-gray-600 dark:text-gray-300">
-                                                    Dispo. du <fmt:formatDate value="${item.listing.startDate}" pattern="dd MMM"/>
-                                                    au <fmt:formatDate value="${item.listing.endDate}" pattern="dd MMM"/>
-                                                </span>
-                                            </div>
+                                            <c:if test="${item.listing.startDate != null && item.listing.endDate != null}">
+                                                <div class="text-sm mb-3">
+                                                    <span class="text-gray-600 dark:text-gray-300">
+                                                        Dispo. du <fmt:formatDate value="${item.listing.startDate}" pattern="dd MMM"/>
+                                                        au <fmt:formatDate value="${item.listing.endDate}" pattern="dd MMM"/>
+                                                    </span>
+                                                </div>
+                                            </c:if>
 
                                             <div class="flex items-center justify-between">
                                                 <div class="text-sm text-gray-600 dark:text-gray-300">
-                                                    <span class="font-medium text-green-800 dark:text-green-600">
-                                                        <i class="fas fa-map-marker-alt mr-1"></i> 
-                                                        ${item.listing.city.name}
-                                                   
-                                                    </span>
+                                                    <c:if test="${item.listing.city != null}">
+                                                        <span class="font-medium text-green-800 dark:text-green-600">
+                                                            <i class="fas fa-map-marker-alt mr-1"></i> 
+                                                            ${item.listing.city.name}
+                                                        </span>
+                                                    </c:if>
                                                 </div>
                                                 <a href="${pageContext.request.contextPath}/listing?id=${item.listing.id}" class="px-3 py-1.5 bg-forest hover:bg-green-700 text-white text-sm rounded-md transition-colors">
                                                     Voir les détails
@@ -341,6 +374,7 @@
                                         </div>
                                     </a>
                                 </div>
+                                </c:if>
                             </c:forEach>
                         </div>
                     </c:when>

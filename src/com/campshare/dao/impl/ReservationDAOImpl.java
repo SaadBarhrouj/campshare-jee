@@ -451,6 +451,7 @@ public class ReservationDAOImpl implements ReservationDAO{
     public List<Reservation> getSimilarListingsByCategory(String email) {
         List<Reservation> similarListings = new ArrayList<>();
 
+        // Optimized query: Use LEFT JOIN instead of correlated subquery for better performance
         String sql = """
             SELECT 
                 images.url AS image_url,
@@ -477,15 +478,15 @@ public class ReservationDAOImpl implements ReservationDAO{
                 )
             ) AS images ON items.id = images.item_id
             LEFT JOIN reviews r ON r.item_id = items.id AND r.type = 'forObject'
-            WHERE ls.status = 'active'
-            AND ls.id != (  -- Exclut le listing actuellement réservé
-                SELECT r.listing_id 
+            LEFT JOIN (
+                SELECT DISTINCT r.listing_id
                 FROM reservations r 
                 JOIN users u ON u.id = r.client_id 
-                WHERE u.email = ? 
-                LIMIT 1
-            )
-            GROUP BY ls.id, items.price_per_day, c.name, items.title, ci.name, ls.start_date, ls.end_date
+                WHERE u.email = ?
+            ) AS user_reservations ON ls.id = user_reservations.listing_id
+            WHERE ls.status = 'active'
+            AND user_reservations.listing_id IS NULL
+            GROUP BY ls.id, items.price_per_day, c.name, items.title, ci.name, ls.start_date, ls.end_date, images.url
             ORDER BY avg_rating DESC, ls.start_date ASC
             LIMIT 3
         """;
@@ -527,11 +528,14 @@ public class ReservationDAOImpl implements ReservationDAO{
                 listing.setEndDate(rs.getDate("end_date"));
                 res.setListing(listing);
 
-                // Image
-                Image image = new Image();
-                image.setUrl(rs.getString("image_url"));
+                // Image - handle null case
                 List<Image> images = new ArrayList<>();
-                images.add(image);
+                String imageUrl = rs.getString("image_url");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    Image image = new Image();
+                    image.setUrl(imageUrl);
+                    images.add(image);
+                }
 
                 // Ratings - Note: partner_id et partner_username ne sont plus dans le SELECT
                 // Si vous en avez besoin, vous devrez les ajouter à la requête SQL
@@ -548,6 +552,10 @@ public class ReservationDAOImpl implements ReservationDAO{
 
         } catch (SQLException e) {
             System.err.println("Erreur SQL lors de la récupération des listings similaires : " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erreur inattendue lors de la récupération des listings similaires : " + e.getMessage());
+            e.printStackTrace();
         }
 
         return similarListings;
@@ -556,6 +564,7 @@ public class ReservationDAOImpl implements ReservationDAO{
      public List<Reservation> getAllSimilarListingsByCategory(String email) {
         List<Reservation> similarListings = new ArrayList<>();
 
+        // Optimized query: Use LEFT JOIN instead of correlated subquery for better performance
         String sql = """
             SELECT 
                 images.url AS image_url,
@@ -582,17 +591,16 @@ public class ReservationDAOImpl implements ReservationDAO{
                 )
             ) AS images ON items.id = images.item_id
             LEFT JOIN reviews r ON r.item_id = items.id AND r.type = 'forObject'
-            WHERE ls.status = 'active'
-            AND ls.id != (  -- Exclut le listing actuellement réservé
-                SELECT r.listing_id 
+            LEFT JOIN (
+                SELECT DISTINCT r.listing_id
                 FROM reservations r 
                 JOIN users u ON u.id = r.client_id 
-                WHERE u.email = ? 
-                LIMIT 1
-            )
-            GROUP BY ls.id, items.price_per_day, c.name, items.title, ci.name, ls.start_date, ls.end_date
+                WHERE u.email = ?
+            ) AS user_reservations ON ls.id = user_reservations.listing_id
+            WHERE ls.status = 'active'
+            AND user_reservations.listing_id IS NULL
+            GROUP BY ls.id, items.price_per_day, c.name, items.title, ci.name, ls.start_date, ls.end_date, images.url
             ORDER BY avg_rating DESC, ls.start_date ASC
-            LIMIT 3
         """;
 
         try (Connection conn = DatabaseManager.getConnection();
@@ -627,11 +635,14 @@ public class ReservationDAOImpl implements ReservationDAO{
                 listing.setEndDate(rs.getDate("end_date"));
                 res.setListing(listing);
 
-                // Image
-                Image image = new Image();
-                image.setUrl(rs.getString("image_url"));
+                // Image - handle null case
                 List<Image> images = new ArrayList<>();
-                images.add(image);
+                String imageUrl = rs.getString("image_url");
+                if (imageUrl != null && !imageUrl.isEmpty()) {
+                    Image image = new Image();
+                    image.setUrl(imageUrl);
+                    images.add(image);
+                }
 
                 
                 User partner = new User();
@@ -649,6 +660,10 @@ public class ReservationDAOImpl implements ReservationDAO{
 
         } catch (SQLException e) {
             System.err.println("Erreur SQL lors de la récupération des listings similaires : " + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.err.println("Erreur inattendue lors de la récupération des listings similaires : " + e.getMessage());
+            e.printStackTrace();
         }
 
         return similarListings;

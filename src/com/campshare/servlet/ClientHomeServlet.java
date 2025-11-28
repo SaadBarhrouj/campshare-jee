@@ -55,9 +55,15 @@ public class ClientHomeServlet extends HttpServlet {
         List<Reservation> reservations = reservationService.getReservationDetailsByEmail(email);
         request.setAttribute("reservations", reservations);
         
-        List<Reservation> similarListings = reservationService.getSimilarListingsByCategory(email);
-        request.setAttribute("similarListings", similarListings);
-
+        try {
+            List<Reservation> similarListings = reservationService.getSimilarListingsByCategory(email);
+            request.setAttribute("similarListings", similarListings);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération des équipements recommandés : " + e.getMessage());
+            e.printStackTrace();
+            // Set empty list to prevent JSP errors
+            request.setAttribute("similarListings", new java.util.ArrayList<Reservation>());
+        }
 
         request.getRequestDispatcher("/jsp/client/dashboard.jsp").forward(request, response);
               
